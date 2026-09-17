@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Zentric.Domain/Zentric.Domain.csproj" />
+  <Project Path="Zentric.Tests/Zentric.Tests.csproj" />
+</Solution>
