@@ -1,14 +1,20 @@
 ---
 name: generic-sdd-agent
-version: 3.0.0
+version: 3.1.0
 language: es
+scope: universal — cualquier lenguaje, stack, empresa o estado de proyecto
+ssot-default: SDD/ (o .specify/ + docs/ + specs/ si el repo no declara otra)
 description: >
-  Spec-Driven Development (SDD) engineering agent. Use for ANY task that
-  creates, changes, debugs, refactors, audits or documents code in a
-  repository with specifications, or in legacy code without trustworthy
-  context: features, bugs, migrations, API/event contracts, security,
-  brownfield discovery, ADRs, traceability, risk classification, approval
-  gates, TDD, rollout and rollback.
+  Spec-Driven Development (SDD) engineering agent for ANY software project:
+  greenfield, brownfield/legacy, personal, startup, SME or large/enterprise
+  and regulated environments. Use for ANY task that creates, changes, debugs,
+  refactors, migrates, audits, secures, deploys or documents code, specs,
+  APIs/events, data, infrastructure or operations — in any language or stack.
+  Adapts rigor by risk (low/medium/high, incl. compliance, payments, PII,
+  auth, migrations, public contracts, async, AI/autonomous actions). Core is
+  stack-agnostic: repo overlay defines language, commands, SSoT and process
+  (Confluence/Jira/ADO/GitHub/GitLab, required reviews, protected branches,
+  environments, change board).
   Triggers (EN/ES): sdd, spec-driven development, spec, specification,
   especificacion, especificación, requirements, requisitos, historia de
   usuario, user story, acceptance criteria, criterios de aceptacion, plan
@@ -16,10 +22,14 @@ description: >
   decision, invariantes, invariants, reglas de negocio, business rules,
   dominio, domain, agregado, aggregate, value object, puerto, port, caso de
   uso, use case, trazabilidad, traceability, evidencia, evidence, brownfield,
-  legacy, refactor, deuda tecnica, technical debt, auditoria, audit, code
-  review, revision de codigo, migracion, migration, rollback, feature flag,
-  idempotencia, idempotency, seguridad, security, endpoint, contrato,
-  contract, bug, hotfix, release, deploy, despliegue.
+  greenfield, legacy, refactor, deuda tecnica, technical debt, auditoria,
+  audit, code review, revision de codigo, migracion, migration, rollback,
+  feature flag, idempotencia, idempotency, seguridad, security, threat model,
+  endpoint, contrato, contract, openapi, asyncapi, evento, event, bug,
+  hotfix, incidente, incident, postmortem, spike, poc, release, deploy,
+  despliegue, devops, sre, observabilidad, observability, compliance,
+  regulatorio, gdpr, hipaa, pci, sox, accesibilidad, accessibility,
+  mobile, frontend, backend, data, ml, ia, ai.
 ---
 
 # SDD Adaptive Engineering Loop
@@ -32,6 +42,34 @@ realidad del producto y del repositorio.
 > La especificación expresa la intención verificable. El plan convierte esa
 > intención en diseño. Las tareas vuelven el diseño ejecutable. El código, las
 > pruebas, los contratos y la evidencia demuestran si la intención se cumplió.
+
+## Alcance universal
+
+Esta skill es **agnóstica de stack, lenguaje, empresa y estado de proyecto**.
+Funciona igual en:
+
+- **Cualquier lenguaje/stack:** TypeScript/Node, Python, Java/Kotlin, Go, C#/.NET,
+  PHP, Ruby, Swift/Kotlin-mobile, C/C++, Rust — y cualquier framework, ORM,
+  base de datos, cola o nube. Los ejemplos que mencionan una tecnología son
+  **ilustrativos**; el overlay del repositorio define la realidad.
+- **Cualquier tamaño de organización:** proyecto personal, startup, pyme o
+  multinacional/enterprise con gobierno formal (change board, revisiones
+  obligatorias, ramas protegidas, entornos DEV/QA/STG/PROD, ventanas de cambio).
+- **Cualquier estado del proyecto:** greenfield (Modo A), evolución normal
+  (Modo B), bug (C), auditoría (D), refactor (E), brownfield/legacy sin contexto
+  confiable (F), más incidente en producción (Modo G) y spike/POC desechable
+  (Modo H). Ver `references/02-modes-and-rigor.md`.
+- **Cualquier gestor de verdad externa:** Jira/Linear/ADO, Confluence/Notion,
+  GitHub/GitLab, ServiceNow, Figma, OpenAPI/AsyncAPI, Terraform/Helm. La SSoT
+  puede vivir fuera del repo: se **enlaza por ID**, no se duplica. Ver
+  `references/00-index-and-precedence.md` §3 y `references/10b-overlay-template.md`.
+
+Regla de adaptación: al entrar a un repositorio nuevo, Gate 0 **siempre**
+identifica lenguaje(s), comandos de verificación, SSoT (repo o externa),
+proceso de cambio (revisiones, ramas, entornos) y restricciones de compliance.
+Si el repo trae overlay propio (`references/10-*-overlay.md`), ese overlay
+**manda** sobre el catálogo genérico. Si no trae, se usa
+`references/10b-overlay-template.md` para crearlo en minutos.
 
 ## Cómo usar esta skill (progressive disclosure)
 
@@ -50,6 +88,8 @@ No leas todo de golpe. Carga solo lo que la tarea exige:
 | Cómo reportar al usuario | `references/08-communication.md` |
 | Necesito una plantilla lista para copiar | `references/09-templates.md` |
 | Trabajar en **este** repositorio (zentric-backend) | `references/10-zentric-overlay.md` |
+| Entrar a un repo **nuevo** (crear su overlay) | `references/10b-overlay-template.md` |
+| Proyecto personal, enterprise o regulado (qué cambia) | `references/11-context-profiles.md` |
 
 ## Principios no negociables (resumen)
 

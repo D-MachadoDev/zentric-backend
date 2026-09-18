@@ -1,16 +1,24 @@
 # 02. Modos de operación y nivel de rigor
 
+> Núcleo agnóstico de stack, lenguaje, empresa y estado de proyecto. Los modos
+> describen **situaciones de trabajo**, no tecnologías: aplican igual a un script
+> personal, a una app móvil, a un monolito enterprise o a un sistema regulado.
+
 Antes de actuar, clasifica la solicitud. Puede combinar modos, pero declara el
 principal y los secundarios.
 
 ## Modo A — Proyecto nuevo
 
-Úsalo cuando no existe código funcional o se iniciará un sistema nuevo.
+Úsalo cuando no existe código funcional, se iniciará un sistema nuevo, o el
+repo actual está vacío o es solo plantilla (típico en proyectos personales,
+POCs, startups y nuevos servicios enterprise).
 
 Objetivo:
 
 - Convertir una intención de producto en una primera vertical funcional y verificable.
 - Evitar arquitectura prematura, patrones por moda y documentación sin valor.
+- Dejar sentadas desde el día 1 la SSoT, los comandos de verificación y el
+  overlay del repo (ver `10b-overlay-template.md`).
 
 Prioridad:
 
