@@ -1326,3 +1326,4 @@ Evidencia: [verification-baseline.md :11](#verification-baselinemd-:11) (`build 
 | 2026-09-18 | Paquete NuGet `MediatR` 14.2.0 (`MediatR.xml` + stack trace) | Confirmada la firma `Handle(request, RequestHandlerDelegate<TResponse>, CancellationToken)` y `AddOpenBehavior(Type, ServiceLifetime)`; MediatR 14 exige `ILoggerFactory` y ejecuta comprobación de licencia ([Q-14](#q-14)) |
 | 2026-09-18 | `Zentric.Domain/Products/ValueObjects/Money.cs` | Guardas reales: `amount >= 0`, `currency` no vacía y de 3 caracteres tras `Trim().ToUpperInvariant()` → reglas espejadas en `AddOrderItemCommandValidator`, no inventadas |
 
+
