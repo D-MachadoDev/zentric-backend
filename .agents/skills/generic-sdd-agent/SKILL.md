@@ -1278,12 +1278,12 @@ Se crea en la raíz **desde evidencia**; lo que no exista es `[PENDIENTE]`. Mant
 
 ## 23. Guía de referencias cruzadas y Markdown profesional
 
-Esta sección define las reglas canónicas para escribir enlaces, referencias cruzadas y formato Markdown en todos los documentos del proyecto. Su objetivo es que cada referencia sea **navegable con un clic** y que el lector nunca tenga que buscar manualmente un documento o sección.
+Esta sección define las reglas canónicas para escribir enlaces, referencias cruzadas y formato Markdown en **cualquier proyecto**. Su objetivo es que cada referencia sea navegable con un clic y el estilo sea de rigor corporativo.
 
 ### 23.1 Sistema de referencias internas (Markdown Estándar)
 - **Prohibido** usar símbolos inventados como `§` o sintaxis numéricas compactas como `:X.Y`.
 - Formato canónico: Únicamente enlaces estándar de Markdown `[Nombre del Documento o Sección](ruta/archivo.md#ancla)`.
-- Ejemplo correcto: `([ZENTRIC.md](../Domain/ZENTRIC.md))` o `[Puertos y Adaptadores](../AGENTS.md#22-puertos-y-adaptadores)`.
+- Ejemplo correcto: `([ARQUITECTURA.md](../docs/ARQUITECTURA.md))` o `[Puertos y Adaptadores](../docs/DISEÑO.md#22-puertos-y-adaptadores)`.
 - El texto del enlace debe ser descriptivo, no un simple número.
 
 ### 23.2 Reglas de enlaces Markdown
@@ -1291,16 +1291,12 @@ Esta sección define las reglas canónicas para escribir enlaces, referencias cr
    Los backticks (acentos graves) convierten el enlace en código/negrilla literal y bloquean la navegación en el editor.
 2. **No anidar enlaces:** ❌ `[texto [otro](url2)](url1)` — Markdown no soporta anidamiento.
 3. **Todo archivo `.md` mencionado en prosa debe ser un enlace relativo.**
-   ❌ `ver SDD/Domain/06-business-rules.md` → ✅ `ver [06-business-rules.md](Domain/06-business-rules.md)`
-4. **Todo ID de tracking debe enlazar a su definición canónica:**
-   - Preguntas: `[Q-10](SDD.md#q-10)` → sección donde vive la ficha completa.
-   - Hallazgos: `[H-05](SDD.md#h-05)` → sección de hallazgos.
-   - Contradicciones: `[C-03](SDD.md#c-03)` → sección de contradicciones.
-   - Tareas: `[T-011](SDD.md#t-011)` → sección de tareas.
-   - ADRs: `[ADR-0001](Adr/0001-reserva-fragmentacion-contingencia.md)` → archivo del ADR.
-   - Addenda: `[ADD-001](SDD.md#add-001)` → sección de ADDENDA.
-   - Reglas de negocio: `[INV-01](Domain/06-business-rules.md)` → catálogo de reglas.
-5. **Referencias a líneas de código** usan anclas GitHub: `[archivo.cs#L42-L50](../Zentric.Domain/ruta/archivo.cs#L42-L50)`
+   ❌ `ver docs/reglas-negocio.md` → ✅ `ver [reglas-negocio.md](docs/reglas-negocio.md)`
+4. **Todo ID de tracking (tickets, requisitos) debe enlazar a su definición canónica:**
+   - Requisitos: `[REQ-10](requisitos.md#req-10)`
+   - Errores/Bugs: `[BUG-05](tracker.md#bug-05)`
+   - ADRs: `[ADR-001](adr/001-base-de-datos.md)`
+5. **Referencias a líneas de código** usan anclas GitHub: `[auth.ts#L42-L50](../src/auth.ts#L42-L50)`
 
 ### 23.3 Generación de anclas GitHub
 Para construir el fragmento `#ancla` de un enlace:
@@ -1309,20 +1305,19 @@ Para construir el fragmento `#ancla` de un enlace:
 3. Eliminar acentos y caracteres especiales (excepto `-` y `_`).
 4. Reemplazar espacios con `-`.
 5. Eliminar puntos, paréntesis, comas, dos puntos.
-
-Ejemplo: `## 2.2 Puertos y Adaptadores` → `#22-puertos-y-adaptadores`
+Ejemplo: `## 2.2 Diseño del Sistema` → `#22-diseño-del-sistema`
 
 ### 23.4 Anti-patrones frecuentes
 | ❌ Incorrecto | ✅ Correcto | Razón |
 |---|---|---|
-| `ver SDD/Domain/06-business-rules.md` | `ver [06-business-rules.md](Domain/06-business-rules.md)` | Texto plano no es navegable |
+| `ver docs/reglas.md` | `ver [reglas.md](docs/reglas.md)` | Texto plano no es navegable |
 | `` `[texto](url)` `` | `[texto](url)` | Los backticks bloquean el clic en el editor |
 | `[texto [otro](url2)](url1)` | `[texto](url1)` + `[otro](url2)` | Los enlaces no se anidan |
 | `(§3.2)` o `[:3.2]` | `[Título de la sección](ruta.md#titulo)` | Símbolos inventados. Se debe usar Markdown estándar |
-| `SDD/Adr/0001-...` | `[ADR-0001](Adr/0001-reserva.md)` | El `...` truncado no navega |
+| `docs/adr/001-...` | `[ADR-001](docs/adr/001-base-de-datos.md)` | El `...` truncado no navega |
 
 ### 23.5 Reglas Generales de Markdown Empresarial
-Al redactar o refactorizar documentación técnica, el agente debe aplicar un rigor tipográfico y estructural de nivel corporativo:
+Al redactar o refactorizar documentación técnica, el agente debe aplicar un rigor tipográfico corporativo y agnóstico al lenguaje:
 
 1. **Jerarquía estricta de encabezados:**
    - Un único `#` (H1) por documento (el título principal).
@@ -1331,18 +1326,18 @@ Al redactar o refactorizar documentación técnica, el agente debe aplicar un ri
    - Dejar siempre una línea en blanco antes y después de listas, tablas, citas (`>`) y bloques de código.
    - Usar siempre guiones (`-`) para listas no ordenadas. Evitar mezclar con asteriscos (`*`).
 3. **Bloques de código tipados:**
-   - Siempre especificar el lenguaje para activar el resaltado de sintaxis: ` ```csharp `, ` ```json `, ` ```bash `.
+   - Siempre especificar el lenguaje (ej. ` ```python `, ` ```typescript `, ` ```bash `) para activar el resaltado de sintaxis.
 4. **Uso semántico del formato:**
-   - **Negrita** (`**texto**`): Usar para resaltar conceptos críticos, IDs de tracking (ej. **Q-10**) o el "Camino Feliz".
-   - *Cursiva* (`*texto*`): Usar con extrema moderación, solo para términos en otro idioma o citas literales.
+   - **Negrita** (`**texto**`): Usar para resaltar conceptos críticos, IDs (ej. **REQ-01**) o el "Camino Feliz".
+   - *Cursiva* (`*texto*`): Usar con extrema moderación, solo para términos en otro idioma o citas.
    - `Código en línea`: Usar EXCLUSIVAMENTE para nombres de métodos, clases, variables, rutas de archivos o comandos. **Nunca** para adornar texto normal.
 5. **Preferencia por tablas:**
-   - Todo lo que sea un catálogo (entidades, errores, reglas, matrices de estado) debe ir en tablas Markdown (`| Col | Col |`), jamás en listas interminables o párrafos densos.
+   - Todo lo que sea un catálogo (entidades, errores, reglas, matrices) debe ir en tablas Markdown (`| Col | Col |`), jamás en listas densas.
 6. **Alertas corporativas (Callouts):**
-   - Para información que requiere atención inmediata, usar la sintaxis nativa de GitHub: `> [!IMPORTANT]`, `> [!WARNING]`, o `> [!NOTE]`.
+   - Para información que requiere atención, usar la sintaxis nativa de GitHub: `> [!IMPORTANT]`, `> [!WARNING]`, o `> [!NOTE]`.
 7. **Tono y prosa narrativa:**
-   - Voz activa, frases cortas, viñetas sobre párrafos. 
-   - Eliminar adjetivos vagos ("fácil", "rápido") y palabras de relleno. Ir directo al grano.
+   - Voz activa, frases cortas, viñetas sobre párrafos densos. 
+   - Eliminar adjetivos vagos ("fácil", "rápido"). Ir directo al grano.
 
 ---
 
