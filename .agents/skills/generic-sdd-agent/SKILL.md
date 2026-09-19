@@ -1278,66 +1278,59 @@ Se crea en la raíz **desde evidencia**; lo que no exista es `[PENDIENTE]`. Mant
 
 ## 23. Guía de referencias cruzadas y Markdown profesional
 
-Esta sección define las reglas canónicas para escribir enlaces, referencias cruzadas y formato Markdown en **cualquier proyecto**. Su objetivo es que cada referencia sea navegable con un clic y el estilo sea de rigor corporativo.
+Esta sección define las reglas estructurales puras para escribir hipervínculos, referencias y formato Markdown. Su objetivo es mantener un estándar tipográfico corporativo donde cada referencia sea navegable.
 
-### 23.1 Sistema de referencias internas (Markdown Estándar)
-- **Prohibido** usar símbolos inventados como `§` o sintaxis numéricas compactas como `:X.Y`.
-- Formato canónico: Únicamente enlaces estándar de Markdown `[Nombre del Documento o Sección](ruta/archivo.md#ancla)`.
-- Ejemplo correcto: `([ARQUITECTURA.md](../docs/ARQUITECTURA.md))` o `[Puertos y Adaptadores](../docs/DISEÑO.md#22-puertos-y-adaptadores)`.
-- El texto del enlace debe ser descriptivo, no un simple número.
+### 23.1 Sistema de referencias (Sintaxis Estándar)
+- **Prohibido** usar símbolos inventados (como `§`) o notaciones numéricas sueltas (como `:X.Y`) en texto plano.
+- Formato único permitido: La sintaxis estándar de hipervínculos de Markdown `[Texto Descriptivo](ruta/archivo.md#ancla)`.
+- Ejemplo de sintaxis: `([Título del Documento](../ruta/documento.md))` o `[Título de Sección](../ruta/archivo.md#nombre-de-seccion)`.
 
-### 23.2 Reglas de enlaces Markdown
-1. **No envolver enlaces en backticks:** ❌ `` `[texto](url)` `` → ✅ `[texto](url)`
-   Los backticks (acentos graves) convierten el enlace en código/negrilla literal y bloquean la navegación en el editor.
-2. **No anidar enlaces:** ❌ `[texto [otro](url2)](url1)` — Markdown no soporta anidamiento.
-3. **Todo archivo `.md` mencionado en prosa debe ser un enlace relativo.**
-   ❌ `ver docs/reglas-negocio.md` → ✅ `ver [reglas-negocio.md](docs/reglas-negocio.md)`
-4. **Todo ID de tracking (tickets, requisitos) debe enlazar a su definición canónica:**
-   - Requisitos: `[REQ-10](requisitos.md#req-10)`
-   - Errores/Bugs: `[BUG-05](tracker.md#bug-05)`
-   - ADRs: `[ADR-001](adr/001-base-de-datos.md)`
-5. **Referencias a líneas de código** usan anclas GitHub: `[auth.ts#L42-L50](../src/auth.ts#L42-L50)`
+### 23.2 Reglas estrictas de hipervínculos
+1. **No envolver enlaces en backticks:** ❌ `` `[texto](ruta)` `` → ✅ `[texto](ruta)`
+   Los acentos graves (` ` `) interpretan el contenido como código literal y anulan la navegación en los editores.
+2. **No anidar hipervínculos:** ❌ `[texto [otro](ruta2)](ruta1)` — La especificación de Markdown no soporta enlaces anidados.
+3. **Rutas relativas obligatorias:** Todo archivo `.md` mencionado en la prosa debe formatearse como un enlace relativo (ej. `[archivo.md](./directorio/archivo.md)`).
+4. **Trazabilidad por anclas:** Todo identificador único (ticket, requisito, registro) debe enlazar a su ancla de definición: `[ID-001](ruta/archivo.md#id-001)`.
+5. **Anclas de código fuente:** Para enlazar rangos de código, usar el estándar de control de versiones: `[archivo.ext#L10-L20](../ruta/archivo.ext#L10-L20)`.
 
-### 23.3 Generación de anclas GitHub
-Para construir el fragmento `#ancla` de un enlace:
-1. Tomar el texto completo del heading (sin el `#`).
-2. Convertir a minúsculas.
-3. Eliminar acentos y caracteres especiales (excepto `-` y `_`).
-4. Reemplazar espacios con `-`.
-5. Eliminar puntos, paréntesis, comas, dos puntos.
-Ejemplo: `## 2.2 Diseño del Sistema` → `#22-diseño-del-sistema`
+### 23.3 Generación de anclas (Estándar GitHub/GitLab)
+Para generar manualmente el fragmento `#ancla` de un encabezado:
+1. Convertir toda la cadena a minúsculas.
+2. Eliminar signos de puntuación y caracteres especiales.
+3. Conservar únicamente letras, números, guiones `-` y guiones bajos `_`.
+4. Reemplazar los espacios en blanco por guiones `-`.
+Ejemplo estructural: `## 2. Título de Ejemplo!` → `#2-titulo-de-ejemplo`
 
-### 23.4 Anti-patrones frecuentes
-| ❌ Incorrecto | ✅ Correcto | Razón |
+### 23.4 Anti-patrones de sintaxis
+| ❌ Anti-patrón (Evitar) | ✅ Sintaxis Estándar | Razón técnica |
 |---|---|---|
-| `ver docs/reglas.md` | `ver [reglas.md](docs/reglas.md)` | Texto plano no es navegable |
-| `` `[texto](url)` `` | `[texto](url)` | Los backticks bloquean el clic en el editor |
-| `[texto [otro](url2)](url1)` | `[texto](url1)` + `[otro](url2)` | Los enlaces no se anidan |
-| `(§3.2)` o `[:3.2]` | `[Título de la sección](ruta.md#titulo)` | Símbolos inventados. Se debe usar Markdown estándar |
-| `docs/adr/001-...` | `[ADR-001](docs/adr/001-base-de-datos.md)` | El `...` truncado no navega |
+| `Ver ruta/archivo.md` | `Ver [archivo.md](ruta/archivo.md)` | El texto plano no genera hipervínculo |
+| `` `[texto](ruta.md)` `` | `[texto](ruta.md)` | Los backticks anulan el comportamiento de enlace |
+| `[texto [otro](ruta2)](ruta1)` | `[texto](ruta1)` y `[otro](ruta2)` | El anidamiento rompe el parser de Markdown |
+| `(§3)` o `[:3]` | `[Título](ruta.md#ancla)` | Sintaxis inventada fuera de la especificación |
+| `ruta/archivo.md#...` | `[Texto](ruta/archivo.md#ancla)` | Truncar URLs rompe la resolución de rutas |
 
-### 23.5 Reglas Generales de Markdown Empresarial
-Al redactar o refactorizar documentación técnica, el agente debe aplicar un rigor tipográfico corporativo y agnóstico al lenguaje:
+### 23.5 Reglas Tipográficas (Markdown Empresarial)
+Al redactar documentación técnica, el estándar estructural es completamente agnóstico al dominio del proyecto:
 
 1. **Jerarquía estricta de encabezados:**
-   - Un único `#` (H1) por documento (el título principal).
-   - No saltar niveles (de `##` pasar a `###`, nunca directo a `####`).
-2. **Estructura visual e interlineado:**
-   - Dejar siempre una línea en blanco antes y después de listas, tablas, citas (`>`) y bloques de código.
-   - Usar siempre guiones (`-`) para listas no ordenadas. Evitar mezclar con asteriscos (`*`).
+   - Declarar un único `#` (H1) por documento.
+   - Respetar el flujo de anidación: descender de `##` a `###` de forma secuencial sin omitir niveles intermedios.
+2. **Estructura visual y espaciado:**
+   - Línea en blanco obligatoria antes y después de listas, tablas, bloques de citas (`>`) y bloques de código (` ``` `).
+   - Mantener consistencia usando un único carácter base para listas no ordenadas (preferiblemente el guión `-`).
 3. **Bloques de código tipados:**
-   - Siempre especificar el lenguaje (ej. ` ```python `, ` ```typescript `, ` ```bash `) para activar el resaltado de sintaxis.
+   - Definir siempre el identificador de lenguaje en la apertura de los bloques de código (` ```<lenguaje> `) para habilitar el resaltado de sintaxis de los analizadores.
 4. **Uso semántico del formato:**
-   - **Negrita** (`**texto**`): Usar para resaltar conceptos críticos, IDs (ej. **REQ-01**) o el "Camino Feliz".
-   - *Cursiva* (`*texto*`): Usar con extrema moderación, solo para términos en otro idioma o citas.
-   - `Código en línea`: Usar EXCLUSIVAMENTE para nombres de métodos, clases, variables, rutas de archivos o comandos. **Nunca** para adornar texto normal.
-5. **Preferencia por tablas:**
-   - Todo lo que sea un catálogo (entidades, errores, reglas, matrices) debe ir en tablas Markdown (`| Col | Col |`), jamás en listas densas.
-6. **Alertas corporativas (Callouts):**
-   - Para información que requiere atención, usar la sintaxis nativa de GitHub: `> [!IMPORTANT]`, `> [!WARNING]`, o `> [!NOTE]`.
-7. **Tono y prosa narrativa:**
-   - Voz activa, frases cortas, viñetas sobre párrafos densos. 
-   - Eliminar adjetivos vagos ("fácil", "rápido"). Ir directo al grano.
+   - **Negrita** (`**texto**`): Exclusivo para resaltar conceptos críticos o identificadores clave.
+   - *Cursiva* (`*texto*`): Exclusivo para términos foráneos o citas literales.
+   - `Código en línea` (` `texto` `): Exclusivo para fragmentos de código, comandos de terminal, variables o rutas. Jamás utilizarse para énfasis literario.
+5. **Estructuras tabulares:**
+   - Utilizar tablas Markdown (`| Columna | Columna |`) para modelar cualquier colección de datos estructurada, diccionarios o matrices asociativas.
+6. **Callouts (Alertas nativas):**
+   - Utilizar la sintaxis nativa de bloques de cita tipados para generar advertencias en plataformas de repositorios: `> [!NOTE]`, `> [!WARNING]`, `> [!IMPORTANT]`.
+7. **Estilo de redacción técnica:**
+   - Favorecer oraciones cortas en voz activa. Utilizar viñetas para desglosar párrafos densos, maximizando la legibilidad.
 
 ---
 
