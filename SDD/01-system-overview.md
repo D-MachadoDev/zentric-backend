@@ -2,19 +2,19 @@
 
 > Documento exigido por [AGENTS.md:0.1](../AGENTS.md#01-consulta-obligatoria-antes-de-codificar). **Derivado**, no inventado: consolida y
 > enlaza la especificación funcional de negocio existente
-> ([SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md)) y los documentos de dominio. No introduce reglas
+> ([ZENTRIC.md](/ZENTRIC.md)) y los documentos de dominio. No introduce reglas
 > nuevas. Todo lo marcado `[INFERIDO]` requiere confirmación.
 
 ## 1. Qué es Zentric
 
-`[CONFIRMADO]` [SDD/Domain/ZENTRIC.md :1](Domain/ZENTRIC.md#dominio-1-administracion-de-usuarios): plataforma digital centralizada que
+`[CONFIRMADO]` [ZENTRIC.md](/ZENTRIC.md): plataforma digital centralizada que
 actúa como **intermediario comercial** entre compradores y vendedores. Administra
 la operación completa: registro de usuarios, publicación de productos, logística,
 facturación y posventa, con trazabilidad y coordinación entre participantes.
 
 ## 2. Objetivos estratégicos
 
-`[CONFIRMADO]` [ZENTRIC.md :2](Domain/ZENTRIC.md#dominio-2-gestion-de-compradores):
+`[CONFIRMADO]` [ZENTRIC.md](/ZENTRIC.md):
 
 | Código | Objetivo |
 |---|---|
@@ -33,19 +33,19 @@ facturación y posventa, con trazabilidad y coordinación entre participantes.
 
 ## 3. Alcance
 
-`[CONFIRMADO]` [ZENTRIC.md :3.1](Domain/ZENTRIC.md#31-procesos-incluidos) incluye: registro de compradores, administración
+`[CONFIRMADO]` [ZENTRIC.md](/ZENTRIC.md) incluye: registro de compradores, administración
 de usuarios, registro **administrativo** de vendedores, administración de bodegas,
 catálogo, inventario, carrito, pedidos, facturación, envíos, devoluciones,
 reembolsos y consulta de reportes administrativos.
 
-`[CONFIRMADO]` [ZENTRIC.md :3.2](Domain/ZENTRIC.md#32-procesos-fuera-del-alcance) excluye explícitamente: interfaces gráficas,
+`[CONFIRMADO]` [ZENTRIC.md](/ZENTRIC.md) excluye explícitamente: interfaces gráficas,
 aplicaciones móviles, portales web, mecanismos de autenticación técnica,
 tecnologías de implementación, arquitectura del software y almacenamiento de la
 información. **Este repositorio cubre el core de dominio y su API, no la UI.**
 
 ## 4. Participantes y roles
 
-`[CONFIRMADO]` [ZENTRIC.md :5](Domain/ZENTRIC.md#dominio-5-gestion-del-catalogo): Comprador, Vendedor, Operador Logístico,
+`[CONFIRMADO]` [ZENTRIC.md](/ZENTRIC.md): Comprador, Vendedor, Operador Logístico,
 Administrador y Supervisor. Cada participante desempeña **un único rol**.
 
 `[CONFIRMADO]` [AGENTS.md :1](../AGENTS.md#1-vision-general-del-proyecto) enumera: vendedores, compradores, bodegas,
@@ -53,7 +53,7 @@ productos, catálogos y pedidos.
 
 ## 5. Modelo operativo (flujo extremo a extremo)
 
-`[CONFIRMADO]` [ZENTRIC.md :6.1](Domain/ZENTRIC.md#61-flujo-general-del-negocio):
+`[CONFIRMADO]` [ZENTRIC.md](/ZENTRIC.md):
 
 1. **Incorporación** — el Administrador registra al vendedor y su primera bodega.
 2. **Catálogo** — el vendedor registra productos y características.
@@ -79,7 +79,7 @@ productos, catálogos y pedidos.
 
 ## 7. Restricciones transversales
 
-`[CONFIRMADO]` [ZENTRIC.md :10](Domain/ZENTRIC.md#dominio-10-gestin-de-facturacin-y-pagos) y [:11](Domain/ZENTRIC.md#11-validaciones-criticas):
+`[CONFIRMADO]` [ZENTRIC.md](/ZENTRIC.md) y [:11](/ZENTRIC.md#11-validaciones-criticas):
 
 | Código | Restricción |
 |---|---|

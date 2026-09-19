@@ -4,12 +4,12 @@ mapa-base: working tree sobre 40aea11 (cambios locales sin commit) · última au
 
 > **Rol de este archivo** (skill generic-sdd-agent v6.0.0, secciones :0.12 y :13.1-d de la skill): este repo **ya declara su SSoT** en [AGENTS.md:0](#agentsmd:0) — la carpeta SDD/. Por la regla "no se crea una SSoT paralela", este documento **no duplica** las especificaciones: es la **memoria viva** (índice, mapa de entidades, decisiones/ADDENDA, verificación, riesgos y estado) y **apunta** a los documentos canónicos.
 >
-> **Jerarquía de verdad:** decisión del Owner → [AGENTS.md](#agentsmd) → [SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md) (Ley, intocable) → resto de SDD/ → este archivo.
+> **Jerarquía de verdad:** decisión del Owner → [AGENTS.md](#agentsmd) → [ZENTRIC.md](/ZENTRIC.md) (Ley, intocable) → resto de SDD/ → este archivo.
 
 ## 1. Contexto y alcance
-- **Propósito observado** [OBSERVADO]: API central y núcleo de dominio de **Zentric**, plataforma que intermedia entre **Comprador** y **Vendedor** administrando usuarios, catálogo, inventario distribuido, pedidos, facturación, logística y posventa ([SDD/Domain/ZENTRIC.md:1](Domain/ZENTRIC.md#dominio-1-administracion-de-usuarios)).
+- **Propósito observado** [OBSERVADO]: API central y núcleo de dominio de **Zentric**, plataforma que intermedia entre **Comprador** y **Vendedor** administrando usuarios, catálogo, inventario distribuido, pedidos, facturación, logística y posventa ([ZENTRIC.md](/ZENTRIC.md)).
 - **Owner:** no registrado en el repositorio [PENDIENTE].
-- **Biblia (intocable, :0.7):** [SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md). **Integridad verificada el 2026-09-18:** git diff --numstat = **38 adiciones / 1 borrado**; el único borrado es una línea separadora, por lo que el texto original del cliente **no fue reescrito**. Las adiciones están bajo # [ADDENDUM - DICTADO POR OWNER] → transcripción en [SDD.md:4](#addendum---dictado-por-owner]-→-transcripción-en-[sddmd:4) ([ADD-001](#add-001)…[ADD-003](#add-003)).
+- **Biblia (intocable, :0.7):** [ZENTRIC.md](/ZENTRIC.md). **Integridad verificada el 2026-09-18:** git diff --numstat = **38 adiciones / 1 borrado**; el único borrado es una línea separadora, por lo que el texto original del cliente **no fue reescrito**. Las adiciones están bajo # [ADDENDUM - DICTADO POR OWNER] → transcripción en [SDD.md:4](#addendum---dictado-por-owner]-→-transcripción-en-[sddmd:4) ([ADD-001](#add-001)…[ADD-003](#add-003)).
 - **Otros documentos normativos:** [AGENTS.md](#agentsmd) (contrato operativo), [SDD/01-system-overview.md](#sdd/01-system-overviewmd), [SDD/02-software-architecture.md](#sdd/02-software-architecturemd), SDD/Domain/*, SDD/Application/*, SDD/Infrastructure/*, SDD/Presentation/*, SDD/Adr/*.
 - **Alcance del sistema:** [SDD/01-system-overview.md:3.1](#sdd/01-system-overviewmd:31) (incluidos) y [SDD/01-system-overview.md:3.2](#sdd/01-system-overviewmd:32) (excluidos: UI, apps móviles, portales, autenticación técnica, tecnologías de implementación y almacenamiento).
 - **Fuera de alcance de este archivo:** detalle de reglas de dominio (SDD/Domain/), contratos HTTP (SDD/Presentation/), mapeo EF (SDD/Infrastructure/).
@@ -19,7 +19,7 @@ mapa-base: working tree sobre 40aea11 (cambios locales sin commit) · última au
 
 ### Metodología Bootstrap
 - Modo de operación: **F (Brownfield sin contexto confiable)** + **A (arranque)**.
-- Existe una spec funcional de negocio sólida ([SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md)) y una spec
+- Existe una spec funcional de negocio sólida ([ZENTRIC.md](/ZENTRIC.md)) y una spec
   de dominio detallada, pero con **solapes de numeración y contradicciones**.
 - `[OBSOLETO — 2026-09-18]` ~~Solo existe el proyecto `Zentric.Domain`, con 6 artefactos implementados, 1 stub vacío y **0 pruebas**~~ → hoy la solución tiene **5 proyectos** (Domain, Application, Infrastructure, Api, Tests) con **178 pruebas** en verde, pero las capas exteriores y los dominios Orders/Logistics/Billing/Returns se implementaron **sin registrar** y con decisiones no dictadas por el Owner.
 - `[OBSOLETO — 2026-09-18]` ~~[AGENTS.md](#obsoleto-—-2026-09-18]-~~[agentsmd) referencia dos documentos de `/SDD` que no existen~~ → existen [SDD/01-system-overview.md](#sdd/01-system-overviewmd), [SDD/02-software-architecture.md](#sdd/02-software-architecturemd) y las carpetas `SDD/Application/`, `SDD/Infrastructure/` y `SDD/Presentation/`.
@@ -84,7 +84,7 @@ referencia nada). `Zentric.Domain.csproj` sigue sin `PackageReference`.
 | E-026 | `Zentric.slnx` | Configuración | raíz | Ensambla los 5 proyectos | — | OK | — |
 | E-027 | Skill `generic-sdd-agent` + `scripts/sync-skill.ps1` | Operación | `.agents/skills/generic-sdd-agent/` | Metodología operativa del agente | copia instalada en `%USERPROFILE%\.agents\skills` | **v6.0.0** (repo) vs **v3.1.0** (instalada) → **[C-09](#c-09)** | — |
 | E-028 | Documentos `SDD/` | Documentos | `SDD/**` | SSoT del sistema | apunta a E-029 | parcial (**[C-06](#c-06)**: [Software-arquitecture.md](Domain/Software-arquitecture.md) = 0 bytes) | — |
-| E-029 | [ZENTRIC.md](Domain/ZENTRIC.md) | Biblia (Ley) | [SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md) | Especificación funcional del cliente | rige E-001…E-014 | intacta + ADDENDA (`[ADD-001](#add-001)…003`) | — |
+| E-029 | [ZENTRIC.md](/ZENTRIC.md) | Biblia (Ley) | [ZENTRIC.md](/ZENTRIC.md) | Especificación funcional del cliente | rige E-001…E-014 | intacta + ADDENDA (`[ADD-001](#add-001)…003`) | — |
 | E-030 | [ADR-0001](Adr/0001-reserva-fragmentacion-contingencia.md)…0003 | Decisiones | `SDD/Adr/` | Reserva/fraccionamiento, clave de stock, variante obligatoria | rigen E-007, E-004, E-003 | aprobadas por el Owner | — |
 
 **Ajenos / generados (clasificados, no mapeados):** `bin/`, `obj/` (generado), `LICENSE`, `.gitignore`, `.vscode/settings.json`, `Zentric.Api.http`, `appsettings.Development.json`.
@@ -106,7 +106,7 @@ referencia nada). `Zentric.Domain.csproj` sigue sin `PackageReference`.
 | ID | Spec | Documento | Estado | Nota |
 |---|---|---|---|---|
 | SPEC-000 | Adopción SDD (bootstrap brownfield) | [SDD.md](SDD.md) (consolidado) | en curso | línea base del 2026-09-17 |
-| SPEC-001 | Ley funcional Zentric | [SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md) | **congelada (Biblia)** | intacta; ADDENDA en [:4](Domain/ZENTRIC.md#dominio-4-gestion-de-bodegas) |
+| SPEC-001 | Ley funcional Zentric | [ZENTRIC.md](/ZENTRIC.md) | **congelada (Biblia)** | intacta; ADDENDA en [:4](/ZENTRIC.md#dominio-4-gestion-de-bodegas) |
 | SPEC-002 | Dominio (modelos, reglas, invariantes, puertos, eventos, ciclo de vida) | `SDD/Domain/*` y `SDD/Domain/services/*` | parcial | [C-03](#c-03), [C-04](#c-04), [C-06](#c-06), [C-07](#c-07) abiertas |
 | SPEC-003 | Aplicación (casos de uso y puertos) | [SDD/Application/01-use-cases-and-ports.md](Application/01-use-cases-and-ports.md) | borrador | **contradicha por el código** ([H-09](#h-09), [H-10](#h-10)) |
 | SPEC-004 | Infraestructura (EF Core, mapeos, migraciones) | [SDD/Infrastructure/01-data-access.md](Infrastructure/01-data-access.md) | en curso | repositorios de Returns/Invoices pendientes |
@@ -119,7 +119,7 @@ referencia nada). `Zentric.Domain.csproj` sigue sin `PackageReference`.
 **Propósito y señal de resultado:** que la SSoT describa el estado real de `Zentric.Api`, `Zentric.Application`, `Zentric.Infrastructure` y los dominios Orders/Logistics/Billing/Returns (hoy verdes pero **sin registrar**), sin tocar código de producción.
 
 **Alcance:** actualizar [SDD/SDD.md](#sdd/sddmd), los 7 documentos de [SDD.md](SDD.md), las 3 specs de capa, [AGENTS.md :0.0](#agentsmd-:00) y `scripts/sync-skill.ps1`.
-**Fuera de alcance:** cualquier cambio en los proyectos `Zentric.*` (código) y cualquier alteración de [SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md).
+**Fuera de alcance:** cualquier cambio en los proyectos `Zentric.*` (código) y cualquier alteración de [ZENTRIC.md](/ZENTRIC.md).
 
 **Requisitos:**
 - FR-01: cada tarea ejecutada ([T-011](#t-011)…[T-022](#t-022)) aparece en el plan con estado y evidencia.
@@ -142,7 +142,7 @@ referencia nada). `Zentric.Domain.csproj` sigue sin `PackageReference`.
 | FR-01 | [T-01](#t-01) | [migration-to-sdd-plan.md :2](#migration-to-sdd-planmd-:2) Fase 3b/4 con estados | PASS |
 | FR-02 | [T-01](#t-01) | [verification-baseline.md :10](#verification-baselinemd-:10) (`178/178`) | PASS |
 | FR-03 | [T-02](#t-02) | [risks-and-gaps.md :2](#risks-and-gapsmd-:2) ([R-11](#r-11)…[R-16](#r-16)) y [:6](#:6) | PASS |
-| [INV-01](Domain/06-business-rules.md) | [T-01](#t-01) | `git diff --numstat [SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md)` = 38/1, sin borrado de texto original | PASS |
+| [INV-01](Domain/06-business-rules.md) | [T-01](#t-01) | `git diff --numstat [ZENTRIC.md](/ZENTRIC.md)` = 38/1, sin borrado de texto original | PASS |
 | CA-01 | [T-01](#t-01) | `git status --short` (solo `.md` y `sync-skill.ps1`) | PASS |
 | CA-02 | [T-01](#t-01) | Este archivo, [:1](#:1)–:8 | PASS |
 
@@ -195,13 +195,13 @@ referencia nada). `Zentric.Domain.csproj` sigue sin `PackageReference`.
 
 ### 4.2 Adiciones a la Biblia (formato [skill :0.7](#skill-:07))
 
-> **Integridad `[CONFIRMADO]`:** [SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md) conserva el texto original: `git diff --numstat` = **38 adiciones / 1 borrado** y ese borrado es una línea separadora, no contenido del cliente.
+> **Integridad `[CONFIRMADO]`:** [ZENTRIC.md](/ZENTRIC.md) conserva el texto original: `git diff --numstat` = **38 adiciones / 1 borrado** y ese borrado es una línea separadora, no contenido del cliente.
 >
 > `[CONTRADICCIÓN]` **[C-10](#c-10)** — El bloque añadido que antecede al rótulo (`## DOMINIO 8`, `## DOMINIO 9`, `## DOMINIO 10` del ciclo de estados, la facturación y las devoluciones) **no lleva el rótulo `[ADDENDUM - DICTADO POR OWNER]`**, que [AGENTS.md :0.7](#addendum---dictado-por-owner]**,-que-[agentsmd-:07) exige para toda adición a la Biblia. Queda registrado; **no lo corrijo yo** (la Biblia es intocable).
 
 ### [ADDENDUM - DICTADO POR OWNER] [ADD-001](#addendum---dictado-por-owner]-[add-001) — Dominio 8: logística y despachos (Fulfillment)
 
-- Fecha: **no registrada** `[PENDIENTE]` · Owner: **no registrado** `[PENDIENTE]` · Origen: bloque `[ADDENDUM - DICTADO POR OWNER]` de [SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md)
+- Fecha: **no registrada** `[PENDIENTE]` · Owner: **no registrado** `[PENDIENTE]` · Origen: bloque `[ADDENDUM - DICTADO POR OWNER]` de [ZENTRIC.md](/ZENTRIC.md)
 - Regla dictada (texto del documento):
   - "**Estados:** Empacado y Despachado."
   - "**Regla (Stock Fantasma):** No debería ocurrir, pero en caso de haber un quiebre de stock fantasma, el pedido se cancela con devolución obligatoria para no retener stock irreal."
@@ -425,7 +425,7 @@ Fecha: 2026-09-18. Alcance: **solo lectura + documentación**. **Cero archivos d
 | `dotnet build Zentric.slnx --nologo` | `PASS` | `Build succeeded. 0 Warning(s) 0 Error(s)`; compilan **5** proyectos (Domain, Application, Infrastructure, Api, Tests) |
 | `dotnet test Zentric.slnx --nologo` | `PASS` | `Failed: 0, Passed: 178, Skipped: 0, Total: 178` (~479 ms) |
 | `Get-FileHash` de `.agents/skills/.../SKILL.md` vs copia instalada | `FAIL` → luego `PASS` | Repo = `24E7ED4F…` (v6.0.0) vs instalada = `EB4E7166…` (v3.1.0); sincronizada con `sync-skill.ps1` (corregido previamente) |
-| `git diff --numstat [SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md)` | `PASS` | 38 adiciones / 1 borrado (línea separadora) → **la Ley conserva el texto original** |
+| `git diff --numstat [ZENTRIC.md](/ZENTRIC.md)` | `PASS` | 38 adiciones / 1 borrado (línea separadora) → **la Ley conserva el texto original** |
 
 ### Salida textual relevante
 
@@ -437,7 +437,7 @@ Build succeeded.
 Passed!  - Failed:     0, Passed:   178, Skipped:     0, Total:   178 - Zentric.Tests.dll (net10.0)
 ```
 
-### Delta de pruebas respecto a [:9](Domain/ZENTRIC.md#dominio-9-gestin-de-devoluciones-y-reembolsos) (14 nuevas desde la última línea base)
+### Delta de pruebas respecto a [:9](/ZENTRIC.md#dominio-9-gestin-de-devoluciones-y-reembolsos) (14 nuevas desde la última línea base)
 
 | Suite nueva | Casos | Cubre |
 |---|---|---|
@@ -548,21 +548,21 @@ Leyenda: **OK** conforme · **PARCIAL** existe pero incompleto · **DESVIADO** e
 | Requisito de spec | Fuente | Código | Estado |
 |---|---|---|---|
 | AR `User` con `Id`, `FullName`, `Email`, `Role`, `Status` | [01-models.md :1](Domain/01-models.md#1-bounded-context-identity-access-usuarios) | `User.cs[:7](Domain/01-models.md#7-bounded-context-billing-facturacin)-43` | OK |
-| `IdentityDocument` obligatorio y único | [01-models.md :1](Domain/01-models.md#1-bounded-context-identity-access-usuarios), `02-aggregates:9`, [ZENTRIC.md](Domain/ZENTRIC.md) Dom.1 | — | **FALTA** |
-| Correo único en todo el sistema | [01-models.md :1](Domain/01-models.md#1-bounded-context-identity-access-usuarios), [ZENTRIC.md](Domain/ZENTRIC.md) 11 | `IUserRepository.GetByEmailAsync` es solo lectura | **PARCIAL** |
-| Un solo rol por usuario | [ZENTRIC.md](Domain/ZENTRIC.md) RG-02 | `User.Role` único | OK |
+| `IdentityDocument` obligatorio y único | [01-models.md :1](Domain/01-models.md#1-bounded-context-identity-access-usuarios), `02-aggregates:9`, [ZENTRIC.md](/ZENTRIC.md) Dom.1 | — | **FALTA** |
+| Correo único en todo el sistema | [01-models.md :1](Domain/01-models.md#1-bounded-context-identity-access-usuarios), [ZENTRIC.md](/ZENTRIC.md) 11 | `IUserRepository.GetByEmailAsync` es solo lectura | **PARCIAL** |
+| Un solo rol por usuario | [ZENTRIC.md](/ZENTRIC.md) RG-02 | `User.Role` único | OK |
 | `Lock()` / `Unlock()` / `ChangeRole()` | [01-models.md :1](Domain/01-models.md#1-bounded-context-identity-access-usuarios) | `Block()` / `Activate()` / `UpdateRole()` | **DESVIADO** |
 | `Block()` dispara evento de suspensión en cascada | `02-aggregates:10`, [invariante 6](Domain/04-invariants-and-rules.md) | sin eventos de dominio | **FALTA** |
 | Suspensión en cascada de productos del vendedor | [invariante 6](Domain/04-invariants-and-rules.md) (`04-invariants`) | — | **FALTA** |
-| `UserStatus`: Activo, Bloqueado | [ZENTRIC.md](Domain/ZENTRIC.md) Dom.1 | `Active, Blocked, Deleted` | OK + extra |
+| `UserStatus`: Activo, Bloqueado | [ZENTRIC.md](/ZENTRIC.md) Dom.1 | `Active, Blocked, Deleted` | OK + extra |
 
 ## 2. Buyer
 
 | Requisito | Fuente | Código | Estado |
 |---|---|---|---|
-| Dirección principal obligatoria | [ZENTRIC.md](Domain/ZENTRIC.md) Dom.2 | `Buyer.cs:26-29` | OK |
-| Direcciones adicionales (opcional, añadir/quitar) | [ZENTRIC.md](Domain/ZENTRIC.md) Dom.2 | `Buyer.cs:45-70` | OK |
-| Estado comercial | [ZENTRIC.md](Domain/ZENTRIC.md) Dom.2 | `IsActiveForCommerce` | OK |
+| Dirección principal obligatoria | [ZENTRIC.md](/ZENTRIC.md) Dom.2 | `Buyer.cs:26-29` | OK |
+| Direcciones adicionales (opcional, añadir/quitar) | [ZENTRIC.md](/ZENTRIC.md) Dom.2 | `Buyer.cs:45-70` | OK |
+| Estado comercial | [ZENTRIC.md](/ZENTRIC.md) Dom.2 | `IsActiveForCommerce` | OK |
 | Agregado `Buyer` declarado en la spec de dominio | [01-models.md](Domain/01-models.md), `02-aggregates` | existe en código | **FALTA en spec** |
 | Sin almacenamiento de medios de pago | [invariante 9](Domain/04-invariants-and-rules.md) (`04-invariants`) | `PaymentTokens` (`Buyer.cs:13,112-139`) | **CONTRA** |
 | Dirección como VO `Address` | [02-value-objects.md](Domain/02-value-objects.md) | `string` (`Buyer.cs:10-11`) | **DESVIADO** |
@@ -573,7 +573,7 @@ Leyenda: **OK** conforme · **PARCIAL** existe pero incompleto · **DESVIADO** e
 |---|---|---|---|
 | AR `Product` con `SellerId`, `Price`, `Type` | [01-models.md :2](Domain/01-models.md#2-bounded-context-catalog-catalogo) | `Product.cs` | OK |
 | Propiedad `Title` | [01-models.md :2](Domain/01-models.md#2-bounded-context-catalog-catalogo) | `Name` | **DESVIADO** |
-| `ProductStatus` = Published / Suspended / Discontinued | [02-value-objects.md](Domain/02-value-objects.md), [ZENTRIC.md](Domain/ZENTRIC.md) Dom.5 | `bool IsActive` + `DeletedAt` | **DESVIADO** |
+| `ProductStatus` = Published / Suspended / Discontinued | [02-value-objects.md](Domain/02-value-objects.md), [ZENTRIC.md](/ZENTRIC.md) Dom.5 | `bool IsActive` + `DeletedAt` | **DESVIADO** |
 | Nace publicado sin aprobación ([CAT-01](Domain/06-business-rules.md)) | [invariante 5](Domain/04-invariants-and-rules.md), `06-business-rules` [CAT-01](Domain/06-business-rules.md) | `Product.cs:59` | OK |
 | `Suspend()` reactivo | `02-aggregates:17` | existe | OK |
 | `Discontinue()` | `01-models:22` | — | **FALTA** |
@@ -603,27 +603,27 @@ Leyenda: **OK** conforme · **PARCIAL** existe pero incompleto · **DESVIADO** e
 | `Adjust(qty)` para devoluciones | `01-models:35`, servicio de devoluciones | `UpdateQuantities` / `AddStock` / `ReciveReturnedStock` | DESVIADO |
 | `ManualAdjust(qty, UserId, Role)` con regla dura | `02-aggregates:34`, [invariante 4](Domain/04-invariants-and-rules.md) | ningún método recibe `Role` | **FALTA** |
 | `AvailableQuantity` nunca negativo | [INV-01](Domain/06-business-rules.md), [invariante 1](Domain/04-invariants-and-rules.md) | protegido (`Inventory.cs:33,60,99,116,132`) | OK |
-| Cantidad dañada no reservable | [ZENTRIC.md](Domain/ZENTRIC.md) 11 | `DamagedQuantity` existe; no bloquea la reserva | **PARCIAL** |
-| Movimientos: Ingreso, Reserva, Salida, Ajuste, Devolución | [ZENTRIC.md](Domain/ZENTRIC.md) Dom.6 | 5 operaciones presentes | OK |
+| Cantidad dañada no reservable | [ZENTRIC.md](/ZENTRIC.md) 11 | `DamagedQuantity` existe; no bloquea la reserva | **PARCIAL** |
+| Movimientos: Ingreso, Reserva, Salida, Ajuste, Devolución | [ZENTRIC.md](/ZENTRIC.md) Dom.6 | 5 operaciones presentes | OK |
 
 ## 5. Ordering
 
 | Requisito | Fuente | Código | Estado |
 |---|---|---|---|
-| AR `CustomerOrder` con `BuyerId`, `Items`, `TotalAmount`, `Status` | `01-models` [Buyer.cs[:4](Domain/ZENTRIC.md#dominio-4-gestion-de-bodegas)](../Zentric.Domain/Buyers/Buyer.cs#L4) | `Orders/CustomerOrder.cs` | **PARCIAL** — `Items` (no `Lines`); `TotalAmount` con moneda "USD" **inventada** ([Buyer.cs:24](../Zentric.Domain/Buyers/Buyer.cs#L24)) |
+| AR `CustomerOrder` con `BuyerId`, `Items`, `TotalAmount`, `Status` | `01-models` [Buyer.cs[:4](/ZENTRIC.md#dominio-4-gestion-de-bodegas)](../Zentric.Domain/Buyers/Buyer.cs#L4) | `Orders/CustomerOrder.cs` | **PARCIAL** — `Items` (no `Lines`); `TotalAmount` con moneda "USD" **inventada** ([Buyer.cs:24](../Zentric.Domain/Buyers/Buyer.cs#L24)) |
 | `OrderLine` (variante, cantidad, precio unitario, total, tipo) | `01-models:43`, `02-aggregates:41` | `Orders/Entities/OrderItem.cs` | **DESVIADO** (nombre: `OrderItem`) |
 | `FlatShippingFee` | `02-aggregates:40`, [invariante 7](Domain/04-invariants-and-rules.md) | — | **FALTA** |
 | Estados `Cart`, `PendingPayment`, `Paid`, `PartiallyDelivered`, `Completed`, `Cancelled` | `02-value-objects:45-51` | `Orders/Enums/OrderStatus.cs` | **PARCIAL** — la Ley (Dom.7) fija Cart, PendingPayment, Paid, Dispatched, Delivered; faltan `PartiallyDelivered`, `Completed`, `Cancelled` |
 | `ConfirmPayment()`, `CancelEarly()`, `ApplyPartialRefund()` | `02-aggregates:42-45` | `MarkAsPaid()`, `Dispatch()`, `Deliver()` | **DESVIADO** — sin cancelación ni reembolso parcial |
 | `PaymentReceipt` (simulación de pasarela) | [invariante 9](Domain/04-invariants-and-rules.md) | — | **FALTA** |
 | Timeout de reserva 15 min ([PED-01](Domain/06-business-rules.md)) | `06-business-rules` [PED-01](Domain/06-business-rules.md), `07-lifecycle` | — | **FALTA** — y la reserva preventiva tampoco existe (**H-10**) |
-| Pedido entregado **no modificable** | [ZENTRIC.md :11](Domain/ZENTRIC.md#11-validaciones-criticas) (Validaciones Críticas) | `CustomerOrder.EnsureNotDelivered()` ([CustomerOrder.cs:152-159](../Zentric.Domain/Orders/CustomerOrder.cs#L152-L159)) | **OK** (con prueba) |
+| Pedido entregado **no modificable** | [ZENTRIC.md](/ZENTRIC.md) (Validaciones Críticas) | `CustomerOrder.EnsureNotDelivered()` ([CustomerOrder.cs:152-159](../Zentric.Domain/Orders/CustomerOrder.cs#L152-L159)) | **OK** (con prueba) |
 
 ## 6. Fulfillment, devoluciones, eventos y puertos
 
 | Requisito | Fuente | Código | Estado |
 |---|---|---|---|
-| AR `FulfillmentOrder` + `Shipment` | `01-models` [FulfillmentOrder.cs[:5](Domain/ZENTRIC.md#dominio-5-gestion-del-catalogo)](../Zentric.Domain/Logistics/FulfillmentOrder.cs#L5) | `Logistics/FulfillmentOrder.cs`, `Entities/Shipment.cs` | **PARCIAL** — agregados sin servicio ([T-014](#t-014) parcial) |
+| AR `FulfillmentOrder` + `Shipment` | `01-models` [FulfillmentOrder.cs[:5](/ZENTRIC.md#dominio-5-gestion-del-catalogo)](../Zentric.Domain/Logistics/FulfillmentOrder.cs#L5) | `Logistics/FulfillmentOrder.cs`, `Entities/Shipment.cs` | **PARCIAL** — agregados sin servicio ([T-014](#t-014) parcial) |
 | Estados de despacho | `02-value-objects:53-58`, `03-value-objects:36-41`, [Ley [ADD-001](#ley-[add-001)](../SDD.md#addendum---dictado-por-owner-add-001-dominio-8-logistica-y-despachos-fulfillment) | `FulfillmentStatus` = Packed, Dispatched, Delivered, CancelledNoStock | **CONTRADICCIÓN** — 4 valores vs 5; **falta `PendingPack`** y el orden de la Ley (**[C-08](#c-08)**) |
 | `CancelDueToGhostStock`, `RequestReturn` (no digital) | `02-aggregates:53-54`, [Ley [ADD-001](#ley-[add-001)](../SDD.md#addendum---dictado-por-owner-add-001-dominio-8-logistica-y-despachos-fulfillment)/002 | `CancelDueToNoStock()`, `ReturnRequest` (rechaza `Digital`) | **PARCIAL** — nombres desviados; sin la "devolución obligatoria" que exige [ADD-001](#add-001) |
 | `ReturnStatus` (Requested → Refunded / Rejected) | `03-value-objects:43-48`, Ley Dom.10 | `Returns/Enums/ReturnStatus.cs` | **OK** |
@@ -682,9 +682,9 @@ Leyenda: **OK** conforme · **PARCIAL** existe pero incompleto · **DESVIADO** e
 
 | ID | Contradicción | Evidencia | Bloquea |
 |---|---|---|---|
-| **[C-08](#c-08)** | **La Ley define `DOMINIO 8/9/10` dos veces con contenidos distintos** (9 y 10 intercambian significado entre el bloque base y el ADDENDUM; el 8 tiene 5 estados vs 2). El código tomó una interpretación que el Owner no dictó: falta `PendingPack`, falta "Detalle Zentric" y la devolución aprobada no devuelve stock | [ZENTRIC.md](Domain/ZENTRIC.md) líneas 254-270 vs 320-334 · `FulfillmentStatus.cs` · `InvoiceType.cs` · `ReturnRequest.cs` | Fases 3b/4 → requiere **[Q-13](#q-13)** |
+| **[C-08](#c-08)** | **La Ley define `DOMINIO 8/9/10` dos veces con contenidos distintos** (9 y 10 intercambian significado entre el bloque base y el ADDENDUM; el 8 tiene 5 estados vs 2). El código tomó una interpretación que el Owner no dictó: falta `PendingPack`, falta "Detalle Zentric" y la devolución aprobada no devuelve stock | [ZENTRIC.md](/ZENTRIC.md) líneas 254-270 vs 320-334 · `FulfillmentStatus.cs` · `InvoiceType.cs` · `ReturnRequest.cs` | Fases 3b/4 → requiere **[Q-13](#q-13)** |
 | **[C-09](#c-09)** | Skill: el repo está en **v6.0.0** monolítico (sin `references/`) y la copia instalada seguía en **v3.1.0**; [AGENTS.md](#agentsmd) citaba la v3.0.0 con `references/10-zentric-overlay.md`, inexistente | hashes distintos · [AGENTS.md :0.0](#agentsmd-:00) | Gobernanza (**corregido** en esta tanda) |
-| **[C-10](#c-10)** | Adiciones a la Biblia **sin rótulo** `[ADDENDUM - DICTADO POR OWNER]` (bloque previo al marcador) | `git diff` de [ZENTRIC.md](Domain/ZENTRIC.md) | Trazabilidad de la Ley |
+| **[C-10](#c-10)** | Adiciones a la Biblia **sin rótulo** `[ADDENDUM - DICTADO POR OWNER]` (bloque previo al marcador) | `git diff` de [ZENTRIC.md](/ZENTRIC.md) | Trazabilidad de la Ley |
 | [C-03](#c-03) | `Cancelled` vs `CancelledByStockBreak` | [02-value-objects.md :58](Domain/02-value-objects.md)` vs [03-value-objects.md :41](Domain/03-value-objects.md)` | Fulfillment → **[Q-03](#q-03)** |
 | [C-04](#c-04) | ¿`Cart` es estado de `CustomerOrder`? | [02-value-objects.md :46](Domain/02-value-objects.md)` vs [03-value-objects.md :29](Domain/03-value-objects.md)` | Ordering → **[Q-04](#q-04)** |
 | [C-05](#c-05) | `Vendor` (spec) vs `Seller` (código) | [02-value-objects.md :62](Domain/02-value-objects.md)` vs `WarehouseType.cs:6` | Renombrado → [Q-05](#q-05) |
@@ -769,9 +769,9 @@ Registrado en [SDD/Adr/0002-clave-inventario-variantid.md](Adr/0002-clave-invent
 
 - **Fuente A** — [02-aggregates-and-entities.md :29](Domain/02-aggregates-and-entities.md)`, [03-value-objects.md :15](Domain/03-value-objects.md)`:
   `VariantId` como SKU.
-- **Fuente B** — [01-models.md :33](Domain/01-models.md)` y [ZENTRIC.md](Domain/ZENTRIC.md) Dominio 6: "vinculado
+- **Fuente B** — [01-models.md :33](Domain/01-models.md)` y [ZENTRIC.md](/ZENTRIC.md) Dominio 6: "vinculado
   obligatoriamente a un producto y una bodega"; el código usa `ProductId`.
-- [ZENTRIC.md](Domain/ZENTRIC.md) Dominio 5 sí menciona "Variantes: Diferencias de color, talla,
+- [ZENTRIC.md](/ZENTRIC.md) Dominio 5 sí menciona "Variantes: Diferencias de color, talla,
   modelo".
 
 | Opción | Consecuencia |
@@ -820,7 +820,7 @@ canónico en `SDD/Domain/00-index.md`. Desbloquea la navegabilidad de la SSoT.
 
 ## [Q-07](#q-07-documento-de-identidad-del-usuario) — Documento de identidad del usuario
 
-[ZENTRIC.md](Domain/ZENTRIC.md) Dominio 1 lo marca obligatorio y único, y [AGENTS.md](#agentsmd) prohíbe
+[ZENTRIC.md](/ZENTRIC.md) Dominio 1 lo marca obligatorio y único, y [AGENTS.md](#agentsmd) prohíbe
 inventar. Opciones: **(a)** añadir `IdentityDocument` como VO obligatorio con
 validación de formato (¿qué país/formato?); **(b)** añadirlo opcional; **(c)**
 eliminarlo de la spec por no aplicar al negocio. Si es (a), se necesita el
@@ -914,7 +914,7 @@ verde, pero con etiqueta `[PROPUESTO]` en estos 4 puntos).
 
 ## [Q-13](#q-13-c-08-la-ley-define-dominio-8-9-y-10-dos-veces-con-significados-cruzados-abierta-bloqueante) ([C-08](#c-08)) — La Ley define `DOMINIO 8`, `9` y `10` **dos veces**, con significados cruzados · 🔴 ABIERTA · **BLOQUEANTE**
 
-**Hallazgo (2026-09-18).** [SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md) contiene hoy **dos bloques** que definen los mismos
+**Hallazgo (2026-09-18).** [ZENTRIC.md](/ZENTRIC.md) contiene hoy **dos bloques** que definen los mismos
 números de dominio con contenidos distintos: el bloque base (líneas 254-270) y el bloque
 `# [ADDENDUM - DICTADO POR OWNER]` (líneas 320-334).
 
@@ -981,13 +981,13 @@ afecta a la sostenibilidad y al cumplimiento de la dependencia.
 | ID | Categoría | Evidencia | Impacto | Prob. | Acción | ¿Bloquea? |
 |---|---|---|---|---|---|---|
 | ~~C-01~~ | ~~Regla de negocio / inventario~~ | ~~[04-invariants-and-rules.md :8](Domain/04-invariants-and-rules.md)` vs [06-business-rules.md :7](Domain/06-business-rules.md)` vs [services/inventory-reservation-service.md :18](Domain/services/inventory-reservation-service.md)`~~ | **RESUELTA el 2026-09-17 por decisión del owner (A3 híbrido).** Regla canónica: bodega única si una bodega cubre la cantidad; fraccionamiento de contingencia solo si ninguna cubre; fallo si la suma no alcanza. Ver [SDD/Adr/0001-reserva-fragmentacion-contingencia.md](Adr/0001-reserva-fragmentacion-contingencia.md) | — | Cerrada | No |
-| ~~C-02~~ | ~~Modelo de datos / clave de stock~~ | ~~[02-aggregates-and-entities.md :29](Domain/02-aggregates-and-entities.md)` y [03-value-objects.md :15](Domain/03-value-objects.md)` (`VariantId`) vs [01-models.md :33](Domain/01-models.md)`, [ZENTRIC.md](Domain/ZENTRIC.md) Dom.6 y el código (`ProductId`)~~ | **RESUELTA el 2026-09-17 por decisión del owner (B2).** El stock se lleva por `VariantId` (SKU); `ProductVariant` es entidad hija de `Product`; clave `(VariantId, WarehouseId)`. Ver [SDD/Adr/0002-clave-inventario-variantid.md](Adr/0002-clave-inventario-variantid.md) | — | Cerrada (queda [Q-10](#q-10) sobre variante obligatoria) | Parcialmente |
+| ~~C-02~~ | ~~Modelo de datos / clave de stock~~ | ~~[02-aggregates-and-entities.md :29](Domain/02-aggregates-and-entities.md)` y [03-value-objects.md :15](Domain/03-value-objects.md)` (`VariantId`) vs [01-models.md :33](Domain/01-models.md)`, [ZENTRIC.md](/ZENTRIC.md) Dom.6 y el código (`ProductId`)~~ | **RESUELTA el 2026-09-17 por decisión del owner (B2).** El stock se lleva por `VariantId` (SKU); `ProductVariant` es entidad hija de `Product`; clave `(VariantId, WarehouseId)`. Ver [SDD/Adr/0002-clave-inventario-variantid.md](Adr/0002-clave-inventario-variantid.md) | — | Cerrada (queda [Q-10](#q-10) sobre variante obligatoria) | Parcialmente |
 | C-03 | Estado de dominio | [02-value-objects.md :58](Domain/02-value-objects.md)` (`FulfillmentStatus.Cancelled`) vs [03-value-objects.md :41](Domain/03-value-objects.md)` (`CancelledByStockBreak`) | Máquina de estados de despacho ambigua | Media | [Q-03](#q-03) | Sí (Fulfillment) |
 | C-04 | Estado de dominio | [02-value-objects.md :46](Domain/02-value-objects.md)` incluye `Cart` en `OrderStatus` vs [03-value-objects.md :29](Domain/03-value-objects.md)-34` lo omite | Un carrito efímero y un pedido formal no pueden compartir agregado sin definirlo | Media | [Q-04](#q-04) | Sí (Ordering) |
 | C-05 | Lenguaje ubicuo | [02-value-objects.md :62](Domain/02-value-objects.md)` (`Vendor`) vs `WarehouseType.cs:6` (`Seller`) | Nombres divergentes en API, base de datos y eventos | Media | [Q-05](#q-05) | No (se propaga) |
 | C-06 | Gobernanza documental | [AGENTS.md :0.1](#agentsmd-:01) exige [SDD/01-system-overview.md](#sdd/01-system-overviewmd), [SDD/02-software-architecture.md](#sdd/02-software-architecturemd), `SDD/Infrastructure/`, `SDD/Presentation/`; no existían. Además [SDD/Domain/Software-arquitecture.md](Domain/Software-arquitecture.md) está **vacío (0 bytes)** | La SSoT declarada no era navegable y el agente no podía cumplir la consulta obligatoria | Alta | 2 documentos creados ahora; restan Infrastructure/Presentation | Parcialmente |
 | C-07 | Numeración de specs | `SDD/Domain/` tiene dos `01-*`, dos `02-*`, dos `03-*`, dos `04-*` con contenido solapado | Cada lectura puede llevar a una regla distinta; no hay canonicidad | Alta | [Q-06](#q-06) | Sí (para consolidar) |
-| **C-08** | **Duplicación de la Ley** | [ZENTRIC.md](Domain/ZENTRIC.md) líneas **254-270** (bloque base: Dom.8 con 5 estados, Dom.9 facturación, Dom.10 devoluciones) vs líneas **320-334** (ADDENDUM: Dom.8 "Empacado y Despachado", Dom.9 devoluciones, Dom.10 facturación) — **9 y 10 intercambian significado** | El código ya tomó una interpretación **no dictada**: falta `PendingPack`, falta "Detalle Zentric" y la devolución no devuelve stock | **Alta** | **[Q-13](#q-13) (nueva)** | **Sí — bloquea Fase 3b/4** |
+| **C-08** | **Duplicación de la Ley** | [ZENTRIC.md](/ZENTRIC.md) líneas **254-270** (bloque base: Dom.8 con 5 estados, Dom.9 facturación, Dom.10 devoluciones) vs líneas **320-334** (ADDENDUM: Dom.8 "Empacado y Despachado", Dom.9 devoluciones, Dom.10 facturación) — **9 y 10 intercambian significado** | El código ya tomó una interpretación **no dictada**: falta `PendingPack`, falta "Detalle Zentric" y la devolución no devuelve stock | **Alta** | **[Q-13](#q-13) (nueva)** | **Sí — bloquea Fase 3b/4** |
 | **C-09** | Gobernanza de la skill | Repo en **v6.0.0** monolítico vs copia instalada **v3.1.0**; [AGENTS.md :0.0](#agentsmd-:00) citaba `references/10-zentric-overlay.md` (borrado) | La carga automática usaba metodología obsoleta; `sync-skill.ps1` habría destruido la copia instalada al no existir `references/` | Media | **Corregido el 2026-09-18** ([AGENTS.md :0.0](#agentsmd-:00), script y sincronización) | No |
 | **C-10** | Trazabilidad de la Ley | Las adiciones `DOMINIO 8/9/10` previas al rótulo **no llevan** `[ADDENDUM - DICTADO POR OWNER]` ([AGENTS.md :0.7](#addendum---dictado-por-owner]-([agentsmd-:07)) | No se distingue el texto del cliente de la expansión del modelo | Media | Registrar en [SDD/SDD.md :4.2](#sdd/sddmd-:42))](../SDD.md#42-adiciones-a-la-biblia-formato-skill-07); requiere autorización del Owner para tocar la Biblia | No |
 
@@ -997,7 +997,7 @@ afecta a la sostenibilidad y al cumplimiento de la dependencia.
 |---|---|---|---|---|---|---|
 | R-01 | Integridad de datos | [H-01](#h-01) `Inventory.DispatchStock` (`Inventory.cs:109-123`) | Descuadre de stock: reservado negativo, balance roto | Alta | Corregir con prueba ([T-003](#t-003)) | No |
 | R-02 | Integridad de datos | [H-02](#h-02) `UpdateQuantities` (`Inventory.cs:58-79`) | Se saltan `Reserve/Release/Dispatch`; anula invariantes | Alta | Rediseñar API ([T-003](#t-003)/[T-004](#t-004)) | No |
-| R-03 | Cumplimiento de spec | [H-05](#h-05) `User` sin `IdentityDocument` | No se puede registrar un usuario conforme a [ZENTRIC.md](Domain/ZENTRIC.md) Dom.1 | Alta | [T-006](#t-006) (tras [Q-07](#q-07)) | No |
+| R-03 | Cumplimiento de spec | [H-05](#h-05) `User` sin `IdentityDocument` | No se puede registrar un usuario conforme a [ZENTRIC.md](/ZENTRIC.md) Dom.1 | Alta | [T-006](#t-006) (tras [Q-07](#q-07)) | No |
 | R-04 | Seguridad / autorización | Falta `ManualAdjust(qty, UserId, Role)` ([invariante 4](Domain/04-invariants-and-rules.md)) | Cualquiera podría ajustar stock en bodegas Marketplace | Media | [T-005](#t-005) | Sí (con C-01) |
 | R-05 | Regresión | **164 pruebas** en `Zentric.Tests` (antes: 0) | Queda sin cobertura: `Buyer`, los VOs `Email`/`FullName`, eventos y todo lo faltante | Media | [T-002b](#t-002b), Fase 3 | No |
 | R-06 | Testabilidad | [H-06](#h-06): 46 usos de `DateTime.UtcNow` en 5 entidades | Las reglas temporales (timeout 15 min) no son verificables determinísticamente | Media | [T-004](#t-004) (abstracción de tiempo) | No |
@@ -1217,7 +1217,7 @@ de stock, devolución; (3) contratos públicos → aún no existen; (4) bugs →
 |---|---|---|---|---|
 | T-001 | Crear proyecto `Zentric.Tests` (xUnit) y añadirlo a `Zentric.slnx` | [R-05](#r-05) | `dotnet test` en verde | `[x]` **hecha** |
 | T-002 | Tests de caracterización de invariantes confirmadas: [INV-01](Domain/06-business-rules.md) (`Inventory`), reglas de `Warehouse`, usuario bloqueado (`User`), [CAT-01](Domain/06-business-rules.md) (`Product`), `Money` | [INV-01](Domain/06-business-rules.md), [CAT-01](Domain/06-business-rules.md), RG-02, RG-03 | 105/105 PASS | `[x]` **hecha** |
-| T-002b | Tests de los VOs `Email` y `FullName` y del agregado `Buyer` | [ZENTRIC.md](Domain/ZENTRIC.md) Dom.1 y Dom.2 | pendiente | `[ ]` |
+| T-002b | Tests de los VOs `Email` y `FullName` y del agregado `Buyer` | [ZENTRIC.md](/ZENTRIC.md) Dom.1 y Dom.2 | pendiente | `[ ]` |
 | T-002c | Migrar `InventoryTests` de `ProductId` a `VariantId` + pruebas de `ProductVariant` y `VariantAttribute` | [ADR-0002](Adr/0002-clave-inventario-variantid.md) | 150/150 PASS | `[x]` **hecha** |
 | T-010c | Hacer cumplir [CAT-03](Domain/06-business-rules.md) en `Product` (constructor, `UpdateType`, `RemoveVariant`, `CanBeSold`) | [ADR-0003](Adr/0003-variante-obligatoria-productos-fisicos.md) ([Q-10](#q-10) = [C3](Adr/0003-variante-obligatoria-productos-fisicos.md)) | 164/164 PASS ([verification-baseline.md :9](#verification-baselinemd-:9)) | `[x]` **hecha** (sub-decisiones [Q-12](#q-12) `[PROPUESTO]`) |
 | T-007 | Higiene: `.editorconfig`, `TreatWarningsAsErrors`, CI mínimo (`dotnet build` + `dotnet test`) | [R-08](#r-08) | pipeline verde | `[ ]` |
@@ -1232,7 +1232,7 @@ de stock, devolución; (3) contratos públicos → aún no existen; (4) bugs →
 | T-004 | Rediseñar la API de `Inventory` (eliminar `UpdateQuantities`, alinear `Reserve`/`Release`/`Deduct`/`Adjust`) + abstracción de tiempo (`IClock`) + IDs fuertemente tipados (`record struct VariantId`, G-07) | [H-02](#h-02), [H-06](#h-06), G-07, [R-06](#r-06) | — ([Q-01](#q-01) y [Q-02](#q-02) resueltas) | alto |
 | T-004a | Cambiar la clave del inventario: `Inventory.ProductId` → `Inventory.VariantId` | [INV-03](Domain/06-business-rules.md), [ADR-0002](Adr/0002-clave-inventario-variantid.md) | — | `[x]` **hecha** (riesgo medio) |
 | T-005 | `ManualAdjust(qty, userId, role)` con regla dura de privilegios | [INV-04](Domain/06-business-rules.md) ([invariante 4](Domain/04-invariants-and-rules.md)) | [Q-02](#q-02) | medio |
-| T-006 | `IdentityDocument` como VO obligatorio y único en `User` | [ZENTRIC.md](Domain/ZENTRIC.md) Dom.1, RG-01 | [Q-07](#q-07) | medio |
+| T-006 | `IdentityDocument` como VO obligatorio y único en `User` | [ZENTRIC.md](/ZENTRIC.md) Dom.1, RG-01 | [Q-07](#q-07) | medio |
 | T-009 | Resolver `Buyer.PaymentTokens` vs [invariante 9](Domain/04-invariants-and-rules.md) | [invariante 9](Domain/04-invariants-and-rules.md) | [Q-08](#q-08) | medio |
 
 ### Fase 3 — Núcleo de negocio faltante (tras Fase 2)
@@ -1272,7 +1272,7 @@ ejecutaron con preguntas bloqueantes aún abiertas ([AGENTS.md :0.3](#agentsmd-:
 | T-016 (parte) | Doble aprobación de devoluciones | [DEV-01](Domain/06-business-rules.md) | **parcial**: agregado `ReturnRequest`, **sin** servicio y **sin** retorno a stock | `Zentric.Domain/Returns/`, 3 pruebas |
 | T-018 (parte) | Puertos de repositorio | [05-ports.md :1](Domain/05-ports.md#1-puertos-de-repositorios-persistencia) | **parcial**: 2 de 5 (`ICustomerOrderRepository`, `IFulfillmentOrderRepository`) | `Zentric.Application/**/Ports/` |
 | — | `Invoice` (maestra / detalle de vendedor) | [ADD-003](#add-003) de la Ley | **parcial**: falta "Detalle Zentric" | `Zentric.Domain/Billing/`, 2 pruebas |
-| — | `ProductStatus` (Published/Suspended/Discontinued) | [ZENTRIC.md](Domain/ZENTRIC.md) Dom.5 | **creado sin integrar** en `Product` (sigue con `bool IsActive`) | `Products/Enums/ProductStatus.cs` |
+| — | `ProductStatus` (Published/Suspended/Discontinued) | [ZENTRIC.md](/ZENTRIC.md) Dom.5 | **creado sin integrar** en `Product` (sigue con `bool IsActive`) | `Products/Enums/ProductStatus.cs` |
 
 ### Fase 4 — Capas exteriores (auditada el 2026-09-18)
 
@@ -1320,7 +1320,7 @@ Evidencia: [verification-baseline.md :11](#verification-baselinemd-:11) (`build 
 
 | Fecha | Fuente | Hallazgo |
 |---|---|---|
-| 2026-09-18 | `git diff --numstat [SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md)` | La Ley solo tiene adiciones (38/1); el texto original no fue reescrito |
+| 2026-09-18 | `git diff --numstat [ZENTRIC.md](/ZENTRIC.md)` | La Ley solo tiene adiciones (38/1); el texto original no fue reescrito |
 | 2026-09-18 | `Get-FileHash` de la skill | Repo v6.0.0 ≠ instalada v3.1.0 (la carga automática usaba la versión antigua) |
 | 2026-09-18 | Búsqueda por patrón sobre carpetas sin versionar | La herramienta de búsqueda devuelve falsos negativos ahí; se cambió a escaneo directo por archivo |
 | 2026-09-18 | Paquete NuGet `MediatR` 14.2.0 (`MediatR.xml` + stack trace) | Confirmada la firma `Handle(request, RequestHandlerDelegate<TResponse>, CancellationToken)` y `AddOpenBehavior(Type, ServiceLifetime)`; MediatR 14 exige `ILoggerFactory` y ejecuta comprobación de licencia ([Q-14](#q-14)) |

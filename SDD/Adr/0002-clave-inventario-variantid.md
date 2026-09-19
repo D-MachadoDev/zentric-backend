@@ -19,7 +19,7 @@ incompatibles:
   el inventario se lleva por `VariantId` ("Tiene su propio `VariantId` (que sirve
   como SKU para el inventario)"), y [Product.cs[:2](../Domain/03-value-objects.md#2-enumeraciones-clave-state-definitions)](../Zentric.Domain/Products/Product.cs#L2) define `ProductVariant` como entidad hija
   que "maneja las combinaciones (ej. Talla/Color)".
-- [SDD/Domain/01-models.md :3](../Domain/01-models.md#3-bounded-context-inventory-inventario-y-bodegas) y [SDD/ZENTRIC.md](../Domain/ZENTRIC.md) Dominio 6: el inventario está
+- [SDD/Domain/01-models.md :3](../Domain/01-models.md#3-bounded-context-inventory-inventario-y-bodegas) y [ZENTRIC.md](/ZENTRIC.md) Dominio 6: el inventario está
   "vinculado a un producto y una bodega". El código existente usaba
   `Inventory.ProductId`.
 

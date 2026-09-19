@@ -18,7 +18,7 @@ decisión quedaba un estado inalcanzable (riesgo [R-10](../SDD.md)): un producto
 variantes no puede tener inventario ni reservarse, y el
 `InventoryReservationService` no tenía comportamiento definido para ese caso.
 
-El catálogo vigente ([ZENTRIC.md](../Domain/ZENTRIC.md) Dominio 5, [CAT-02](../Domain/06-business-rules.md), [03-value-objects.md](../Domain/03-value-objects.md)) trata
+El catálogo vigente ([ZENTRIC.md](/ZENTRIC.md) Dominio 5, [CAT-02](../Domain/06-business-rules.md), [03-value-objects.md](../Domain/03-value-objects.md)) trata
 los productos `Digital` como venta final sin logística ni inventario.
 
 ## Decisión
