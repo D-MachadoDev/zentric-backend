@@ -113,23 +113,23 @@ dotnet test
 | `Zentric.Api` | existe | **existe** (parcial: 3 endpoints, middleware simplificado) |
 | Proyecto de pruebas | existe | **existe** (178 pruebas en verde, todas de dominio) |
 | `Result<T>` | en Application/Infrastructure | **existe** (`Application/Common/Models/Result.cs`); no se usa en servicios de dominio (no hay servicios) |
-| Eventos de dominio + dispatcher | puerto en Domain/Application | **no existen** (`// TODO` en su lugar → [H-14](00-bootstrap/spec-conformance-matrix.md)) |
-| Abstracción de tiempo | para reglas temporales | **no existe** (`DateTime.UtcNow` directo, [H-06](00-bootstrap/spec-conformance-matrix.md)) |
+| Eventos de dominio + dispatcher | puerto en Domain/Application | **no existen** (`// TODO` en su lugar → [H-14](SDD.md)) |
+| Abstracción de tiempo | para reglas temporales | **no existe** (`DateTime.UtcNow` directo, [H-06](SDD.md)) |
 | IDs fuertemente tipados | `record struct` | **no existen** (`Guid` plano, G-07) |
 | Regla de dependencia | unidireccional hacia el centro | **cumple** (`Domain` ← `Application` ← `Infrastructure` ← `Api`) |
-| Aislamiento EF ↔ dominio | entidades EF separadas ([:4.2](../AGENTS.md#42-infrastructure-adapter-agent)) | **no cumple** ([H-13](00-bootstrap/spec-conformance-matrix.md): el `DbContext` mapea los agregados de dominio) |
+| Aislamiento EF ↔ dominio | entidades EF separadas ([:4.2](../AGENTS.md#42-infrastructure-adapter-agent)) | **no cumple** ([H-13](SDD.md): el `DbContext` mapea los agregados de dominio) |
 | Validación de entrada (FluentValidation) | obligatoria en Application | **cumple** desde SPEC-007: `ValidationBehavior<,>` + 3 validadores (21 pruebas) |
 | Middleware global + RFC 7807 | en Api | **cumple** en código desde SPEC-007 (`AddProblemDetails()` + `UseExceptionHandler()`); `[PENDIENTE]` verificación por HTTP real |
 
-Detalle y evidencia: [SDD/00-bootstrap/spec-conformance-matrix.md](00-bootstrap/spec-conformance-matrix.md).
+Detalle y evidencia: [SDD.md :5 (Verificación)](SDD.md).
 
 ## 10. Riesgos arquitectónicos abiertos
 
 `[RIESGO]` Añadir `Infrastructure` (EF Core) antes de resolver los mapeos del
 modelo obligaría a escribir y reescribir mapeos y migraciones. Orden recomendado:
 estabilizar el dominio (Fases 1–3 del roadmap) y recién entonces construir
-persistencia y API ([SDD/00-bootstrap/migration-to-sdd-plan.md](00-bootstrap/migration-to-sdd-plan.md)).
+persistencia y API ([SDD.md :7 (Estado)](SDD.md)).
 
 `[RIESGO]` La ausencia de `.editorconfig`, analizadores y CI permite que el
 estilo y las reglas arquitectónicas se degraden sin que nada lo detecte
-(ver [R-08](00-bootstrap/risks-and-gaps.md) del bootstrap).
+(ver [R-08](SDD.md) del bootstrap).

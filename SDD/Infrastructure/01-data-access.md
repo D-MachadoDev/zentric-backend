@@ -32,7 +32,7 @@ Implementan las interfaces definidas en la capa de Aplicación:
 > `[CONFIRMADO]` **(2026-09-18)** Implementados: **solo** `CustomerOrderRepository` y
 > `FulfillmentOrderRepository`. Pendientes y **sin puerto definido todavía**: `ReturnRequest`,
 > `Invoice`, `Product`, `Warehouse`, `Inventory` y `User` (el puerto `IUserRepository` existe en
-> `Zentric.Domain/Users/Ports/` pero **no tiene implementación** → [H-07](../00-bootstrap/spec-conformance-matrix.md)).
+> `Zentric.Domain/Users/Ports/` pero **no tiene implementación** → [H-07](../SDD.md)).
 
 ## 4. Estrategia de Migraciones
 Las migraciones se generan usando `Zentric.Api` como Composition Root (Startup Project). 
@@ -46,7 +46,7 @@ Las migraciones se generan usando `Zentric.Api` como Composition Root (Startup P
 
 | ID | Desviación | Evidencia | Estado |
 |---|---|---|---|
-| [H-13](../00-bootstrap/spec-conformance-matrix.md) | El `DbContext` mapea **directamente** los agregados de dominio, sin entidades EF separadas ni mappers | `ZentricDbContext.OnModelCreating` | `[RIESGO]` contradice [AGENTS.md :4.2](../../AGENTS.md#42-infrastructure-adapter-agent); requiere ADR o corrección |
+| [H-13](../SDD.md) | El `DbContext` mapea **directamente** los agregados de dominio, sin entidades EF separadas ni mappers | `ZentricDbContext.OnModelCreating` | `[RIESGO]` contradice [AGENTS.md :4.2](../../AGENTS.md#42-infrastructure-adapter-agent); requiere ADR o corrección |
 | — | Los `OwnsMany`/`OwnsOne` de `Money`, `VariantAttribute` y `Email` no están validados en ejecución | `ZentricDbContext.cs:39-88` | `[PENDIENTE]` |
 | — | `Inventory` tiene clave `Id`; la unicidad de `(VariantId, WarehouseId)` **no** está declarada como índice | `ZentricDbContext.cs:71` | `[PENDIENTE]` |
 | — | No hay `IUnitOfWork` ni transacciones explícitas: cada repositorio hace `SaveChangesAsync` | `CustomerOrderRepository.cs:20` | `[RIESGO]` patrón declarado en [AGENTS.md :1](../../AGENTS.md#1-vision-general-del-proyecto) |

@@ -1276,7 +1276,56 @@ Se crea en la raíz **desde evidencia**; lo que no exista es `[PENDIENTE]`. Mant
 
 ---
 
-## 23. Cuándo NO usar la skill (o usarla en modo mínimo)
+## 23. Guía de referencias cruzadas y Markdown profesional
+
+Esta sección define las reglas canónicas para escribir enlaces, referencias cruzadas y formato Markdown en todos los documentos del proyecto. Su objetivo es que cada referencia sea **navegable con un clic** y que el lector nunca tenga que buscar manualmente un documento o sección.
+
+### 23.1 Sistema de referencias internas (`:X.Y`)
+- Formato canónico: `[archivo.md :X.Y](ruta/archivo.md#ancla-github)`
+- Ejemplo: `[AGENTS.md :2.2](../AGENTS.md#22-puertos-y-adaptadores)`
+- **Prohibido** usar el símbolo `§` (section sign). Usar siempre `:X.Y` como prefijo de sección.
+- Cada `:X.Y` suelto en el texto **debe** ser un enlace clicable con ancla GitHub válida.
+- Si dos o más `:X` aparecen seguidos, cada uno debe tener su propio enlace: `[:1](ruta#1-titulo), [:2](ruta#2-titulo)`.
+
+### 23.2 Reglas de enlaces Markdown
+1. **No envolver enlaces en backticks:** ❌ `` `[texto](url)` `` → ✅ `[texto](url)`
+   Los backticks convierten el enlace en código literal y bloquean la navegación.
+2. **No anidar enlaces:** ❌ `[texto [otro](url2)](url1)` — Markdown no soporta anidamiento.
+3. **Todo archivo `.md` mencionado en prosa debe ser un enlace relativo.**
+   ❌ `ver SDD/Domain/06-business-rules.md` → ✅ `ver [06-business-rules.md](Domain/06-business-rules.md)`
+4. **Todo ID de tracking debe enlazar a su definición canónica:**
+   - Preguntas: `[Q-10](SDD.md#q-10)` → sección donde vive la ficha completa.
+   - Hallazgos: `[H-05](SDD.md#h-05)` → sección de hallazgos.
+   - Contradicciones: `[C-03](SDD.md#c-03)` → sección de contradicciones.
+   - Tareas: `[T-011](SDD.md#t-011)` → sección de tareas.
+   - ADRs: `[ADR-0001](Adr/0001-reserva-fragmentacion-contingencia.md)` → archivo del ADR.
+   - Addenda: `[ADD-001](SDD.md#add-001)` → sección de ADDENDA.
+   - Reglas de negocio: `[INV-01](Domain/06-business-rules.md)` → catálogo de reglas.
+5. **Referencias a líneas de código** usan anclas GitHub: `[archivo.cs#L42-L50](../Zentric.Domain/ruta/archivo.cs#L42-L50)`
+
+### 23.3 Generación de anclas GitHub
+Para construir el fragmento `#ancla` de un enlace:
+1. Tomar el texto completo del heading (sin el `#`).
+2. Convertir a minúsculas.
+3. Eliminar acentos y caracteres especiales (excepto `-` y `_`).
+4. Reemplazar espacios con `-`.
+5. Eliminar puntos, paréntesis, comas, dos puntos.
+
+Ejemplo: `## 2.2 Puertos y Adaptadores` → `#22-puertos-y-adaptadores`
+
+### 23.4 Anti-patrones frecuentes
+| ❌ Incorrecto | ✅ Correcto | Razón |
+|---|---|---|
+| `ver SDD/Domain/06-business-rules.md` | `ver [06-business-rules.md](Domain/06-business-rules.md)` | Texto plano no es navegable |
+| `` `[texto](url)` `` | `[texto](url)` | Los backticks bloquean el clic |
+| `[texto [otro](url2)](url1)` | `[texto](url1)` + `[otro](url2)` | Los enlaces no se anidan |
+| `(§3.2)` | `[:3.2](ruta.md#32-titulo)` | `§` no es estándar; `:X.Y` es la convención |
+| `SDD/Adr/0001-...` | `[ADR-0001](Adr/0001-reserva.md)` | El `...` truncado no navega |
+| `:11` (suelto sin link) | `[:11](ruta.md#11-titulo)` | Toda referencia numérica debe ser clicable |
+
+---
+
+## 24. Cuándo NO usar la skill (o usarla en modo mínimo)
 
 - Charla técnica, preguntas conceptuales o explicaciones sin cambio de código → Nivel 0: responde directo.
 - Cambios triviales sin riesgo (un typo en un comentario) → sentido común, sin ciclo documental.
@@ -1287,7 +1336,7 @@ En todos los casos: el rigor baja, **la honestidad sobre la evidencia no**.
 
 ---
 
-## 24. Regla final
+## 25. Regla final
 
 Todo cambio debe poder responder, con evidencia: qué resuelve · qué comportamiento se esperaba · qué invariante protege · qué entidades, contratos o datos afecta (y que estaban mapeados) · cómo sabemos que funciona · qué podría romperse · qué decisión humana fue necesaria y dónde quedó registrada · qué documentación sigue siendo verdadera · y, si el sistema se opera, cómo se observa, revierte y diagnostica. Si una respuesta crítica no existe, el ciclo SDD no está cerrado.
 

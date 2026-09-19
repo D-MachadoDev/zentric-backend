@@ -105,23 +105,23 @@ electrónico únicos en la plataforma.
 `[RESUELTO]` Las contradicciones de reglas del dominio quedaron resueltas el
 2026-09-17:
 
-- **[C-01](00-bootstrap/risks-and-gaps.md)** ([INV-02](Domain/06-business-rules.md) vs [invariante 3](Domain/04-invariants-and-rules.md)) → [SDD/Adr/0001-reserva-fragmentacion-contingencia.md](Adr/0001-reserva-fragmentacion-contingencia.md): bodega única con
+- **[C-01](SDD.md)** ([INV-02](Domain/06-business-rules.md) vs [invariante 3](Domain/04-invariants-and-rules.md)) → [SDD/Adr/0001-reserva-fragmentacion-contingencia.md](Adr/0001-reserva-fragmentacion-contingencia.md): bodega única con
   fraccionamiento de contingencia.
-- **[C-02](00-bootstrap/risks-and-gaps.md)** (clave de stock `ProductId` vs `VariantId`) → [SDD/Adr/0002-clave-inventario-variantid.md](Adr/0002-clave-inventario-variantid.md):
+- **[C-02](SDD.md)** (clave de stock `ProductId` vs `VariantId`) → [SDD/Adr/0002-clave-inventario-variantid.md](Adr/0002-clave-inventario-variantid.md):
   el inventario se lleva por `VariantId` (SKU).
-- **[Q-10](00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3)** (¿variante obligatoria?) → [SDD/Adr/0003-variante-obligatoria-productos-fisicos.md](Adr/0003-variante-obligatoria-productos-fisicos.md): obligatoria solo en
+- **[Q-10](SDD.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3)** (¿variante obligatoria?) → [SDD/Adr/0003-variante-obligatoria-productos-fisicos.md](Adr/0003-variante-obligatoria-productos-fisicos.md): obligatoria solo en
   `Physical` ([CAT-03](Domain/06-business-rules.md)), aplicado en código con 164/164 pruebas. Sub-decisiones
-  `[PROPUESTO]` pendientes de confirmar (**[Q-12](00-bootstrap/questions-for-owner.md#sub-decisiones-propuesto-ver-q-12)**).
+  `[PROPUESTO]` pendientes de confirmar (**[Q-12](SDD.md#sub-decisiones-propuesto-ver-q-12)**).
 
 Reglas vigentes de inventario: **[INV-01](Domain/06-business-rules.md), [INV-02](Domain/06-business-rules.md), [INV-03](Domain/06-business-rules.md)** ([06-business-rules.md](Domain/06-business-rules.md)).
 
-`[RIESGO]` Estado de preguntas al **2026-09-18**: **[Q-13](00-bootstrap/questions-for-owner.md#q-13-c-08-la-ley-define-dominio-8-9-y-10-dos-veces-con-significados-cruzados-abierta-bloqueante)** (nueva, **bloqueante**: la Ley duplica
-`DOMINIO 8/9/10` con significados cruzados → [risks-and-gaps.md](00-bootstrap/risks-and-gaps.md) [C-08](00-bootstrap/risks-and-gaps.md)), **[Q-03](00-bootstrap/questions-for-owner.md#q-03-c-03-estado-de-cancelacion-de-despacho)** y **[Q-04](00-bootstrap/questions-for-owner.md#q-04-c-04-cart-es-un-estado-de-customerorder)**
-reactivadas como bloqueantes (su dominio se implementó sin respuesta), y siguen abiertas [Q-05](00-bootstrap/questions-for-owner.md#q-05-c-05-vendor-o-seller),
-[Q-06](00-bootstrap/questions-for-owner.md#q-06-c-07-consolidacion-de-los-documentos-numerados), [Q-07](00-bootstrap/questions-for-owner.md#q-07-documento-de-identidad-del-usuario), [Q-08](00-bootstrap/questions-for-owner.md#q-08-r-07-buyerpaymenttokens-contra-la-invariante-9), [Q-09](00-bootstrap/questions-for-owner.md#q-09-naming-canonico-pendiente), [Q-11](00-bootstrap/questions-for-owner.md#q-11-detalle-del-modelo-de-atributos-de-variante-abierta) y [Q-12](00-bootstrap/questions-for-owner.md#sub-decisiones-propuesto-ver-q-12). Detalle: [SDD/00-bootstrap/questions-for-owner.md](00-bootstrap/questions-for-owner.md).
+`[RIESGO]` Estado de preguntas al **2026-09-18**: **[Q-13](SDD.md#q-13-c-08-la-ley-define-dominio-8-9-y-10-dos-veces-con-significados-cruzados-abierta-bloqueante)** (nueva, **bloqueante**: la Ley duplica
+`DOMINIO 8/9/10` con significados cruzados → [risks-and-gaps.md](SDD.md) [C-08](SDD.md)), **[Q-03](SDD.md#q-03-c-03-estado-de-cancelacion-de-despacho)** y **[Q-04](SDD.md#q-04-c-04-cart-es-un-estado-de-customerorder)**
+reactivadas como bloqueantes (su dominio se implementó sin respuesta), y siguen abiertas [Q-05](SDD.md#q-05-c-05-vendor-o-seller),
+[Q-06](SDD.md#q-06-c-07-consolidacion-de-los-documentos-numerados), [Q-07](SDD.md#q-07-documento-de-identidad-del-usuario), [Q-08](SDD.md#q-08-r-07-buyerpaymenttokens-contra-la-invariante-9), [Q-09](SDD.md#q-09-naming-canonico-pendiente), [Q-11](SDD.md#q-11-detalle-del-modelo-de-atributos-de-variante-abierta) y [Q-12](SDD.md#sub-decisiones-propuesto-ver-q-12). Detalle: [SDD.md :6 (Preguntas)](SDD.md).
 
 ## 9. Estado de implementación
 
-`[CONFIRMADO]` Ver [SDD/00-bootstrap/spec-conformance-matrix.md](00-bootstrap/spec-conformance-matrix.md) y
-[SDD/00-bootstrap/current-state.md](00-bootstrap/current-state.md): solo existe el dominio, parcialmente.
-El roadmap de adopción es [SDD/00-bootstrap/migration-to-sdd-plan.md](00-bootstrap/migration-to-sdd-plan.md).
+`[CONFIRMADO]` Ver [SDD.md :5 (Verificación)](SDD.md) y
+[SDD.md :2 (Mapa)](SDD.md): solo existe el dominio, parcialmente.
+El roadmap de adopción es [SDD.md :7 (Estado)](SDD.md).

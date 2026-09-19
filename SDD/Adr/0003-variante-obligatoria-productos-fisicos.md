@@ -7,14 +7,14 @@ status: accepted
 date: 2026-09-17
 decided_by: owner del proyecto
 supersedes: []
-related_question: [Q-10](../00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) ([SDD/00-bootstrap/questions-for-owner.md](../00-bootstrap/questions-for-owner.md))
+related_question: [Q-10](../SDD.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) ([SDD.md :6 (Preguntas)](../SDD.md))
 ```
 
 ## Contexto
 
 El [ADR-0002](0002-clave-inventario-variantid.md) decidió que el inventario se lleva por `VariantId` (SKU), pero dejó
 explícitamente abierto si todo producto debe tener al menos una variante. Sin esa
-decisión quedaba un estado inalcanzable (riesgo [R-10](../00-bootstrap/risks-and-gaps.md)): un producto `Physical` sin
+decisión quedaba un estado inalcanzable (riesgo [R-10](../SDD.md)): un producto `Physical` sin
 variantes no puede tener inventario ni reservarse, y el
 `InventoryReservationService` no tenía comportamiento definido para ese caso.
 
@@ -39,14 +39,14 @@ los productos `Digital` como venta final sin logística ni inventario.
 | 4 | `RemoveVariant(variantId)` | `InvalidOperationException` si dejaría un `Physical` sin variantes no eliminadas |
 | 5 | `CanBeSold` | En `Physical` exige al menos una variante **vendible** (activa y no eliminada); en `Digital` no exige variante |
 
-### Sub-decisiones `[PROPUESTO]` (ver [Q-12](../00-bootstrap/questions-for-owner.md#sub-decisiones-propuesto-ver-q-12))
+### Sub-decisiones `[PROPUESTO]` (ver [Q-12](../SDD.md#sub-decisiones-propuesto-ver-q-12))
 
-Van más allá del texto literal de [Q-10](../00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) y quedan sujetas a confirmación:
+Van más allá del texto literal de [Q-10](../SDD.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) y quedan sujetas a confirmación:
 
 1. `HasVariant` cuenta solo variantes **no eliminadas lógicamente**.
 2. `CanBeSold` en `Physical` exige una variante **activa** (una variante
    desactivada no hace vendible al producto).
-3. Los productos `Digital` **pueden** declarar variantes ([Q-10](../00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) solo dijo que
+3. Los productos `Digital` **pueden** declarar variantes ([Q-10](../SDD.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) solo dijo que
    *pueden no tener*).
 4. La eliminación lógica de la última variante de un `Physical` **no lanza**:
    deja el producto no vendible (`CanBeSold == false`) hasta restaurarla o añadir
@@ -65,7 +65,7 @@ Van más allá del texto literal de [Q-10](../00-bootstrap/questions-for-owner.m
 
 - **Positivas:** no existe un producto físico sin unidad de stock; el
   `InventoryReservationService` solo puede recibir productos con variante, así que
-  [R-10](../00-bootstrap/risks-and-gaps.md) queda cerrado. Los digitales conservan su flujo simple.
+  [R-10](../SDD.md) queda cerrado. Los digitales conservan su flujo simple.
 - **Negativas / costes:** la creación de un producto físico requiere declarar su
   (al menos una) variante; el alta de catálogo debe conocer el SKU. Se actualizaron
   las pruebas del agregado `Product`.
@@ -73,18 +73,18 @@ Van más allá del texto literal de [Q-10](../00-bootstrap/questions-for-owner.m
   `variants` con semillas `(Sku, Attributes)` — se usó una tupla de tipos ya
   existentes para no inventar un tipo nuevo en el dominio.
 - **Impacto en datos:** ninguno; no hay persistencia todavía.
-- **Riesgo residual:** si se confirma otra interpretación en [Q-12](../00-bootstrap/questions-for-owner.md#sub-decisiones-propuesto-ver-q-12), el ajuste se
+- **Riesgo residual:** si se confirma otra interpretación en [Q-12](../SDD.md#sub-decisiones-propuesto-ver-q-12), el ajuste se
   limita a `HasVariant`/`CanBeSold` y a las pruebas asociadas.
 
 ## Documentos actualizados en la misma decisión
 
 - [SDD/Domain/01-models.md](../Domain/01-models.md) — [Product.cs[:2](../Domain/01-models.md#2-bounded-context-catalog-catalogo)](../Zentric.Domain/Products/Product.cs#L2) (`Product`: regla de variante obligatoria).
 - [SDD/Domain/06-business-rules.md](../Domain/06-business-rules.md) — nueva **[CAT-03](../Domain/06-business-rules.md)**.
-- [SDD/00-bootstrap/questions-for-owner.md](../00-bootstrap/questions-for-owner.md) — [Q-10](../00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) resuelta, [Q-12](../00-bootstrap/questions-for-owner.md#sub-decisiones-propuesto-ver-q-12) abierta.
-- [SDD/00-bootstrap/risks-and-gaps.md](../00-bootstrap/risks-and-gaps.md) — [R-10](../00-bootstrap/risks-and-gaps.md) cerrada.
-- [SDD/00-bootstrap/migration-to-sdd-plan.md](../00-bootstrap/migration-to-sdd-plan.md) — [T-010c](../00-bootstrap/migration-to-sdd-plan.md) ejecutada.
-- [SDD/00-bootstrap/spec-conformance-matrix.md](../00-bootstrap/spec-conformance-matrix.md), [current-state.md](../00-bootstrap/current-state.md),
-  [verification-baseline.md :9](../00-bootstrap/verification-baseline.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3), [README.md](../../README.md) y overlay de la skill.
+- [SDD.md :6 (Preguntas)](../SDD.md) — [Q-10](../SDD.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) resuelta, [Q-12](../SDD.md#sub-decisiones-propuesto-ver-q-12) abierta.
+- [SDD.md :6 (Riesgos)](../SDD.md) — [R-10](../SDD.md) cerrada.
+- [SDD.md :7 (Estado)](../SDD.md) — [T-010c](../SDD.md) ejecutada.
+- [SDD.md :5 (Verificación)](../SDD.md), [current-state.md](../SDD.md),
+  [verification-baseline.md :9](../SDD.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3), [README.md](../../README.md) y overlay de la skill.
 - Código: `Zentric.Domain/Products/Product.cs` y
   `Zentric.Tests/Products/ProductTests.cs`.
 

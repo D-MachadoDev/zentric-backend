@@ -7,7 +7,7 @@ status: accepted
 date: 2026-09-17
 decided_by: owner del proyecto
 supersedes: []
-related_contradiction: [C-01](../00-bootstrap/risks-and-gaps.md) ([SDD/00-bootstrap/risks-and-gaps.md](../00-bootstrap/risks-and-gaps.md))
+related_contradiction: [C-01](../SDD.md) ([SDD.md :6 (Riesgos)](../SDD.md))
 ```
 
 ## Contexto
@@ -78,10 +78,10 @@ Ejemplos normativos (bodega A = 6, bodega B = 4):
 - [SDD/Domain/06-business-rules.md](../Domain/06-business-rules.md) — [INV-02](../Domain/06-business-rules.md) reescrita.
 - [SDD/Domain/services/inventory-reservation-service.md](../Domain/services/inventory-reservation-service.md) — reglas de prioridad,
   bodega única y fraccionamiento de contingencia.
-- [SDD/00-bootstrap/risks-and-gaps.md](../00-bootstrap/risks-and-gaps.md) — [C-01](../00-bootstrap/risks-and-gaps.md) cerrada.
-- [SDD/00-bootstrap/questions-for-owner.md](../00-bootstrap/questions-for-owner.md) — [Q-01](../00-bootstrap/questions-for-owner.md#q-01-c-01-se-permite-fraccionar-la-reserva-entre-bodegas-resuelta-2026-09-17) resuelta.
-- [SDD/00-bootstrap/migration-to-sdd-plan.md](../00-bootstrap/migration-to-sdd-plan.md) — [T-004](../00-bootstrap/migration-to-sdd-plan.md)/[T-013](../00-bootstrap/migration-to-sdd-plan.md)/[T-014](../00-bootstrap/migration-to-sdd-plan.md) desbloqueadas
-  respecto a [Q-01](../00-bootstrap/questions-for-owner.md#q-01-c-01-se-permite-fraccionar-la-reserva-entre-bodegas-resuelta-2026-09-17).
+- [SDD.md :6 (Riesgos)](../SDD.md) — [C-01](../SDD.md) cerrada.
+- [SDD.md :6 (Preguntas)](../SDD.md) — [Q-01](../SDD.md#q-01-c-01-se-permite-fraccionar-la-reserva-entre-bodegas-resuelta-2026-09-17) resuelta.
+- [SDD.md :7 (Estado)](../SDD.md) — [T-004](../SDD.md)/[T-013](../SDD.md)/[T-014](../SDD.md) desbloqueadas
+  respecto a [Q-01](../SDD.md#q-01-c-01-se-permite-fraccionar-la-reserva-entre-bodegas-resuelta-2026-09-17).
 
 ## Estado
 

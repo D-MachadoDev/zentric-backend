@@ -4,7 +4,7 @@ Este documento consolida y lista las reglas de negocio estrictas de Zentric. El 
 
 ## 1. Gestión de Inventario
 - **[INV-01](06-business-rules.md) (Invariante Absoluta):** Bajo ninguna circunstancia (ni siquiera por condiciones de carrera) el `AvailableQuantity` de un `InventoryItem` puede ser un valor negativo.
-- **[INV-02](06-business-rules.md) (Bodega única con fraccionamiento de contingencia):** cuando exista una bodega individual que cubra la cantidad total de la línea, el despacho se cumple desde esa única bodega (el envío no se divide). Solo si **ninguna** bodega individual cubre la cantidad solicitada, la reserva se fracciona entre varias bodegas; en ese caso el despacho se fragmenta en múltiples guías (Shipments), una por bodega de origen. Si la suma de todas las bodegas no alcanza la cantidad solicitada, la operación falla y no se reserva nada. (Contradicción [C-01](../00-bootstrap/risks-and-gaps.md) resuelta por decisión del owner el 2026-09-17; ver [SDD/Adr/0001-reserva-fragmentacion-contingencia.md](../Adr/0001-reserva-fragmentacion-contingencia.md).)
+- **[INV-02](06-business-rules.md) (Bodega única con fraccionamiento de contingencia):** cuando exista una bodega individual que cubra la cantidad total de la línea, el despacho se cumple desde esa única bodega (el envío no se divide). Solo si **ninguna** bodega individual cubre la cantidad solicitada, la reserva se fracciona entre varias bodegas; en ese caso el despacho se fragmenta en múltiples guías (Shipments), una por bodega de origen. Si la suma de todas las bodegas no alcanza la cantidad solicitada, la operación falla y no se reserva nada. (Contradicción [C-01](../SDD.md) resuelta por decisión del owner el 2026-09-17; ver [SDD/Adr/0001-reserva-fragmentacion-contingencia.md](../Adr/0001-reserva-fragmentacion-contingencia.md).)
 - **[INV-03](06-business-rules.md) (Unidad de stock = variante):** el inventario se lleva por `VariantId` (SKU) y bodega, nunca por producto. La clave de stock es la pareja `(VariantId, WarehouseId)` y el SKU es único dentro del producto. *(Decisión del owner el 2026-09-17; ver [SDD/Adr/0002-clave-inventario-variantid.md](../Adr/0002-clave-inventario-variantid.md).)*
 
 ## 2. Gestión de Pedidos
@@ -18,7 +18,7 @@ Este documento consolida y lista las reglas de negocio estrictas de Zentric. El 
 - **[CAT-03](06-business-rules.md) (Variante obligatoria en físicos):** un producto `Physical` exige al
   menos una variante, porque la variante es la unidad de stock ([INV-03](06-business-rules.md)): sin ella
   no hay inventario ni reserva posible. Un producto `Digital` ([CAT-02](06-business-rules.md)) puede nacer
-  sin variantes. *(Decisión del owner el 2026-09-17 — [Q-10](../00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = [C3](../Adr/0003-variante-obligatoria-productos-fisicos.md); ver
+  sin variantes. *(Decisión del owner el 2026-09-17 — [Q-10](../SDD.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = [C3](../Adr/0003-variante-obligatoria-productos-fisicos.md); ver
   [SDD/Adr/0003-variante-obligatoria-productos-fisicos.md](../Adr/0003-variante-obligatoria-productos-fisicos.md).)*
 
 ## 4. Excepciones Logísticas

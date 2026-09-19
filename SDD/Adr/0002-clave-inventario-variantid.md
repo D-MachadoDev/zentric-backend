@@ -7,7 +7,7 @@ status: accepted
 date: 2026-09-17
 decided_by: owner del proyecto
 supersedes: []
-related_contradiction: [C-02](../00-bootstrap/risks-and-gaps.md) ([SDD/00-bootstrap/risks-and-gaps.md](../00-bootstrap/risks-and-gaps.md))
+related_contradiction: [C-02](../SDD.md) ([SDD.md :6 (Riesgos)](../SDD.md))
 ```
 
 ## Contexto
@@ -41,7 +41,7 @@ Esto bloqueaba el agregado de inventario, el `InventoryReservationService`, el
    global del SKU queda para la capa de persistencia (fase `Infrastructure`).
 
 **No se decide** aquí si todo producto debe tener al menos una variante: esa era
-la opción B3, no elegida. Se registra como pregunta abierta **[Q-10](../00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3)**.
+la opción B3, no elegida. Se registra como pregunta abierta **[Q-10](../SDD.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3)**.
 
 ## Alternativas consideradas
 
@@ -49,7 +49,7 @@ la opción B3, no elegida. Se registra como pregunta abierta **[Q-10](../00-boot
 |---|---|---|
 | **B1. Inventario por `ProductId`** (sin `ProductVariant`) | **Rechazada** | Impide controlar stock por talla/color, que la spec de catálogo exige; obligaría a rehacer la clave al introducir variantes |
 | **B2. Inventario por `VariantId`** (elegida) | **Aceptada** | Modelo de marketplace real; alinea catálogo, inventario y logística bajo el mismo identificador |
-| **B3. `ProductVariant` obligatoria** (toda producto tiene ≥1 variante) | **Aplazada** | Coherente a largo plazo, pero decide sobre la obligatoriedad del catálogo, fuera del alcance de esta decisión. Ver [Q-10](../00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) |
+| **B3. `ProductVariant` obligatoria** (toda producto tiene ≥1 variante) | **Aplazada** | Coherente a largo plazo, pero decide sobre la obligatoriedad del catálogo, fuera del alcance de esta decisión. Ver [Q-10](../SDD.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) |
 
 ## Consecuencias
 
@@ -61,11 +61,11 @@ la opción B3, no elegida. Se registra como pregunta abierta **[Q-10](../00-boot
   `VariantId`.
 - **Deuda declarada:** `VariantId` y `ProductVariant.Id` son `Guid` planos, no un
   `record struct VariantId`. La conversión a IDs fuertemente tipados corresponde a
-  G-07 / [T-004](../00-bootstrap/migration-to-sdd-plan.md) y se ejecuta de forma consistente para todo el dominio, no solo
-  para este caso. Ver [spec-conformance-matrix.md](../00-bootstrap/spec-conformance-matrix.md).
+  G-07 / [T-004](../SDD.md) y se ejecuta de forma consistente para todo el dominio, no solo
+  para este caso. Ver [spec-conformance-matrix.md](../SDD.md).
 - **Impacto en datos:** ninguno; no hay persistencia ni datos productivos.
 - **Riesgo abierto:** un producto físico sin variantes no puede tener inventario.
-  Ver [Q-10](../00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) antes de implementar `InventoryReservationService`.
+  Ver [Q-10](../SDD.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) antes de implementar `InventoryReservationService`.
 
 ## Documentos actualizados en la misma decisión
 
@@ -73,7 +73,7 @@ la opción B3, no elegida. Se registra como pregunta abierta **[Q-10](../00-boot
 - [SDD/Domain/02-aggregates-and-entities.md](../Domain/02-aggregates-and-entities.md) — [:3](../Domain/02-aggregates-and-entities.md#3-inventory-module) (`VariantId`).
 - [SDD/Domain/06-business-rules.md](../Domain/06-business-rules.md) — nueva [INV-03](../Domain/06-business-rules.md) (unidad de stock).
 - [SDD/Domain/services/inventory-reservation-service.md](../Domain/services/inventory-reservation-service.md) — entrada por variante.
-- `SDD/00-bootstrap/*` — [C-02](../00-bootstrap/risks-and-gaps.md) cerrada, [Q-02](../00-bootstrap/questions-for-owner.md#q-02-c-02-la-clave-del-inventario-es-el-producto-o-la-variante-sku-resuelta-2026-09-17) resuelta, G-08 cerrada, roadmap,
+- `SDD.md (consolidado)` — [C-02](../SDD.md) cerrada, [Q-02](../SDD.md#q-02-c-02-la-clave-del-inventario-es-el-producto-o-la-variante-sku-resuelta-2026-09-17) resuelta, G-08 cerrada, roadmap,
   matriz de conformidad, estado actual y evidencia de verificación.
 - Código: `Zentric.Domain/Products/ProductVariant.cs`,
   `Zentric.Domain/Products/ValueObjects/VariantAttribute.cs`,

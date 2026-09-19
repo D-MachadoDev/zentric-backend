@@ -34,11 +34,11 @@ exactamente los que documentan [:2](01-endpoints.md#2-api-pedidos-orders) y [:3]
 
 | Hallazgo | Evidencia | Impacto |
 |---|---|---|
-| ~~**[H-11](../00-bootstrap/spec-conformance-matrix.md)** El middleware de excepciones es "simplificado": `app.UseExceptionHandler("/error")` **sin** endpoint `/error` ni `AddProblemDetails()`~~ | **CORREGIDO (SPEC-007, 2026-09-18):** `builder.Services.AddProblemDetails()` + `app.UseExceptionHandler()` | Incumplía [AGENTS.md :3.4](../../AGENTS.md) → **resuelto** (`[PENDIENTE]` verificación por HTTP real) |
+| ~~**[H-11](../SDD.md)** El middleware de excepciones es "simplificado": `app.UseExceptionHandler("/error")` **sin** endpoint `/error` ni `AddProblemDetails()`~~ | **CORREGIDO (SPEC-007, 2026-09-18):** `builder.Services.AddProblemDetails()` + `app.UseExceptionHandler()` | Incumplía [AGENTS.md :3.4](../../AGENTS.md) → **resuelto** (`[PENDIENTE]` verificación por HTTP real) |
 | `ApiControllerBase.HandleResult` sí mapea `Result<T>` → `ProblemDetails` 400 | `ApiControllerBase.cs:14-42` | Cumple parcialmente la especificación de fallo de negocio, aunque con `Title` fijo en inglés |
 | `FluentValidation` está referenciado pero **no hay validadores ni pipeline** | `Zentric.Application.csproj` vs 0 archivos `AbstractValidator` | La validación de entrada **no existe** (incumple [AGENTS.md:4.3](../AGENTS.md#43-application-api-agent)) |
 | Rutas verificadas por atributo de clase (`[Route("api/[controller]")]` heredado de `ApiControllerBase`) | `ApiControllerBase.cs[:8](../../AGENTS.md#8-checklist-de-definicion-de-terminado-dod-para-agentes)` | Coincide con [ApiControllerBase.cs[:2](../../AGENTS.md#2-reglas-arquitectonicas-inviolables-hexagonal-ddd)](../Zentric.Api/Controllers/ApiControllerBase.cs#L2) y [ApiControllerBase.cs[:3](../../AGENTS.md#3-tratamiento-de-errores-y-excepciones-organizado-por-capa)](../Zentric.Api/Controllers/ApiControllerBase.cs#L3) |
 | `[PENDIENTE]` La API **no se levantó**: 0 peticiones HTTP ejecutadas | — | No hay evidencia de runtime |
-| `[RIESGO]` **[R-16](../00-bootstrap/risks-and-gaps.md)** credenciales en claro en `appsettings.json` | `Zentric.Api/appsettings.json` | Violación del DoD :8 ([AGENTS.md](../AGENTS.md)) |
+| `[RIESGO]` **[R-16](../SDD.md)** credenciales en claro en `appsettings.json` | `Zentric.Api/appsettings.json` | Violación del DoD :8 ([AGENTS.md](../AGENTS.md)) |
 
 
