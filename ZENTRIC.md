@@ -223,3 +223,30 @@ Representa el compromiso comercial formal. Su ciclo de vida es el proceso centra
 | Administració n Inventario |  | ✔ | ✔ |  |
 | Gestión de Pedidos | ✔ | ✔ | ✔ |  |
 | Gestión<br>Reembolsos | ✔ |  |  | ✔ |
+---
+# [ADDENDUM - DICTADO POR OWNER]
+*Sección añadida para cubrir los vacíos de logística, facturación y devoluciones.*
+
+## DOMINIO 8. Gestión de Logística y Despachos (Fulfillment) 
+Deriva del pedido del cliente para organizar la entrega física por parte de cada vendedor.
+- **Ciclo de Estados del Despacho:**
+  1. **Pendiente de Empaque:** Esperando procesamiento en bodega.
+  2. **Empacado:** Listo para recolección.
+  3. **Despachado:** Entregado a la transportadora.
+  4. **Entregado:** Recibido por el comprador.
+  5. **Cancelado por Quiebre:** Cancelación unilateral del vendedor por falta física de stock.
+- **Regla (Stock Fantasma):** No debería ocurrir, pero en caso de haber un quiebre de stock fantasma, el pedido se cancela con devolución obligatoria para no retener stock irreal.
+
+## DOMINIO 9. Gestión de Facturación y Pagos 
+Administrar el proceso financiero derivado de los pedidos.
+- **Alcance:** Validación de transacciones, generación de facturas y conciliación de pagos a vendedores (split de pagos).
+- **Documentos:**
+  - **Factura Maestra:** Entregada al cliente con el total de la transacción.
+  - **Detalle Zentric:** Detalle transaccional desglosado para control de plataforma.
+  - **Factura de Vendedor:** Factura propia detallando el monto que le corresponde al Vendedor (Split).
+
+## DOMINIO 10. Gestión de Devoluciones y Reembolsos 
+Garantizar la resolución de conflictos posventa.
+- **Estados de Devolución:** Solicitada, Aprobada, Rechazada, Reembolsada.
+- **Regla (Prohibición):** Está **prohibido** devolver productos digitales.
+- **Flujo Físico:** El operador logístico inspecciona que el producto esté en buen estado. Si es así, requiere la aprobación del Vendedor. Si ambas se cumplen, el producto vuelve al stock en el inventario con la etiqueta Usado.
