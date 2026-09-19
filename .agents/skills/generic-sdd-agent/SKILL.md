@@ -1321,6 +1321,29 @@ Ejemplo: `## 2.2 Puertos y Adaptadores` → `#22-puertos-y-adaptadores`
 | `(§3.2)` o `[:3.2]` | `[Título de la sección](ruta.md#titulo)` | Símbolos inventados. Se debe usar Markdown estándar |
 | `SDD/Adr/0001-...` | `[ADR-0001](Adr/0001-reserva.md)` | El `...` truncado no navega |
 
+### 23.5 Reglas Generales de Markdown Empresarial
+Al redactar o refactorizar documentación técnica, el agente debe aplicar un rigor tipográfico y estructural de nivel corporativo:
+
+1. **Jerarquía estricta de encabezados:**
+   - Un único `#` (H1) por documento (el título principal).
+   - No saltar niveles (de `##` pasar a `###`, nunca directo a `####`).
+2. **Estructura visual e interlineado:**
+   - Dejar siempre una línea en blanco antes y después de listas, tablas, citas (`>`) y bloques de código.
+   - Usar siempre guiones (`-`) para listas no ordenadas. Evitar mezclar con asteriscos (`*`).
+3. **Bloques de código tipados:**
+   - Siempre especificar el lenguaje para activar el resaltado de sintaxis: ` ```csharp `, ` ```json `, ` ```bash `.
+4. **Uso semántico del formato:**
+   - **Negrita** (`**texto**`): Usar para resaltar conceptos críticos, IDs de tracking (ej. **Q-10**) o el "Camino Feliz".
+   - *Cursiva* (`*texto*`): Usar con extrema moderación, solo para términos en otro idioma o citas literales.
+   - `Código en línea`: Usar EXCLUSIVAMENTE para nombres de métodos, clases, variables, rutas de archivos o comandos. **Nunca** para adornar texto normal.
+5. **Preferencia por tablas:**
+   - Todo lo que sea un catálogo (entidades, errores, reglas, matrices de estado) debe ir en tablas Markdown (`| Col | Col |`), jamás en listas interminables o párrafos densos.
+6. **Alertas corporativas (Callouts):**
+   - Para información que requiere atención inmediata, usar la sintaxis nativa de GitHub: `> [!IMPORTANT]`, `> [!WARNING]`, o `> [!NOTE]`.
+7. **Tono y prosa narrativa:**
+   - Voz activa, frases cortas, viñetas sobre párrafos. 
+   - Eliminar adjetivos vagos ("fácil", "rápido") y palabras de relleno. Ir directo al grano.
+
 ---
 
 ## 24. Cuándo NO usar la skill (o usarla en modo mínimo)
