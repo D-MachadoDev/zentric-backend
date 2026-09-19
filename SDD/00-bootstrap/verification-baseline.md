@@ -41,7 +41,7 @@ potencial.
 
 `[INFERIDO]` El build limpio (0 warnings) se debe a que no hay analizadores
 estrictos activos, no a que el código esté libre de hallazgos. Ver
-`quality-baseline` implícito en [`risks-and-gaps.md`](risks-and-gaps.md).
+`quality-baseline` implícito en [risks-and-gaps.md](risks-and-gaps.md).
 
 ## 4. CI/CD e infraestructura
 
@@ -97,7 +97,7 @@ Passed!  - Failed: 0, Passed: 105, Skipped: 0, Total: 105
 
 - Archivo: `Zentric.Domain/Inventories/Inventory.cs` (`ReturnToAvalible`).
 - Cambio: guarda `quantity <= 0` → `ArgumentOutOfRangeException`.
-- Justificación: INV-01 (invariante absoluta de no-negatividad), que sí existe en
+- Justificación: [INV-01](../Domain/06-business-rules.md) (invariante absoluta de no-negatividad), que sí existe en
   la especificación. Sin la guarda, `ReturnToAvalible(-100)` dejaba
   `AvailableQuantity = -100`. **No se inventó ninguna regla nueva: se hizo cumplir
   una `[CONFIRMADO]`.**
@@ -176,7 +176,7 @@ defectuosa**, no como defecto de producción.
 
 ## 9. Cuarta iteración — ADR-0003: variante obligatoria en físicos ([Q-10](questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = C3)
 
-Fecha: 2026-09-17. Alcance: [T-010c](migration-to-sdd-plan.md) (hacer cumplir CAT-03 en `Product`).
+Fecha: 2026-09-17. Alcance: [T-010c](migration-to-sdd-plan.md) (hacer cumplir [CAT-03](../Domain/06-business-rules.md) en `Product`).
 
 | Comando | Resultado | Observaciones |
 |---|---|---|
@@ -195,7 +195,7 @@ Passed!  - Failed: 0, Passed: 164, Skipped: 0, Total: 164
 
 | Archivo | Cambio |
 |---|---|
-| `Zentric.Domain/Products/Product.cs` | Nueva regla CAT-03: el constructor exige ≥1 variante si `Type == Physical` (`ArgumentException`, paramName `variants`); las semillas se crean vía `AddVariant` (heredan unicidad de SKU); `UpdateType(Physical)` lanza `InvalidOperationException` sin variante; `RemoveVariant` no puede dejar un `Physical` sin variantes; `CanBeSold` exige variante vendible (activa y no eliminada) en `Physical`. Nuevas propiedades `HasVariant` / `HasSellableVariant` / `CanBeSold` |
+| `Zentric.Domain/Products/Product.cs` | Nueva regla [CAT-03](../Domain/06-business-rules.md): el constructor exige ≥1 variante si `Type == Physical` (`ArgumentException`, paramName `variants`); las semillas se crean vía `AddVariant` (heredan unicidad de SKU); `UpdateType(Physical)` lanza `InvalidOperationException` sin variante; `RemoveVariant` no puede dejar un `Physical` sin variantes; `CanBeSold` exige variante vendible (activa y no eliminada) en `Physical`. Nuevas propiedades `HasVariant` / `HasSellableVariant` / `CanBeSold` |
 | `Zentric.Tests/Products/ProductTests.cs` | +14 casos C3 (constructor físico/digital, semillas duplicadas, `UpdateType`, `RemoveVariant`, `HasVariant` con variante eliminada, `CanBeSold` con variante desactivada/eliminada); el helper `CreateProduct()` por defecto ahora crea `Digital` para no romper los casos base |
 
 ### Cobertura acumulada
@@ -205,7 +205,7 @@ Passed!  - Failed: 0, Passed: 164, Skipped: 0, Total: 164
 | `Inventory` | 24 |
 | `Warehouse` | 22 |
 | `User` | 22 |
-| `Product` (incl. variantes + CAT-03) | 44 |
+| `Product` (incl. variantes + [CAT-03](../Domain/06-business-rules.md)) | 44 |
 | `ProductVariant` | 24 |
 | `VariantAttribute` | 10 |
 | `Money` | 14 |
@@ -223,7 +223,7 @@ Fecha: 2026-09-18. Alcance: **solo lectura + documentación**. **Cero archivos d
 | `dotnet build Zentric.slnx --nologo` | `PASS` | `Build succeeded. 0 Warning(s) 0 Error(s)`; compilan **5** proyectos (Domain, Application, Infrastructure, Api, Tests) |
 | `dotnet test Zentric.slnx --nologo` | `PASS` | `Failed: 0, Passed: 178, Skipped: 0, Total: 178` (~479 ms) |
 | `Get-FileHash` de `.agents/skills/.../SKILL.md` vs copia instalada | `FAIL` → luego `PASS` | Repo = `24E7ED4F…` (v6.0.0) vs instalada = `EB4E7166…` (v3.1.0); sincronizada con `sync-skill.ps1` (corregido previamente) |
-| `git diff --numstat SDD/Domain/ZENTRIC.md` | `PASS` | 38 adiciones / 1 borrado (línea separadora) → **la Ley conserva el texto original** |
+| `git diff --numstat [SDD/Domain/ZENTRIC.md](../Domain/ZENTRIC.md)` | `PASS` | 38 adiciones / 1 borrado (línea separadora) → **la Ley conserva el texto original** |
 
 ### Salida textual relevante
 
@@ -235,7 +235,7 @@ Build succeeded.
 Passed!  - Failed:     0, Passed:   178, Skipped:     0, Total:   178 - Zentric.Tests.dll (net10.0)
 ```
 
-### Delta de pruebas respecto a :9 (14 nuevas desde la última línea base)
+### Delta de pruebas respecto a [:9](../Domain/ZENTRIC.md#dominio-9-gestin-de-devoluciones-y-reembolsos) (14 nuevas desde la última línea base)
 
 | Suite nueva | Casos | Cubre |
 |---|---|---|
@@ -252,7 +252,7 @@ Passed!  - Failed:     0, Passed:   178, Skipped:     0, Total:   178 - Zentric.
 | `Inventory` | 24 |
 | `Warehouse` | 22 |
 | `User` | 22 |
-| `Product` (incl. variantes + CAT-03) | 44 |
+| `Product` (incl. variantes + [CAT-03](../Domain/06-business-rules.md)) | 44 |
 | `ProductVariant` | 24 |
 | `VariantAttribute` | 10 |
 | `Money` | 14 |
@@ -275,7 +275,7 @@ Passed!  - Failed:     0, Passed:   178, Skipped:     0, Total:   178 - Zentric.
 
 Alcance: cerrar **[H-09](spec-conformance-matrix.md)** (`try-catch` genérico prohibido en Application), **[H-11](spec-conformance-matrix.md)** (sin
 `AddProblemDetails()` ni validadores FluentValidation) y **[H-12](spec-conformance-matrix.md)** (`Class1.cs` vacíos), los tres
-incumplimientos literales de [`AGENTS.md`](../../AGENTS.md). **No** se tocó nada que dependa de [Q-13](questions-for-owner.md#q-13-c-08-la-ley-define-dominio-8-9-y-10-dos-veces-con-significados-cruzados-abierta-bloqueante)/[Q-03](questions-for-owner.md#q-03-c-03-estado-de-cancelacion-de-despacho)/[Q-04](questions-for-owner.md#q-04-c-04-cart-es-un-estado-de-customerorder).
+incumplimientos literales de [AGENTS.md](../../AGENTS.md). **No** se tocó nada que dependa de [Q-13](questions-for-owner.md#q-13-c-08-la-ley-define-dominio-8-9-y-10-dos-veces-con-significados-cruzados-abierta-bloqueante)/[Q-03](questions-for-owner.md#q-03-c-03-estado-de-cancelacion-de-despacho)/[Q-04](questions-for-owner.md#q-04-c-04-cart-es-un-estado-de-customerorder).
 
 | Comando | Resultado | Observaciones |
 |---|---|---|

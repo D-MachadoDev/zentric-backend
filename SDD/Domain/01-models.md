@@ -20,10 +20,10 @@ Representa un bien ofrecido por un Vendedor.
 - **Entidades Hijas: `ProductVariant`** — combinación vendible del producto (ej. Talla/Color). Su `Id` **es** el `VariantId` y actúa como SKU para el inventario (ADR-0002). Se compone de atributos: `VariantAttribute` (nombre + valor). El SKU es único dentro del producto.
 - **Reglas de Negocio:**
   - Al crearse, su estado es `Published` automáticamente (sin flujo de aprobación).
-  - **Variante obligatoria solo para físicos (CAT-03):** un producto `Physical`
-    exige al menos una variante (ver [`SDD/Domain/06-business-rules.md`](06-business-rules.md) CAT-03 y
-    [`SDD/Adr/0003-variante-obligatoria-productos-fisicos.md`](../Adr/0003-variante-obligatoria-productos-fisicos.md)). Un producto
-    `Digital` (CAT-02: sin logística ni inventario) puede nacer sin variantes.
+  - **Variante obligatoria solo para físicos ([CAT-03](06-business-rules.md)):** un producto `Physical`
+    exige al menos una variante (ver [SDD/Domain/06-business-rules.md](06-business-rules.md) [CAT-03](06-business-rules.md) y
+    [SDD/Adr/0003-variante-obligatoria-productos-fisicos.md](../Adr/0003-variante-obligatoria-productos-fisicos.md)). Un producto
+    `Digital` ([CAT-02](06-business-rules.md): sin logística ni inventario) puede nacer sin variantes.
 - **Comportamientos:** `UpdatePrice()`, `Suspend()`, `Discontinue()`, `AddVariant()`, `RemoveVariant()`.
 
 ## 3. Bounded Context: Inventory (Inventario y Bodegas)

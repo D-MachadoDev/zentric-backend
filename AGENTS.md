@@ -8,23 +8,23 @@
 En este proyecto aplicamos **Spec-Driven Development (SDD)**. La documentación en la carpeta `/SDD` es la **Fuente Única de Verdad (Single Source of Truth - SSoT)**.
 
 ### 0.0 Skill de ingeniería SDD (obligatoria)
-*   La metodología operativa de todo agente en este repositorio vive en la skill **`generic-sdd-agent` v6.0.0** (documento único):
-    - Fuente de verdad versionada: `.agents/skills/generic-sdd-agent/SKILL.md` (v6.0.0, monolítico; **ya no usa `references/`**).
-    - Copia instalada para carga automática: `%USERPROFILE%\.agents\skills\generic-sdd-agent\` (regenerar con `.agents/skills/generic-sdd-agent/scripts/sync-skill.ps1`; **no editar la copia a mano**).
-    - Overlay del repositorio: integrado en **este [`AGENTS.md`](AGENTS.md)** (:0–:8) más el contexto persistente de [`SDD/SDD.md`](SDD/SDD.md).
-*   **Contexto persistente (huella mínima):** [`AGENTS.md`](AGENTS.md) (contrato operativo) + [`SDD/SDD.md`](SDD/SDD.md) (memoria viva: mapa de entidades, decisiones/ADDENDA, verificación, riesgos y estado). [`SDD/SDD.md`](SDD/SDD.md) **no duplica** las specs: las indexa y apunta a ellas.
-*   Cuando exista conflicto, la prioridad es: decisión del owner → [`AGENTS.md`](AGENTS.md) → [`SDD/Domain/ZENTRIC.md`](SDD/Domain/ZENTRIC.md) (Ley) → resto de `SDD/` → skill.
-*   `generic-sdd-agent.md` (raíz, v2.0.0) quedó **superseded** y fue **ELIMINADO el 2026-09-18** por autorización del Owner (el propio archivo pedía autorización para su eliminación). La skill **v6.0.0** es el único punto de entrada metodológico vigente.
+*   La metodología operativa de todo agente en este repositorio vive en la skill **generic-sdd-agent v6.0.0** (documento único):
+    - Fuente de verdad versionada: .agents/skills/generic-sdd-agent/SKILL.md (v6.0.0, monolítico; **ya no usa references/**).
+    - Copia instalada para carga automática: %USERPROFILE%\.agents\skills\generic-sdd-agent\ (regenerar con .agents/skills/generic-sdd-agent/scripts/sync-skill.ps1; **no editar la copia a mano**).
+    - Overlay del repositorio: integrado en **este [AGENTS.md](AGENTS.md)** ([:0](AGENTS.md#0-enrutador-y-principios-de-spec-driven-development-sdd)–[:8](AGENTS.md#8-checklist-de-definicion-de-terminado-dod-para-agentes)) más el contexto persistente de [SDD/SDD.md]([SDD/SDD.md](SDD/SDD.md)).
+*   **Contexto persistente (huella mínima):** [AGENTS.md](AGENTS.md) (contrato operativo) + [SDD/SDD.md]([SDD/SDD.md](SDD/SDD.md)) (memoria viva: mapa de entidades, decisiones/ADDENDA, verificación, riesgos y estado). [SDD/SDD.md]([SDD/SDD.md](SDD/SDD.md)) **no duplica** las specs: las indexa y apunta a ellas.
+*   Cuando exista conflicto, la prioridad es: decisión del owner → [AGENTS.md](AGENTS.md) → [SDD/Domain/ZENTRIC.md]([SDD/Domain/ZENTRIC.md](SDD/Domain/ZENTRIC.md)) (Ley) → resto de SDD/ → skill.
+*   generic-sdd-agent.md (raíz, v2.0.0) quedó **superseded** y fue **ELIMINADO el 2026-09-18** por autorización del Owner (el propio archivo pedía autorización para su eliminación). La skill **v6.0.0** es el único punto de entrada metodológico vigente.
 
 ### 0.1 Consulta Obligatoria Antes de Codificar
 Antes de generar o modificar código, el agente **DEBE** consultar la documentación correspondiente en `/SDD`:
 
-*   **Para contexto del negocio global:** Lee [`SDD/01-system-overview.md`](SDD/01-system-overview.md).
-*   **Para entender el flujo general y las capas:** Lee [`SDD/02-software-architecture.md`](SDD/02-software-architecture.md) para asimilar la Arquitectura Hexagonal y la regla de dependencia.
-*   **Para el contexto de negocio específico y reglas puras (Bounded Context):** Revisa los archivos dentro de `SDD/Domain/`. Aquí habitan las invariantes, el modelado y las reglas de negocio.
-*   **Para orquestación, puertos de salida y casos de uso:** Revisa los archivos en `SDD/Application/`.
-*   **Para acceso a datos, ORM y adaptadores:** Revisa los archivos en `SDD/Infrastructure/`.
-*   **Para controladores y exposición de endpoints:** Revisa los archivos en `SDD/Presentation/`.
+*   **Para contexto del negocio global:** Lee [SDD/01-system-overview.md]([SDD/01-system-overview.md](SDD/01-system-overview.md)).
+*   **Para entender el flujo general y las capas:** Lee [SDD/02-software-architecture.md]([SDD/02-software-architecture.md](SDD/02-software-architecture.md)) para asimilar la Arquitectura Hexagonal y la regla de dependencia.
+*   **Para el contexto de negocio específico y reglas puras (Bounded Context):** Revisa los archivos dentro de SDD/Domain/. Aquí habitan las invariantes, el modelado y las reglas de negocio.
+*   **Para orquestación, puertos de salida y casos de uso:** Revisa los archivos en SDD/Application/.
+*   **Para acceso a datos, ORM y adaptadores:** Revisa los archivos en SDD/Infrastructure/.
+*   **Para controladores y exposición de endpoints:** Revisa los archivos en SDD/Presentation/.
 
 ### 0.2 Regla de Sincronización Bidireccional (Spec-Anchored Code)
 *   **Sin Especificación no hay Código:** Todo cambio estructural o de regla de negocio debe estar respaldado por la especificación en `/SDD/`.
@@ -78,26 +78,26 @@ Cualquier agente que genere o modifique código en este proyecto DEBE cumplir co
 ### 2.1. Regla de Dependencia Estricta y Aislamiento de Capas
 El flujo de dependencias es unidireccional y siempre apunta hacia el centro (Dominio). 
 
-- **`Zentric.Domain` (El Centro):** No referencia a ningún otro proyecto de la solución. Es el núcleo puro del negocio.
+- **Zentric.Domain** (El Centro): No referencia a ningún otro proyecto de la solución. Es el núcleo puro del negocio.
   - **PROHIBIDO:** Instalar paquetes o tener dependencias de infraestructura, ORMs (EF Core), frameworks web (ASP.NET Core) o clientes HTTP.
   - **Uso:** Exclusivo para código C# puro (Entidades, Value Objects, Agregados, Domain Events y Domain Services).
 
-- **`Zentric.Application` (Orquestación):** Referencia **SOLO** a `Zentric.Domain`.
-  - **PROHIBIDO:** Referenciar a `Zentric.Infrastructure` o `Zentric.Api`. 
+- **Zentric.Application** (Orquestación): Referencia **SOLO** a Zentric.Domain.
+  - **PROHIBIDO:** Referenciar a Zentric.Infrastructure o Zentric.Api. 
   - **Uso:** No debe contener SQL, ni detalles de HTTP, ni dependencias de Entity Framework.
 
-- **`Zentric.Infrastructure` (Tecnología):** Referencia a `Zentric.Application` (para implementar sus puertos) y a `Zentric.Domain` (para mapear datos).
-  - **PROHIBIDO:** Referenciar a `Zentric.Api`.
+- **Zentric.Infrastructure** (Tecnología): Referencia a Zentric.Application (para implementar sus puertos) y a Zentric.Domain (para mapear datos).
+  - **PROHIBIDO:** Referenciar a Zentric.Api.
   - **Uso:** Implementación técnica (EF Core, PostgreSQL, APIs de terceros).
 
-- **`Zentric.Api` (Presentation / Composition Root):** Referencia a `Zentric.Application` y a `Zentric.Infrastructure`.
-  - **Uso restrictivo:** La referencia a `Infrastructure` es **ÚNICAMENTE** para registrar la Inyección de Dependencias (IoC) en el archivo de inicio (`Program.cs`). Los controladores web solo deben hablar con `Application`.
+- **Zentric.Api** (Presentation / Composition Root): Referencia a Zentric.Application y a Zentric.Infrastructure.
+  - **Uso restrictivo:** La referencia a Infrastructure es **ÚNICAMENTE** para registrar la Inyección de Dependencias (IoC) en el archivo de inicio (Program.cs). Los controladores web solo deben hablar con Application.
 
 ### 2.2. Puertos y Adaptadores
-- **Puertos de Salida (Output Ports):** Interfaces definidas en la capa `Application` o `Domain`. Dictan QUÉ necesita el sistema (abstracción), sin importar CÓMO se obtiene.
-- **Adaptadores de Salida:** Clases concretas que implementan los puertos de salida en `Infrastructure`.
-- **Puertos de Entrada (Input Ports):** Interfaces o Casos de Uso definidos e implementados en `Application`.
-- **Adaptadores de Entrada:** Controladores REST (Endpoints) en `Presentation` que reciben solicitudes HTTP y delegan inmediatamente la ejecución a los puertos de entrada.
+- **Puertos de Salida (Output Ports):** Interfaces definidas en la capa Application o Domain. Dictan QUÉ necesita el sistema (abstracción), sin importar CÓMO se obtiene.
+- **Adaptadores de Salida:** Clases concretas que implementan los puertos de salida en Infrastructure.
+- **Puertos de Entrada (Input Ports):** Interfaces o Casos de Uso definidos e implementados en Application.
+- **Adaptadores de Entrada:** Controladores REST (Endpoints) en Presentation que reciben solicitudes HTTP y delegan inmediatamente la ejecución a los puertos de entrada.
 
 ### 2.3. Modelado de Dominio (Táctico)
 - **Entidades y Raíces de Agregado:** Tienen identidad única (ID) y controlan su ciclo de vida.
@@ -115,25 +115,25 @@ El flujo de dependencias es unidireccional y siempre apunta hacia el centro (Dom
 ## 3. Tratamiento de Errores y Excepciones (Organizado por Capa)
 
   ### **Regla Global del Proyecto:**
-  *   **Patrón Result:** Utilizar el patrón `Result<T>` en las capas de Aplicación e Infraestructura para manejar resultados de operaciones que pueden fallar y reflejar reglas de negocio predecibles.
+  *   **Patrón Result:** Utilizar el patrón Result<T> en las capas de Aplicación e Infraestructura para manejar resultados de operaciones que pueden fallar y reflejar reglas de negocio predecibles.
   *   **Control de Flujo:** Prohibido utilizar excepciones para controlar el flujo lógico habitual del sistema.
 
   ### 1. Capa de Dominio (Domain Layer)
-  *   **Invariantes y Guardas:** Las entidades pueden usar guardas defensivas (`ArgumentException`, `InvalidOperationException`) o retornar `Result` para garantizar que nunca existan objetos en un estado inválido en memoria.
-  *   **Cero Captura Técnica:** Prohibido usar bloques `try-catch` o dependencias de excepciones técnicas de infraestructura en el dominio.
+  *   **Invariantes y Guardas:** Las entidades pueden usar guardas defensivas (ArgumentException, InvalidOperationException) o retornar Result para garantizar que nunca existan objetos en un estado inválido en memoria.
+  *   **Cero Captura Técnica:** Prohibido usar bloques try-catch o dependencias de excepciones técnicas de infraestructura en el dominio.
 
   ### 2. Capa de Aplicación (Casos de Uso)
   *   **Validación de Entrada:** Los errores de validación de entrada (formatos, nulos, longitudes) deben ser manejados obligatoriamente en esta capa (usando FluentValidation / Result) antes de invocar a las entidades del dominio.
-  *   **Retorno de Resultados:** Devolver objetos `Result<T>` a la capa de presentación para representar fallos predecibles de negocio.
-  *   **Paso Transparente de Excepciones Catastróficas:** Excepciones no controladas de infraestructura (fallos de red, caídas de base de datos) NUNCA deben ser atrapadas con `try-catch` genéricos aquí; dejar que suban al middleware.
+  *   **Retorno de Resultados:** Devolver objetos Result<T> a la capa de presentación para representar fallos predecibles de negocio.
+  *   **Paso Transparente de Excepciones Catastróficas:** Excepciones no controladas de infraestructura (fallos de red, caídas de base de datos) NUNCA deben ser atrapadas con try-catch genéricos aquí; dejar que suban al middleware.
 
   ### 3. Capa de Infraestructura (Infrastructure Layer)
-  *   **Traducción de Errores:** Los errores predecibles de infraestructura deben ser atrapados en esta misma capa y traducidos a un error de negocio o `Result.Failure`.
-  *   **Ocultamiento de Detalles:** Prohibido exponer detalles internos de la tecnología (`SqlException`, cadenas de conexión) hacia la capa de Aplicación.
+  *   **Traducción de Errores:** Los errores predecibles de infraestructura deben ser atrapados en esta misma capa y traducidos a un error de negocio o Result.Failure.
+  *   **Ocultamiento de Detalles:** Prohibido exponer detalles internos de la tecnología (SqlException, cadenas de conexión) hacia la capa de Aplicación.
 
   ### 4. Capa de Presentación / Adaptador Primario (API, Controladores)
   *   **Middleware de Excepciones Global:** Esta capa es la última barrera. Implementa un manejador global (Exception Middleware) que atrape cualquier excepción técnica o catastrófica no controlada.
-  *   **Mapeo de Respuestas:** Mapea los objetos `Result<T>` a respuestas HTTP RESTful consistentes (usando RFC 7807 Problem Details).
+  *   **Mapeo de Respuestas:** Mapea los objetos Result<T> a respuestas HTTP RESTful consistentes (usando RFC 7807 Problem Details).
 
 ---
 
@@ -141,7 +141,7 @@ El flujo de dependencias es unidireccional y siempre apunta hacia el centro (Dom
 
 Cuando interactúes en este proyecto, asume o coordina según el rol requerido:
 
-### 4.1 `Domain-Architect-Agent`
+### 4.1 Domain-Architect-Agent
 - **Responsabilidad:** Modelado de entidades, agregados, servicios, value objects, invariantes de negocio y **mantenimiento de las especificaciones en `/SDD/Domain/`**.
 - **Criterio:** Garantizar que el modelo refleje fielmente el lenguaje ubicuo y no se contamine con detalles técnicos.
 
@@ -163,12 +163,12 @@ Cuando interactúes en este proyecto, asume o coordina según el rol requerido:
 ## 5. Convenciones de Código y Estilo en C#
 
 - **Nombres:**
-  - Interfaces: Prefijo `I`.
-  - Clases / Métodos / Propiedades: `PascalCase`.
-  - Variables locales / Parámetros: `camelCase`.
-  - Campos privados: `_camelCase`.
+  - Interfaces: Prefijo I.
+  - Clases / Métodos / Propiedades: PascalCase.
+  - Variables locales / Parámetros: camelCase.
+  - Campos privados: _camelCase.
 - **Inmutabilidad:**
-  - Priorizar `record` o clases con propiedades `init` / `private set` en Value Objects y DTOs.
+  - Priorizar record o clases con propiedades init / private set en Value Objects y DTOs.
   - Priorizar `sealed` en clases de dominio que no deban ser heredadas.
   - **Evitar setters públicos:** Las entidades y agregados deben exponer métodos de negocio explícitos que modifiquen su estado, prohibido usar setters públicos anémicos.
 - **Documentación:**
@@ -177,8 +177,8 @@ Cuando interactúes en este proyecto, asume o coordina según el rol requerido:
 ---
 
 ## 6. Inyección de Dependencias (DI)
-  - Cada capa (`Application`, `Infrastructure`) debe tener su propio método de extensión de registro.
-  - El proyecto de Presentación (`Api`) es el Composition Root y el único autorizado para ensamblar e inyectar todas las capas.
+  - Cada capa (Application, Infrastructure) debe tener su propio método de extensión de registro.
+  - El proyecto de Presentación (Api) es el Composition Root y el único autorizado para ensamblar e inyectar todas las capas.
 
 ---
 
@@ -201,13 +201,13 @@ dotnet restore
 
 ## 8. Checklist de Definición de Terminado (DoD) para Agentes
 
-- [ ] ¿El cambio está respaldado por y alineado con la especificación en `/SDD/`?
+- [ ] ¿El cambio está respaldado por y alineado con la especificación en SDD/?
 - [ ] ¿Se utilizaron los términos exactos del Lenguaje Ubicuo sin inventar sinónimos?
 - [ ] ¿El código respeta la arquitectura hexagonal y la regla de dependencias hacia el centro?
 - [ ] ¿El modelo de dominio contiene las invariantes requeridas y evita modelos anémicos?
 - [ ] ¿Se crearon o actualizaron tests unitarios (BDD style) para las reglas de negocio?
 - [ ] ¿Se actualizó la trazabilidad/estado (checklists) en los archivos aplicables tras la implementación?
-- [ ] ¿La solución compila sin advertencias ni errores (`dotnet build`)?
+- [ ] ¿La solución compila sin advertencias ni errores (dotnet build)?
 - [ ] ¿No se introdujeron secretos, tokens o credenciales en el código?
 - [ ] (Infraestructura) ¿Se verifico mediante un escaneo transversal de 'Zentric.Domain' que ninguna entidad preexistente haya quedado por fuera del DbContext (Anti-Amnesia)?
 

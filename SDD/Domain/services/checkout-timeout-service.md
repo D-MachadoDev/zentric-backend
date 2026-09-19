@@ -10,7 +10,7 @@ Opera principalmente en el **Ordering Context** para cancelar el pedido, e **Inv
 - **Input:** Invocado por un Job recurrente (Cron) o un patrón de expiración en memoria.
 - **Output:** `Result` (Total de carritos liberados).
 
-## 4. Flujo Lógico y Reglas (PED-01)
+## 4. Flujo Lógico y Reglas ([PED-01](../06-business-rules.md))
 1. Consultar el repositorio por todos los agregados `CustomerOrder` que estén en estado `Cart` o `PendingPayment` y cuya propiedad `UpdatedAt` demuestre una antigüedad mayor al umbral del sistema (**15 minutos** estándar).
 2. Iterar sobre los pedidos expirados encontrados:
    - Identificar las cantidades exactas y bodegas que fueron reservadas en el paso inicial de compra.

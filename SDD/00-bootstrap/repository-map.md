@@ -7,16 +7,16 @@
 | Elemento | Tipo | Nota |
 |---|---|---|
 | `Zentric.slnx` | solución | referencia **5** proyectos: `Zentric.Domain`, `Zentric.Application`, `Zentric.Infrastructure`, `Zentric.Api`, `Zentric.Tests` |
-| [`AGENTS.md`](../../AGENTS.md) | gobernanza | directrices de agentes, arquitectura y DoD (actualizado 2026-09-18: skill v6.0.0) |
+| [AGENTS.md](../../AGENTS.md) | gobernanza | directrices de agentes, arquitectura y DoD (actualizado 2026-09-18: skill v6.0.0) |
 | ~~`generic-sdd-agent.md`~~ | gobernanza | ~~prompt SDD v2.0.0 monolítico — superseded~~ → **ELIMINADO el 2026-09-18**: el Owner autorizó su eliminación (el propio archivo la pedía); recuperable con `git checkout -- generic-sdd-agent.md` |
 | `SDD/` | especificaciones | SSoT declarada por [AGENTS.md :0](../../AGENTS.md#0-enrutador-y-principios-de-spec-driven-development-sdd) |
-| [`SDD/SDD.md`](../SDD.md) | gobernanza | **memoria viva** creada el 2026-09-18 (mapa de entidades, ADDENDA, verificación, riesgos, estado) |
+| [SDD/SDD.md](../SDD.md) | gobernanza | **memoria viva** creada el 2026-09-18 (mapa de entidades, ADDENDA, verificación, riesgos, estado) |
 | `Zentric.Domain/` | código | núcleo de dominio, sin dependencias externas |
 | `Zentric.Application/` | código | casos de uso, puertos, `Result<T>` (MediatR + FluentValidation) |
 | `Zentric.Infrastructure/` | código | EF Core + Npgsql, `ZentricDbContext`, repositorios, migraciones |
 | `Zentric.Api/` | código | Composition Root + controladores REST |
 | `Zentric.Tests/` | pruebas | xUnit, **178** casos en verde |
-| [`README.md`](README.md) | doc | 2 líneas, sin instrucciones de ejecución |
+| [README.md](README.md) | doc | 2 líneas, sin instrucciones de ejecución |
 | `LICENSE` | legal | — |
 | `.gitignore` | configuración | 7.906 bytes |
 | `.vscode/settings.json` | configuración | preferencias del editor |
@@ -114,10 +114,10 @@ SDD/
         └── returns-approval-service.md
 ```
 
-`[CONTRADICCIÓN]` [AGENTS.md :0.1](../../AGENTS.md#01-consulta-obligatoria-antes-de-codificar) exige como lectura obligatoria [`SDD/01-system-overview.md`](../01-system-overview.md),
-[`SDD/02-software-architecture.md`](../02-software-architecture.md), `SDD/Application/`, `SDD/Infrastructure/` y `SDD/Presentation/`:
+`[CONTRADICCIÓN]` [AGENTS.md :0.1](../../AGENTS.md#01-consulta-obligatoria-antes-de-codificar) exige como lectura obligatoria [SDD/01-system-overview.md](../01-system-overview.md),
+[SDD/02-software-architecture.md](../02-software-architecture.md), `SDD/Application/`, `SDD/Infrastructure/` y `SDD/Presentation/`:
 los dos primeros se crearon el 2026-09-17 y las tres carpetas de capa existen desde el 2026-09-18.
-Queda **[C-06](risks-and-gaps.md)**: [`SDD/Domain/Software-arquitecture.md`](../Domain/Software-arquitecture.md) sigue con **0 bytes**.
+Queda **[C-06](risks-and-gaps.md)**: [SDD/Domain/Software-arquitecture.md](../Domain/Software-arquitecture.md) sigue con **0 bytes**.
 
 `[CONTRADICCIÓN]` Numeración duplicada dentro de `SDD/Domain/`: dos `01-*`, dos `02-*`, dos `03-*`,
 dos `04-*`, con solapes y contradicciones de contenido (**[C-07](risks-and-gaps.md)** → [Q-06](questions-for-owner.md#q-06-c-07-consolidacion-de-los-documentos-numerados)).

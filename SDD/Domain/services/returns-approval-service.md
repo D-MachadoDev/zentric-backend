@@ -10,7 +10,7 @@ Opera principalmente en el **Fulfillment Context** y altera el **Inventory Conte
 - **Inputs:** Confirmación de estado de Logística (`LogisticsApproval`), Confirmación comercial del Vendedor (`SellerApproval`).
 - **Output:** `Result` (Éxito de la devolución o rechazo).
 
-## 4. Flujo Lógico y Reglas (DEV-01)
+## 4. Flujo Lógico y Reglas ([DEV-01](../06-business-rules.md))
 1. El proceso arranca formalmente cuando el operador logístico de Zentric recibe el paquete de vuelta en sus instalaciones o centro de acopio.
 2. **Paso 1 (Logística):** El `LogisticsOperator` inspecciona físicamente el producto y registra en el sistema su veredicto (Aprobado / Rechazado por daño por mal uso).
 3. Si Logística aprueba, el estado avanza y se notifica al `Seller`.

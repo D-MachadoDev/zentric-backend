@@ -16,9 +16,9 @@ resolvió por decisión del agente (regla de cero asunciones, [AGENTS.md :0.3](.
   liberan las reservas parciales de esa misma transacción.
 - **Logística:** cuando hubo fraccionamiento se crean múltiples `Shipment`.
 
-Registrado en [`SDD/Adr/0001-reserva-fragmentacion-contingencia.md`](../Adr/0001-reserva-fragmentacion-contingencia.md) y aplicado a
-[`SDD/Domain/04-invariants-and-rules.md`](../Domain/04-invariants-and-rules.md) (invariante 3),
-[`SDD/Domain/06-business-rules.md`](../Domain/06-business-rules.md) (INV-02) y
+Registrado en [SDD/Adr/0001-reserva-fragmentacion-contingencia.md](../Adr/0001-reserva-fragmentacion-contingencia.md) y aplicado a
+[SDD/Domain/04-invariants-and-rules.md](../Domain/04-invariants-and-rules.md) (invariante 3),
+[SDD/Domain/06-business-rules.md](../Domain/06-business-rules.md) ([INV-02](../Domain/06-business-rules.md)) y
 [SDD/Domain/services/inventory-reservation-service.md :4](../Domain/services/inventory-reservation-service.md#4-flujo-logico-y-reglas-invariantes).
 
 **Desbloquea:** [T-004](migration-to-sdd-plan.md), [T-013](migration-to-sdd-plan.md), [T-014](migration-to-sdd-plan.md) (estas dos últimas quedan pendientes solo de [Q-02](#q-02-c-02-la-clave-del-inventario-es-el-producto-o-la-variante-sku-resuelta-2026-09-17)/[Q-03](#q-03-c-03-estado-de-cancelacion-de-despacho)).
@@ -28,7 +28,7 @@ Registrado en [`SDD/Adr/0001-reserva-fragmentacion-contingencia.md`](../Adr/0001
 - **Fuente A** — [SDD/Domain/04-invariants-and-rules.md :8](../Domain/04-invariants-and-rules.md)`: "Toda la cantidad
   solicitada de una Variante específica en una `OrderLine` debe poder surtirse
   desde **una (1) sola bodega**… Los envíos de un mismo SKU no se dividen".
-- **Fuente B** — [SDD/Domain/06-business-rules.md :7](../Domain/06-business-rules.md)` (INV-02) y
+- **Fuente B** — [SDD/Domain/06-business-rules.md :7](../Domain/06-business-rules.md)` ([INV-02](../Domain/06-business-rules.md)) y
   [SDD/Domain/services/inventory-reservation-service.md :18](../Domain/services/inventory-reservation-service.md)`: "el servicio tiene
   permitido **fraccionar** la reserva en ambas bodegas".
 
@@ -53,17 +53,17 @@ Registrado en [`SDD/Adr/0001-reserva-fragmentacion-contingencia.md`](../Adr/0001
 - **No decidido por B2:** si todo producto debe tener al menos una variante →
   nueva pregunta **[Q-10](#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3)**. Detalle del modelo de atributos → **[Q-11](#q-11-detalle-del-modelo-de-atributos-de-variante-abierta)**.
 
-Registrado en [`SDD/Adr/0002-clave-inventario-variantid.md`](../Adr/0002-clave-inventario-variantid.md) y aplicado a
-[`SDD/Domain/01-models.md`](../Domain/01-models.md), [`SDD/Domain/06-business-rules.md`](../Domain/06-business-rules.md) (INV-03),
-[`SDD/Domain/05-ports.md`](../Domain/05-ports.md) y [`SDD/Domain/services/inventory-reservation-service.md`](../Domain/services/inventory-reservation-service.md).
+Registrado en [SDD/Adr/0002-clave-inventario-variantid.md](../Adr/0002-clave-inventario-variantid.md) y aplicado a
+[SDD/Domain/01-models.md](../Domain/01-models.md), [SDD/Domain/06-business-rules.md](../Domain/06-business-rules.md) ([INV-03](../Domain/06-business-rules.md)),
+[SDD/Domain/05-ports.md](../Domain/05-ports.md) y [SDD/Domain/services/inventory-reservation-service.md](../Domain/services/inventory-reservation-service.md).
 
 ### Contexto histórico de la contradicción
 
 - **Fuente A** — [02-aggregates-and-entities.md :29](../Domain/02-aggregates-and-entities.md)`, [03-value-objects.md :15](../Domain/03-value-objects.md)`:
   `VariantId` como SKU.
-- **Fuente B** — [01-models.md :33](../Domain/01-models.md)` y [`ZENTRIC.md`](../Domain/ZENTRIC.md) Dominio 6: "vinculado
+- **Fuente B** — [01-models.md :33](../Domain/01-models.md)` y [ZENTRIC.md](../Domain/ZENTRIC.md) Dominio 6: "vinculado
   obligatoriamente a un producto y una bodega"; el código usa `ProductId`.
-- [`ZENTRIC.md`](../Domain/ZENTRIC.md) Dominio 5 sí menciona "Variantes: Diferencias de color, talla,
+- [ZENTRIC.md](../Domain/ZENTRIC.md) Dominio 5 sí menciona "Variantes: Diferencias de color, talla,
   modelo".
 
 | Opción | Consecuencia |
@@ -84,7 +84,7 @@ campo `Reason` obligatorio. Desbloquea G-02.
 
 ## [Q-04](#q-04-c-04-cart-es-un-estado-de-customerorder) ([C-04](risks-and-gaps.md)) — ¿`Cart` es un estado de `CustomerOrder`?
 
-[02-value-objects.md :46](../Domain/02-value-objects.md)` y `07-lifecycle` :1 lo incluyen; [03-value-objects.md :29](../Domain/03-value-objects.md)`
+[02-value-objects.md :46](../Domain/02-value-objects.md)` y `07-lifecycle` [:1](../Domain/02-value-objects.md#1-value-objects-objetos-de-valor) lo incluyen; [03-value-objects.md :29](../Domain/03-value-objects.md)`
 no. Opciones: **(a)** `Cart` es estado del agregado (con timeout de 15 min);
 **(b)** el carrito es un agregado separado (`Cart`) y `CustomerOrder` nace en
 `PendingPayment`; **(c)** `Cart` y `Order` comparten el agregado pero el carrito
@@ -112,7 +112,7 @@ canónico en `SDD/Domain/00-index.md`. Desbloquea la navegabilidad de la SSoT.
 
 ## [Q-07](#q-07-documento-de-identidad-del-usuario) — Documento de identidad del usuario
 
-[`ZENTRIC.md`](../Domain/ZENTRIC.md) Dominio 1 lo marca obligatorio y único, y [`AGENTS.md`](../../AGENTS.md) prohíbe
+[ZENTRIC.md](../Domain/ZENTRIC.md) Dominio 1 lo marca obligatorio y único, y [AGENTS.md](../../AGENTS.md) prohíbe
 inventar. Opciones: **(a)** añadir `IdentityDocument` como VO obligatorio con
 validación de formato (¿qué país/formato?); **(b)** añadirlo opcional; **(c)**
 eliminarlo de la spec por no aplicar al negocio. Si es (a), se necesita el
@@ -140,16 +140,16 @@ masivo ahora (coste mínimo) o se difiere? Desbloquea [T-008](migration-to-sdd-p
 **Decisión del owner: C3 — obligatoria solo para `Physical`.**
 
 - Un producto `Physical` **exige al menos una variante** (la variante es la
-  unidad de stock, INV-03).
-- Un producto `Digital` (CAT-02: sin logística ni inventario) **puede** nacer sin
+  unidad de stock, [INV-03](../Domain/06-business-rules.md)).
+- Un producto `Digital` ([CAT-02](../Domain/06-business-rules.md): sin logística ni inventario) **puede** nacer sin
   variantes.
 - Aplicación en código ([T-010c](migration-to-sdd-plan.md), ADR-0003): constructor rechaza `Physical` sin
   variantes; `UpdateType(Physical)` exige variante; `RemoveVariant` no puede
   dejar un `Physical` sin variantes; `CanBeSold` exige variante vendible en
   `Physical`. Suite: 164/164 PASS.
 
-Registrado en [`SDD/Adr/0003-variante-obligatoria-productos-fisicos.md`](../Adr/0003-variante-obligatoria-productos-fisicos.md) y aplicado
-a [SDD/Domain/01-models.md :2](../Domain/01-models.md#2-bounded-context-catalog-catalogo) y [`SDD/Domain/06-business-rules.md`](../Domain/06-business-rules.md) (CAT-03).
+Registrado en [SDD/Adr/0003-variante-obligatoria-productos-fisicos.md](../Adr/0003-variante-obligatoria-productos-fisicos.md) y aplicado
+a [SDD/Domain/01-models.md :2](../Domain/01-models.md#2-bounded-context-catalog-catalogo) y [SDD/Domain/06-business-rules.md](../Domain/06-business-rules.md) ([CAT-03](../Domain/06-business-rules.md)).
 
 ### Contexto histórico de la pregunta
 
@@ -160,7 +160,7 @@ si un producto puede existir sin variantes.
 |---|---|
 | **C1. Variante opcional** | Un producto sin variantes no puede tener inventario ni reservarse. Sirve para productos digitales o catálogos informativos, pero deja un estado inalcanzable para productos físicos |
 | **C2. Variante obligatoria (equivalente a B3)** | Todo producto nace con al menos una variante "unidad". Elimina el estado inválido, pero cambia el alta de producto y las pruebas de catálogo |
-| **C3. Obligatoria solo para `Physical`** | Los productos `Digital` (CAT-02: sin logística ni inventario) quedan sin variante; los físicos siempre tienen una |
+| **C3. Obligatoria solo para `Physical`** | Los productos `Digital` ([CAT-02](../Domain/06-business-rules.md): sin logística ni inventario) quedan sin variante; los físicos siempre tienen una |
 
 **Impacto si no se decide:** `InventoryReservationService` no puede definir qué
 hacer con un producto físico sin variantes (¿error de especificación o compra
@@ -206,7 +206,7 @@ verde, pero con etiqueta `[PROPUESTO]` en estos 4 puntos).
 
 ## [Q-13](#q-13-c-08-la-ley-define-dominio-8-9-y-10-dos-veces-con-significados-cruzados-abierta-bloqueante) ([C-08](risks-and-gaps.md)) — La Ley define `DOMINIO 8`, `9` y `10` **dos veces**, con significados cruzados · 🔴 ABIERTA · **BLOQUEANTE**
 
-**Hallazgo (2026-09-18).** [`SDD/Domain/ZENTRIC.md`](../Domain/ZENTRIC.md) contiene hoy **dos bloques** que definen los mismos
+**Hallazgo (2026-09-18).** [SDD/Domain/ZENTRIC.md](../Domain/ZENTRIC.md) contiene hoy **dos bloques** que definen los mismos
 números de dominio con contenidos distintos: el bloque base (líneas 254-270) y el bloque
 `# [ADDENDUM - DICTADO POR OWNER]` (líneas 320-334).
 

@@ -21,7 +21,7 @@ Se definen interfaces (Repositorios) en la capa de aplicación, que serán imple
 > - `AddOrderItemCommand` **no valida stock**: no existe `IInventoryRepository` en todo el repositorio.
 > - `CheckoutOrderCommand` **no existe** (el agregado sí expone `Checkout()`, pero no hay caso de uso ni endpoint).
 >
-> El estado real deja además `PED-01` (reserva preventiva + liberación a los 15 minutos) **sin implementar**.
+> El estado real deja además `[PED-01](../Domain/06-business-rules.md)` (reserva preventiva + liberación a los 15 minutos) **sin implementar**.
 > Se corrige el texto cuando el Owner resuelva [Q-04](../00-bootstrap/questions-for-owner.md#q-04-c-04-cart-es-un-estado-de-customerorder) (¿el carrito reserva stock?) — **no se inventa aquí**.
 
 ## 4. Casos de Uso (Commands) - Logística (Fulfillment)
@@ -57,7 +57,7 @@ Todas las entradas de los usuarios, como emails, GUIDs vacíos, cantidades negat
 > en `Zentric.Api/Program.cs`. Evidencia: 21 pruebas unitarias + 7 de integración DI
 > ([verification-baseline.md :11](../00-bootstrap/verification-baseline.md#11-sexta-iteracion-spec-007-validacion-de-entrada-rfc-7807-e-higiene-2026-09-18), 206/206).
 >
-> `[PENDIENTE]` Los comandos **especificados pero no implementados** (:3–:6) no tienen validador
+> `[PENDIENTE]` Los comandos **especificados pero no implementados** ([:3](../00-bootstrap/verification-baseline.md#3-formato-lint-y-analisis-estatico)–[:6](../00-bootstrap/verification-baseline.md#6-como-repetir-esta-linea-base)) no tienen validador
 > porque no existen: `CheckoutOrderCommand`, `DispatchFulfillmentCommand`, `RequestReturnCommand`,
 > `ApproveReturnCommand`, `CreateProductCommand`, `PublishProductCommand`.
 

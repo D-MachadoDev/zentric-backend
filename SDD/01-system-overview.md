@@ -1,8 +1,8 @@
 # 01. System Overview — Zentric
 
-> Documento exigido por [AGENTS.md :0.1](../AGENTS.md#01-consulta-obligatoria-antes-de-codificar). **Derivado**, no inventado: consolida y
+> Documento exigido por [AGENTS.md:0.1](../AGENTS.md#01-consulta-obligatoria-antes-de-codificar). **Derivado**, no inventado: consolida y
 > enlaza la especificación funcional de negocio existente
-> ([`SDD/Domain/ZENTRIC.md`](Domain/ZENTRIC.md)) y los documentos de dominio. No introduce reglas
+> ([SDD/Domain/ZENTRIC.md](Domain/ZENTRIC.md)) y los documentos de dominio. No introduce reglas
 > nuevas. Todo lo marcado `[INFERIDO]` requiere confirmación.
 
 ## 1. Qué es Zentric
@@ -79,7 +79,7 @@ productos, catálogos y pedidos.
 
 ## 7. Restricciones transversales
 
-`[CONFIRMADO]` [ZENTRIC.md :10](Domain/ZENTRIC.md#dominio-10-gestin-de-facturacin-y-pagos) y :11:
+`[CONFIRMADO]` [ZENTRIC.md :10](Domain/ZENTRIC.md#dominio-10-gestin-de-facturacin-y-pagos) y [:11](Domain/ZENTRIC.md#11-validaciones-criticas):
 
 | Código | Restricción |
 |---|---|
@@ -95,33 +95,33 @@ electrónico únicos en la plataforma.
 
 `[CONFIRMADO]` El catálogo canónico de reglas vive en:
 
-- [`SDD/Domain/06-business-rules.md`](Domain/06-business-rules.md): INV-01, INV-02, PED-01, PED-02, PED-03,
-  CAT-01, CAT-02, EXC-01, EXC-02, DEV-01.
-- [`SDD/Domain/04-invariants-and-rules.md`](Domain/04-invariants-and-rules.md): invariantes 1–13 (inventario,
+- [SDD/Domain/06-business-rules.md](Domain/06-business-rules.md): [INV-01](Domain/06-business-rules.md), [INV-02](Domain/06-business-rules.md), [PED-01](Domain/06-business-rules.md), [PED-02](Domain/06-business-rules.md), [PED-03](Domain/06-business-rules.md),
+  [CAT-01](Domain/06-business-rules.md), [CAT-02](Domain/06-business-rules.md), [EXC-01](Domain/06-business-rules.md), [EXC-02](Domain/06-business-rules.md), [DEV-01](Domain/06-business-rules.md).
+- [SDD/Domain/04-invariants-and-rules.md](Domain/04-invariants-and-rules.md): invariantes 1–13 (inventario,
   catálogo, pagos, posventa).
-- [`SDD/Domain/07-lifecycle.md`](Domain/07-lifecycle.md): máquinas de estado de `CustomerOrder` y
+- [SDD/Domain/07-lifecycle.md](Domain/07-lifecycle.md): máquinas de estado de `CustomerOrder` y
   `FulfillmentOrder`.
 
 `[RESUELTO]` Las contradicciones de reglas del dominio quedaron resueltas el
 2026-09-17:
 
-- **[C-01](00-bootstrap/risks-and-gaps.md)** (INV-02 vs invariante 3) → `SDD/Adr/0001-...`: bodega única con
+- **[C-01](00-bootstrap/risks-and-gaps.md)** ([INV-02](Domain/06-business-rules.md) vs invariante 3) → `SDD/Adr/0001-...`: bodega única con
   fraccionamiento de contingencia.
 - **[C-02](00-bootstrap/risks-and-gaps.md)** (clave de stock `ProductId` vs `VariantId`) → `SDD/Adr/0002-...`:
   el inventario se lleva por `VariantId` (SKU).
 - **[Q-10](00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3)** (¿variante obligatoria?) → `SDD/Adr/0003-...`: obligatoria solo en
-  `Physical` (CAT-03), aplicado en código con 164/164 pruebas. Sub-decisiones
+  `Physical` ([CAT-03](Domain/06-business-rules.md)), aplicado en código con 164/164 pruebas. Sub-decisiones
   `[PROPUESTO]` pendientes de confirmar (**[Q-12](00-bootstrap/questions-for-owner.md#sub-decisiones-propuesto-ver-q-12)**).
 
-Reglas vigentes de inventario: **INV-01, INV-02, INV-03** ([`06-business-rules.md`](Domain/06-business-rules.md)).
+Reglas vigentes de inventario: **[INV-01](Domain/06-business-rules.md), [INV-02](Domain/06-business-rules.md), [INV-03](Domain/06-business-rules.md)** ([06-business-rules.md](Domain/06-business-rules.md)).
 
 `[RIESGO]` Estado de preguntas al **2026-09-18**: **[Q-13](00-bootstrap/questions-for-owner.md#q-13-c-08-la-ley-define-dominio-8-9-y-10-dos-veces-con-significados-cruzados-abierta-bloqueante)** (nueva, **bloqueante**: la Ley duplica
-`DOMINIO 8/9/10` con significados cruzados → [`risks-and-gaps.md`](00-bootstrap/risks-and-gaps.md) [C-08](00-bootstrap/risks-and-gaps.md)), **[Q-03](00-bootstrap/questions-for-owner.md#q-03-c-03-estado-de-cancelacion-de-despacho)** y **[Q-04](00-bootstrap/questions-for-owner.md#q-04-c-04-cart-es-un-estado-de-customerorder)**
+`DOMINIO 8/9/10` con significados cruzados → [risks-and-gaps.md](00-bootstrap/risks-and-gaps.md) [C-08](00-bootstrap/risks-and-gaps.md)), **[Q-03](00-bootstrap/questions-for-owner.md#q-03-c-03-estado-de-cancelacion-de-despacho)** y **[Q-04](00-bootstrap/questions-for-owner.md#q-04-c-04-cart-es-un-estado-de-customerorder)**
 reactivadas como bloqueantes (su dominio se implementó sin respuesta), y siguen abiertas [Q-05](00-bootstrap/questions-for-owner.md#q-05-c-05-vendor-o-seller),
-[Q-06](00-bootstrap/questions-for-owner.md#q-06-c-07-consolidacion-de-los-documentos-numerados), [Q-07](00-bootstrap/questions-for-owner.md#q-07-documento-de-identidad-del-usuario), [Q-08](00-bootstrap/questions-for-owner.md#q-08-r-07-buyerpaymenttokens-contra-la-invariante-9), [Q-09](00-bootstrap/questions-for-owner.md#q-09-naming-canonico-pendiente), [Q-11](00-bootstrap/questions-for-owner.md#q-11-detalle-del-modelo-de-atributos-de-variante-abierta) y [Q-12](00-bootstrap/questions-for-owner.md#sub-decisiones-propuesto-ver-q-12). Detalle: [`SDD/00-bootstrap/questions-for-owner.md`](00-bootstrap/questions-for-owner.md).
+[Q-06](00-bootstrap/questions-for-owner.md#q-06-c-07-consolidacion-de-los-documentos-numerados), [Q-07](00-bootstrap/questions-for-owner.md#q-07-documento-de-identidad-del-usuario), [Q-08](00-bootstrap/questions-for-owner.md#q-08-r-07-buyerpaymenttokens-contra-la-invariante-9), [Q-09](00-bootstrap/questions-for-owner.md#q-09-naming-canonico-pendiente), [Q-11](00-bootstrap/questions-for-owner.md#q-11-detalle-del-modelo-de-atributos-de-variante-abierta) y [Q-12](00-bootstrap/questions-for-owner.md#sub-decisiones-propuesto-ver-q-12). Detalle: [SDD/00-bootstrap/questions-for-owner.md](00-bootstrap/questions-for-owner.md).
 
 ## 9. Estado de implementación
 
-`[CONFIRMADO]` Ver [`SDD/00-bootstrap/spec-conformance-matrix.md`](00-bootstrap/spec-conformance-matrix.md) y
-[`SDD/00-bootstrap/current-state.md`](00-bootstrap/current-state.md): solo existe el dominio, parcialmente.
-El roadmap de adopción es [`SDD/00-bootstrap/migration-to-sdd-plan.md`](00-bootstrap/migration-to-sdd-plan.md).
+`[CONFIRMADO]` Ver [SDD/00-bootstrap/spec-conformance-matrix.md](00-bootstrap/spec-conformance-matrix.md) y
+[SDD/00-bootstrap/current-state.md](00-bootstrap/current-state.md): solo existe el dominio, parcialmente.
+El roadmap de adopción es [SDD/00-bootstrap/migration-to-sdd-plan.md](00-bootstrap/migration-to-sdd-plan.md).

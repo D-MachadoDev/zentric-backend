@@ -15,8 +15,8 @@ Pertenece al **Inventory Context**, pero es orquestado a solicitud del **Orderin
 2. Por cada `VariantId` físico solicitado:
    - Consultar todos los agregados `InventoryItem` (bodegas) donde el `VariantId` coincida y `AvailableQuantity > 0`. *(Clave de stock `(VariantId, WarehouseId)` — ADR-0002.)*
    - **Regla de Prioridad:** Ordenar las bodegas de mayor a menor stock para intentar cubrir la demanda sin fragmentar.
-   - **Regla de Bodega Única (regla base INV-02):** si una sola bodega cubre la cantidad solicitada, la reserva se hace **íntegramente** en esa bodega aunque existan otras con stock. El envío no se divide.
-   - **Regla de Fragmentación de Contingencia (excepción INV-02, ADR-0001):** solo si **ninguna** bodega individual cubre la cantidad solicitada (ej. se piden 10 y la Bodega A tiene 6 y la Bodega B tiene 4), el servicio **fracciona** la reserva entre las bodegas necesarias, en orden de mayor a menor stock.
+   - **Regla de Bodega Única (regla base [INV-02](../06-business-rules.md)):** si una sola bodega cubre la cantidad solicitada, la reserva se hace **íntegramente** en esa bodega aunque existan otras con stock. El envío no se divide.
+   - **Regla de Fragmentación de Contingencia (excepción [INV-02](../06-business-rules.md), ADR-0001):** solo si **ninguna** bodega individual cubre la cantidad solicitada (ej. se piden 10 y la Bodega A tiene 6 y la Bodega B tiene 4), el servicio **fracciona** la reserva entre las bodegas necesarias, en orden de mayor a menor stock.
    - Invocar el método `Reserve(qty)` en los `InventoryItem` seleccionados.
 3. **Consistencia Transaccional:** Si el total sumado de todas las bodegas es menor a la cantidad solicitada por el usuario, **falla** la operación (Rollback virtual), liberando cualquier reserva parcial que se haya calculado en el proceso de esa misma transacción.
 

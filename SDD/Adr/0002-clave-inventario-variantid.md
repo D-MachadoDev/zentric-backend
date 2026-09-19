@@ -7,7 +7,7 @@ status: accepted
 date: 2026-09-17
 decided_by: owner del proyecto
 supersedes: []
-related_contradiction: [C-02](../00-bootstrap/risks-and-gaps.md) (SDD/00-bootstrap/risks-and-gaps.md)
+related_contradiction: [C-02](../00-bootstrap/risks-and-gaps.md) ([SDD/00-bootstrap/risks-and-gaps.md](../00-bootstrap/risks-and-gaps.md))
 ```
 
 ## Contexto
@@ -15,11 +15,11 @@ related_contradiction: [C-02](../00-bootstrap/risks-and-gaps.md) (SDD/00-bootstr
 La especificación de dominio definía la clave del inventario de dos formas
 incompatibles:
 
-- [SDD/Domain/02-aggregates-and-entities.md :3](../Domain/02-aggregates-and-entities.md#3-inventory-module) y [`SDD/Domain/03-value-objects.md`](../Domain/03-value-objects.md):
+- [SDD/Domain/02-aggregates-and-entities.md :3](../Domain/02-aggregates-and-entities.md#3-inventory-module) y [SDD/Domain/03-value-objects.md](../Domain/03-value-objects.md):
   el inventario se lleva por `VariantId` ("Tiene su propio `VariantId` (que sirve
-  como SKU para el inventario)"), y [`:2`](../../Zentric.Domain/Products/Product.cs#L2) define `ProductVariant` como entidad hija
+  como SKU para el inventario)"), y [Product.cs[:2](../Domain/03-value-objects.md#2-enumeraciones-clave-state-definitions)](../Zentric.Domain/Products/Product.cs#L2) define `ProductVariant` como entidad hija
   que "maneja las combinaciones (ej. Talla/Color)".
-- [SDD/Domain/01-models.md :3](../Domain/01-models.md#3-bounded-context-inventory-inventario-y-bodegas) y [`SDD/ZENTRIC.md`](../Domain/ZENTRIC.md) Dominio 6: el inventario está
+- [SDD/Domain/01-models.md :3](../Domain/01-models.md#3-bounded-context-inventory-inventario-y-bodegas) y [SDD/ZENTRIC.md](../Domain/ZENTRIC.md) Dominio 6: el inventario está
   "vinculado a un producto y una bodega". El código existente usaba
   `Inventory.ProductId`.
 
@@ -62,17 +62,17 @@ la opción B3, no elegida. Se registra como pregunta abierta **[Q-10](../00-boot
 - **Deuda declarada:** `VariantId` y `ProductVariant.Id` son `Guid` planos, no un
   `record struct VariantId`. La conversión a IDs fuertemente tipados corresponde a
   G-07 / [T-004](../00-bootstrap/migration-to-sdd-plan.md) y se ejecuta de forma consistente para todo el dominio, no solo
-  para este caso. Ver [`spec-conformance-matrix.md`](../00-bootstrap/spec-conformance-matrix.md).
+  para este caso. Ver [spec-conformance-matrix.md](../00-bootstrap/spec-conformance-matrix.md).
 - **Impacto en datos:** ninguno; no hay persistencia ni datos productivos.
 - **Riesgo abierto:** un producto físico sin variantes no puede tener inventario.
   Ver [Q-10](../00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) antes de implementar `InventoryReservationService`.
 
 ## Documentos actualizados en la misma decisión
 
-- [`SDD/Domain/01-models.md`](../Domain/01-models.md) — :2 (variantes) y :3 (`VariantId`).
-- [`SDD/Domain/02-aggregates-and-entities.md`](../Domain/02-aggregates-and-entities.md) — :3 (`VariantId`).
-- [`SDD/Domain/06-business-rules.md`](../Domain/06-business-rules.md) — nueva INV-03 (unidad de stock).
-- [`SDD/Domain/services/inventory-reservation-service.md`](../Domain/services/inventory-reservation-service.md) — entrada por variante.
+- [SDD/Domain/01-models.md](../Domain/01-models.md) — [:2](../Domain/01-models.md#2-bounded-context-catalog-catalogo) (variantes) y [:3](../Domain/01-models.md#3-bounded-context-inventory-inventario-y-bodegas) (`VariantId`).
+- [SDD/Domain/02-aggregates-and-entities.md](../Domain/02-aggregates-and-entities.md) — [:3](../Domain/02-aggregates-and-entities.md#3-inventory-module) (`VariantId`).
+- [SDD/Domain/06-business-rules.md](../Domain/06-business-rules.md) — nueva [INV-03](../Domain/06-business-rules.md) (unidad de stock).
+- [SDD/Domain/services/inventory-reservation-service.md](../Domain/services/inventory-reservation-service.md) — entrada por variante.
 - `SDD/00-bootstrap/*` — [C-02](../00-bootstrap/risks-and-gaps.md) cerrada, [Q-02](../00-bootstrap/questions-for-owner.md#q-02-c-02-la-clave-del-inventario-es-el-producto-o-la-variante-sku-resuelta-2026-09-17) resuelta, G-08 cerrada, roadmap,
   matriz de conformidad, estado actual y evidencia de verificación.
 - Código: `Zentric.Domain/Products/ProductVariant.cs`,
