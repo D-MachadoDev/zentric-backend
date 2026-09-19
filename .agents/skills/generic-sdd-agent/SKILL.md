@@ -1280,16 +1280,15 @@ Se crea en la raíz **desde evidencia**; lo que no exista es `[PENDIENTE]`. Mant
 
 Esta sección define las reglas canónicas para escribir enlaces, referencias cruzadas y formato Markdown en todos los documentos del proyecto. Su objetivo es que cada referencia sea **navegable con un clic** y que el lector nunca tenga que buscar manualmente un documento o sección.
 
-### 23.1 Sistema de referencias internas (`:X.Y`)
-- Formato canónico: `[archivo.md :X.Y](ruta/archivo.md#ancla-github)`
-- Ejemplo: `[AGENTS.md :2.2](../AGENTS.md#22-puertos-y-adaptadores)`
-- **Prohibido** usar el símbolo `§` (section sign). Usar siempre `:X.Y` como prefijo de sección.
-- Cada `:X.Y` suelto en el texto **debe** ser un enlace clicable con ancla GitHub válida.
-- Si dos o más `:X` aparecen seguidos, cada uno debe tener su propio enlace: `[:1](ruta#1-titulo), [:2](ruta#2-titulo)`.
+### 23.1 Sistema de referencias internas (Markdown Estándar)
+- **Prohibido** usar símbolos inventados como `§` o sintaxis numéricas compactas como `:X.Y`.
+- Formato canónico: Únicamente enlaces estándar de Markdown `[Nombre del Documento o Sección](ruta/archivo.md#ancla)`.
+- Ejemplo correcto: `([ZENTRIC.md](../Domain/ZENTRIC.md))` o `[Puertos y Adaptadores](../AGENTS.md#22-puertos-y-adaptadores)`.
+- El texto del enlace debe ser descriptivo, no un simple número.
 
 ### 23.2 Reglas de enlaces Markdown
 1. **No envolver enlaces en backticks:** ❌ `` `[texto](url)` `` → ✅ `[texto](url)`
-   Los backticks convierten el enlace en código literal y bloquean la navegación.
+   Los backticks (acentos graves) convierten el enlace en código/negrilla literal y bloquean la navegación en el editor.
 2. **No anidar enlaces:** ❌ `[texto [otro](url2)](url1)` — Markdown no soporta anidamiento.
 3. **Todo archivo `.md` mencionado en prosa debe ser un enlace relativo.**
    ❌ `ver SDD/Domain/06-business-rules.md` → ✅ `ver [06-business-rules.md](Domain/06-business-rules.md)`
@@ -1317,11 +1316,10 @@ Ejemplo: `## 2.2 Puertos y Adaptadores` → `#22-puertos-y-adaptadores`
 | ❌ Incorrecto | ✅ Correcto | Razón |
 |---|---|---|
 | `ver SDD/Domain/06-business-rules.md` | `ver [06-business-rules.md](Domain/06-business-rules.md)` | Texto plano no es navegable |
-| `` `[texto](url)` `` | `[texto](url)` | Los backticks bloquean el clic |
+| `` `[texto](url)` `` | `[texto](url)` | Los backticks bloquean el clic en el editor |
 | `[texto [otro](url2)](url1)` | `[texto](url1)` + `[otro](url2)` | Los enlaces no se anidan |
-| `(§3.2)` | `[:3.2](ruta.md#32-titulo)` | `§` no es estándar; `:X.Y` es la convención |
+| `(§3.2)` o `[:3.2]` | `[Título de la sección](ruta.md#titulo)` | Símbolos inventados. Se debe usar Markdown estándar |
 | `SDD/Adr/0001-...` | `[ADR-0001](Adr/0001-reserva.md)` | El `...` truncado no navega |
-| `:11` (suelto sin link) | `[:11](ruta.md#11-titulo)` | Toda referencia numérica debe ser clicable |
 
 ---
 
