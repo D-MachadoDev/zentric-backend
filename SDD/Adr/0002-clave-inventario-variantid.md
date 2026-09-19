@@ -1,4 +1,4 @@
-# ADR-0002 — Clave del inventario: VariantId (SKU)
+# [ADR-0002](0002-clave-inventario-variantid.md) — Clave del inventario: VariantId (SKU)
 
 ```yaml
 id: 0002

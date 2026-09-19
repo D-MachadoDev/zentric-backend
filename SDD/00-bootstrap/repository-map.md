@@ -89,7 +89,7 @@ SDD/
 ├── 01-system-overview.md
 ├── 02-software-architecture.md
 ├── 00-bootstrap/                                  # SPEC-000 (8 documentos)
-├── Adr/                                           # ADR-0001, ADR-0002, ADR-0003
+├── Adr/                                           # [ADR-0001](../Adr/0001-reserva-fragmentacion-contingencia.md), [ADR-0002](../Adr/0002-clave-inventario-variantid.md), [ADR-0003](../Adr/0003-variante-obligatoria-productos-fisicos.md)
 ├── Application/01-use-cases-and-ports.md           # SPEC-003
 ├── Infrastructure/01-data-access.md                # SPEC-004
 ├── Presentation/01-endpoints.md                    # SPEC-005

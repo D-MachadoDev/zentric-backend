@@ -115,7 +115,7 @@ Passed!  - Failed: 0, Passed: 105, Skipped: 0, Total: 105
 
 ---
 
-## 8. Tercera iteración — ADR-0002: clave del inventario = `VariantId`
+## 8. Tercera iteración — [ADR-0002](../Adr/0002-clave-inventario-variantid.md): clave del inventario = `VariantId`
 
 Fecha: 2026-09-17. Alcance: [T-010](migration-to-sdd-plan.md) (`ProductVariant`), [T-004a](migration-to-sdd-plan.md)
 (`Inventory.ProductId` → `Inventory.VariantId`) y [T-002c](migration-to-sdd-plan.md) (migración de pruebas).
@@ -174,7 +174,7 @@ defectuosa**, no como defecto de producción.
 
 ---
 
-## 9. Cuarta iteración — ADR-0003: variante obligatoria en físicos ([Q-10](questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = C3)
+## 9. Cuarta iteración — [ADR-0003](../Adr/0003-variante-obligatoria-productos-fisicos.md): variante obligatoria en físicos ([Q-10](questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = [C3](../Adr/0003-variante-obligatoria-productos-fisicos.md))
 
 Fecha: 2026-09-17. Alcance: [T-010c](migration-to-sdd-plan.md) (hacer cumplir [CAT-03](../Domain/06-business-rules.md) en `Product`).
 

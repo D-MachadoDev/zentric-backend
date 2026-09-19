@@ -12,20 +12,20 @@
 | `Users/Ports/IUserRepository.cs` | puerto | [05-ports.md](../Domain/05-ports.md) | parcial |
 | `Buyers/Buyer.cs` | AR | [ZENTRIC.md](../Domain/ZENTRIC.md) Dominio 2 (**no** en `02-aggregates`) | extra en la spec de dominio |
 | `Products/Product.cs` | AR | [01-models.md :2](../Domain/01-models.md#2-bounded-context-catalog-catalogo) | parcial (+ gestión de variantes) |
-| `Products/ProductVariant.cs` | entidad hija | `02-aggregates:18-19` | **implementado** (ADR-0002) |
+| `Products/ProductVariant.cs` | entidad hija | `02-aggregates:18-19` | **implementado** ([ADR-0002](../Adr/0002-clave-inventario-variantid.md)) |
 | `Products/ValueObjects/VariantAttribute.cs` | VO | `02-aggregates:18` | **implementado** `[PROPUESTO]` ([Q-11](questions-for-owner.md#q-11-detalle-del-modelo-de-atributos-de-variante-abierta)) |
 | `Products/ValueObjects/Money.cs` | VO | [02-value-objects.md](../Domain/02-value-objects.md) | conforme |
 | `Products/Enums/ProductType.cs` | enum | [02-value-objects.md](../Domain/02-value-objects.md) | conforme |
 | `Warehouses/Warehouse.cs` | AR | [01-models.md :3](../Domain/01-models.md#3-bounded-context-inventory-inventario-y-bodegas) | parcial |
 | `Warehouses/Enum/WarehouseType.cs` | enum | [02-value-objects.md](../Domain/02-value-objects.md) | nombre desviado (`Seller` vs `Vendor`) |
-| `Inventories/Inventory.cs` | AR | [01-models.md :3](../Domain/01-models.md#3-bounded-context-inventory-inventario-y-bodegas) (`InventoryItem`) | parcial + nombre desviado; clave `VariantId` (ADR-0002) |
+| `Inventories/Inventory.cs` | AR | [01-models.md :3](../Domain/01-models.md#3-bounded-context-inventory-inventario-y-bodegas) (`InventoryItem`) | parcial + nombre desviado; clave `VariantId` ([ADR-0002](../Adr/0002-clave-inventario-variantid.md)) |
 | `Orders/Order.cs` | stub | [01-models.md :4](../Domain/01-models.md#4-bounded-context-ordering-pedidos---interfaz-del-comprador) (`CustomerOrder`) | **vacío** |
 
 ## 2. Reglas de negocio efectivamente protegidas hoy
 
 `[CONFIRMADO]` por lectura del código:
 
-1. **No-negatividad de inventario ([INV-01](../Domain/06-business-rules.md) / invariante 1).** Protegida en el
+1. **No-negatividad de inventario ([INV-01](../Domain/06-business-rules.md) / [invariante 1](../Domain/04-invariants-and-rules.md)).** Protegida en el
    constructor y en cada mutación de `Inventory`
    (`Inventory.cs:33`, [Inventory.cs:60](../Zentric.Domain/Inventories/Inventory.cs#L60), [Inventory.cs:99](../Zentric.Domain/Inventories/Inventory.cs#L99), [Inventory.cs:116](../Zentric.Domain/Inventories/Inventory.cs#L116), [Inventory.cs:132](../Zentric.Domain/Inventories/Inventory.cs#L132)).
 2. **Bodega Marketplace sin vendedor y bodega de vendedor con dueño.**
@@ -38,7 +38,7 @@
    `User.cs:52`, [User.cs:73](../Zentric.Domain/Users/User.cs#L73), [User.cs:96](../Zentric.Domain/Users/User.cs#L96), [User.cs:158](../Zentric.Domain/Users/User.cs#L158).
 6. **Producto creado nace activo ([CAT-01](../Domain/06-business-rules.md)).** `Product.cs:59`.
 7. **Variante obligatoria en productos físicos ([CAT-03](../Domain/06-business-rules.md)).** Constructor,
-   `UpdateType` y `RemoveVariant` en `Product.cs` (ADR-0003).
+   `UpdateType` y `RemoveVariant` en `Product.cs` ([ADR-0003](../Adr/0003-variante-obligatoria-productos-fisicos.md)).
 8. **Moneda homogénea en operaciones con `Money`.** `Money.cs:78-84`.
 9. **Correo con formato mínimo validado.** `Email.cs:8-39`.
 
@@ -69,7 +69,7 @@
 `AvalibleQuantity < quantity` cuando la cantidad que decrementa es
 `ReservedQuantity`. Con `Available = 0`, `Reserved = 10`, `DispatchStock(5)`
 decrementa `Reserved` a 5 sin error; con `quantity > ReservedQuantity` puede
-dejar `ReservedQuantity` **negativo**, violando la invariante 1 referida al stock
+dejar `ReservedQuantity` **negativo**, violando la [invariante 1](../Domain/04-invariants-and-rules.md) referida al stock
 reservado y rompiendo el balance
 `Avalible + Reservado + Dañado`.
 
@@ -94,13 +94,13 @@ actual de `Inventory`, `Warehouse`, `User`, `Product` (incl. [CAT-03](../Domain/
 `ProductVariant`, `VariantAttribute` y `Money`. Evidencia inicial en
 [verification-baseline.md :7](verification-baseline.md#7-segunda-iteracion-suite-de-pruebas-y-correccion-t-003) y [:8](verification-baseline.md#8-tercera-iteracion-adr-0002-clave-del-inventario-variantid).
 
-`[CONFIRMADO]` [T-010](migration-to-sdd-plan.md)/[T-004a](migration-to-sdd-plan.md) (2026-09-17, ADR-0002): se implementó `ProductVariant`
+`[CONFIRMADO]` [T-010](migration-to-sdd-plan.md)/[T-004a](migration-to-sdd-plan.md) (2026-09-17, [ADR-0002](../Adr/0002-clave-inventario-variantid.md)): se implementó `ProductVariant`
 (SKU = `VariantId`) y `VariantAttribute`, `Product` gestiona sus variantes con
 SKU único por producto, y `Inventory` cambió su clave de `ProductId` a `VariantId`.
 El inventario dejó de referenciar el producto directamente: la unidad de stock es
 la variante.
 
-`[CONFIRMADO]` [T-010c](migration-to-sdd-plan.md) (2026-09-17, ADR-0003, [Q-10](questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = C3): `Product` hace cumplir
+`[CONFIRMADO]` [T-010c](migration-to-sdd-plan.md) (2026-09-17, [ADR-0003](../Adr/0003-variante-obligatoria-productos-fisicos.md), [Q-10](questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = [C3](../Adr/0003-variante-obligatoria-productos-fisicos.md)): `Product` hace cumplir
 [CAT-03](../Domain/06-business-rules.md) — un `Physical` exige ≥1 variante (constructor, `UpdateType`,
 `RemoveVariant`) y `CanBeSold` exige variante vendible en físicos. Evidencia en
 [verification-baseline.md :9](verification-baseline.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) (164/164 PASS).

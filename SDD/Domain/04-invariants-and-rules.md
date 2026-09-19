@@ -5,9 +5,9 @@ El Dominio está obligado a proteger y hacer cumplir las siguientes reglas media
 ## 1. Integridad del Inventario (Las reglas más duras)
 1. **No-Negatividad Absoluta:** `AvailableQuantity` nunca puede ser `< 0`. Es matemáticamente imposible en el dominio.
 2. **Prioridad Marketplace:** El algoritmo de reserva debe buscar existencias *primero* en una `WarehouseType.Marketplace` y solo buscar en bodegas del Vendedor como contingencia.
-3. **Bodega única con fraccionamiento de contingencia ([INV-02](06-business-rules.md) revisada por ADR-0001):**
+3. **Bodega única con fraccionamiento de contingencia ([INV-02](06-business-rules.md) revisada por [ADR-0001](../Adr/0001-reserva-fragmentacion-contingencia.md)):**
    - **Regla base:** toda la cantidad solicitada de una Variante específica en una `OrderLine` debe surtirse desde **una (1) sola bodega** cuando exista una bodega individual cuyo `AvailableQuantity` cubra la cantidad total. Los envíos de un mismo SKU no se dividen, para evitar costos exorbitantes.
-   - **Umbral exacto de la excepción (fraccionamiento permitido):** solo si **ninguna** bodega individual cubre la cantidad solicitada, el `InventoryReservationService` puede fraccionar la reserva entre varias bodegas, ordenándolas de mayor a menor stock disponible y respetando la prioridad de bodega `Marketplace` (invariante 2).
+   - **Umbral exacto de la excepción (fraccionamiento permitido):** solo si **ninguna** bodega individual cubre la cantidad solicitada, el `InventoryReservationService` puede fraccionar la reserva entre varias bodegas, ordenándolas de mayor a menor stock disponible y respetando la prioridad de bodega `Marketplace` ([invariante 2](04-invariants-and-rules.md)).
    - **Fallo y compensación:** si la suma de todas las bodegas es menor que la cantidad solicitada, la operación **falla** y se liberan las reservas parciales calculadas en esa misma transacción (rollback virtual).
    - **Efecto en logística:** cuando hubo fraccionamiento, se generan **múltiples `Shipment`** (una guía por bodega) dentro del `FulfillmentOrder` del vendedor.
    - **Ejemplos normativos:** bodega A = 6, bodega B = 4.

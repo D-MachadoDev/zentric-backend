@@ -97,7 +97,7 @@ electrónico únicos en la plataforma.
 
 - [SDD/Domain/06-business-rules.md](Domain/06-business-rules.md): [INV-01](Domain/06-business-rules.md), [INV-02](Domain/06-business-rules.md), [PED-01](Domain/06-business-rules.md), [PED-02](Domain/06-business-rules.md), [PED-03](Domain/06-business-rules.md),
   [CAT-01](Domain/06-business-rules.md), [CAT-02](Domain/06-business-rules.md), [EXC-01](Domain/06-business-rules.md), [EXC-02](Domain/06-business-rules.md), [DEV-01](Domain/06-business-rules.md).
-- [SDD/Domain/04-invariants-and-rules.md](Domain/04-invariants-and-rules.md): invariantes 1–13 (inventario,
+- [SDD/Domain/04-invariants-and-rules.md](Domain/04-invariants-and-rules.md): [invariantes 1–13](Domain/04-invariants-and-rules.md) (inventario,
   catálogo, pagos, posventa).
 - [SDD/Domain/07-lifecycle.md](Domain/07-lifecycle.md): máquinas de estado de `CustomerOrder` y
   `FulfillmentOrder`.
@@ -105,11 +105,11 @@ electrónico únicos en la plataforma.
 `[RESUELTO]` Las contradicciones de reglas del dominio quedaron resueltas el
 2026-09-17:
 
-- **[C-01](00-bootstrap/risks-and-gaps.md)** ([INV-02](Domain/06-business-rules.md) vs invariante 3) → `SDD/Adr/0001-...`: bodega única con
+- **[C-01](00-bootstrap/risks-and-gaps.md)** ([INV-02](Domain/06-business-rules.md) vs [invariante 3](Domain/04-invariants-and-rules.md)) → [SDD/Adr/0001-reserva-fragmentacion-contingencia.md](Adr/0001-reserva-fragmentacion-contingencia.md): bodega única con
   fraccionamiento de contingencia.
-- **[C-02](00-bootstrap/risks-and-gaps.md)** (clave de stock `ProductId` vs `VariantId`) → `SDD/Adr/0002-...`:
+- **[C-02](00-bootstrap/risks-and-gaps.md)** (clave de stock `ProductId` vs `VariantId`) → [SDD/Adr/0002-clave-inventario-variantid.md](Adr/0002-clave-inventario-variantid.md):
   el inventario se lleva por `VariantId` (SKU).
-- **[Q-10](00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3)** (¿variante obligatoria?) → `SDD/Adr/0003-...`: obligatoria solo en
+- **[Q-10](00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3)** (¿variante obligatoria?) → [SDD/Adr/0003-variante-obligatoria-productos-fisicos.md](Adr/0003-variante-obligatoria-productos-fisicos.md): obligatoria solo en
   `Physical` ([CAT-03](Domain/06-business-rules.md)), aplicado en código con 164/164 pruebas. Sub-decisiones
   `[PROPUESTO]` pendientes de confirmar (**[Q-12](00-bootstrap/questions-for-owner.md#sub-decisiones-propuesto-ver-q-12)**).
 

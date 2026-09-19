@@ -1,4 +1,4 @@
-# ADR-0001 — Reserva de inventario: bodega única con fraccionamiento de contingencia
+# [ADR-0001](0001-reserva-fragmentacion-contingencia.md) — Reserva de inventario: bodega única con fraccionamiento de contingencia
 
 ```yaml
 id: 0001
@@ -15,7 +15,7 @@ related_contradiction: [C-01](../00-bootstrap/risks-and-gaps.md) ([SDD/00-bootst
 La especificación de dominio contenía dos reglas incompatibles para la reserva de
 stock distribuido:
 
-- [SDD/Domain/04-invariants-and-rules.md](../Domain/04-invariants-and-rules.md) (invariante 3): "No Fraccionamiento de
+- [SDD/Domain/04-invariants-and-rules.md](../Domain/04-invariants-and-rules.md) ([invariante 3](../Domain/04-invariants-and-rules.md)): "No Fraccionamiento de
   Variante… toda la cantidad debe surtirse desde **una (1) sola bodega**… Los
   envíos de un mismo SKU no se dividen para evitar costos exorbitantes."
 - [SDD/Domain/06-business-rules.md](../Domain/06-business-rules.md) ([INV-02](../Domain/06-business-rules.md)) y
@@ -36,7 +36,7 @@ Se adopta el modelo **híbrido (A3)**:
 2. **Umbral exacto de la excepción:** solo si **ninguna** bodega individual cubre
    la cantidad solicitada, se permite fraccionar la reserva entre varias bodegas,
    ordenadas de mayor a menor stock disponible y respetando la prioridad de bodega
-   `Marketplace` sobre `Vendor` (invariante 2).
+   `Marketplace` sobre `Vendor` ([invariante 2](../Domain/04-invariants-and-rules.md)).
 3. **Fallo y compensación:** si la suma de todas las bodegas es menor que la
    cantidad solicitada, la operación falla y se liberan las reservas parciales
    calculadas en esa misma transacción (rollback virtual).
@@ -74,7 +74,7 @@ Ejemplos normativos (bodega A = 6, bodega B = 4):
 
 ## Documentos actualizados en la misma decisión
 
-- [SDD/Domain/04-invariants-and-rules.md](../Domain/04-invariants-and-rules.md) — invariante 3 reescrita.
+- [SDD/Domain/04-invariants-and-rules.md](../Domain/04-invariants-and-rules.md) — [invariante 3](../Domain/04-invariants-and-rules.md) reescrita.
 - [SDD/Domain/06-business-rules.md](../Domain/06-business-rules.md) — [INV-02](../Domain/06-business-rules.md) reescrita.
 - [SDD/Domain/services/inventory-reservation-service.md](../Domain/services/inventory-reservation-service.md) — reglas de prioridad,
   bodega única y fraccionamiento de contingencia.
@@ -85,4 +85,4 @@ Ejemplos normativos (bodega A = 6, bodega B = 4):
 
 ## Estado
 
-`accepted` — vigente. Sustituye a la invariante 3 original y a [INV-02](../Domain/06-business-rules.md) original.
+`accepted` — vigente. Sustituye a la [invariante 3](../Domain/04-invariants-and-rules.md) original y a [INV-02](../Domain/06-business-rules.md) original.

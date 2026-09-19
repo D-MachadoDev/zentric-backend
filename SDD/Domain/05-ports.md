@@ -7,7 +7,7 @@ Siguiendo el principio de **Inversión de Dependencias** y la **Arquitectura Hex
 - **`IUserRepository`**: Abstracción para leer/escribir perfiles. Esencial para validar la unicidad del correo electrónico y el documento de identidad.
 - **`IProductRepository`**: Acceso al catálogo.
 - **`IWarehouseRepository`**: Acceso a la configuración y ubicación de bodegas (Marketplace vs. Vendor).
-- **`IInventoryRepository`**: Extremadamente crítico. Debe soportar manejo de concurrencia y bloqueo optimista para evitar fallos matemáticos al invocar `Reserve()` y `Release()`. Opera con la clave `(VariantId, WarehouseId)` (ADR-0002).
+- **`IInventoryRepository`**: Extremadamente crítico. Debe soportar manejo de concurrencia y bloqueo optimista para evitar fallos matemáticos al invocar `Reserve()` y `Release()`. Opera con la clave `(VariantId, WarehouseId)` ([ADR-0002](../Adr/0002-clave-inventario-variantid.md)).
 - **`ICustomerOrderRepository`**: Administra la persistencia del pedido maestro transaccional unificado.
 - **`IFulfillmentOrderRepository`**: Administra el ciclo de vida de los despachos individuales generados para los vendedores.
 

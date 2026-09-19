@@ -13,8 +13,8 @@ contradice la especificación.
 | Correo único en todo el sistema | [01-models.md :1](../Domain/01-models.md#1-bounded-context-identity-access-usuarios), [ZENTRIC.md](../Domain/ZENTRIC.md) 11 | `IUserRepository.GetByEmailAsync` es solo lectura | **PARCIAL** |
 | Un solo rol por usuario | [ZENTRIC.md](../Domain/ZENTRIC.md) RG-02 | `User.Role` único | OK |
 | `Lock()` / `Unlock()` / `ChangeRole()` | [01-models.md :1](../Domain/01-models.md#1-bounded-context-identity-access-usuarios) | `Block()` / `Activate()` / `UpdateRole()` | **DESVIADO** |
-| `Block()` dispara evento de suspensión en cascada | `02-aggregates:10`, invariante 6 | sin eventos de dominio | **FALTA** |
-| Suspensión en cascada de productos del vendedor | invariante 6 (`04-invariants`) | — | **FALTA** |
+| `Block()` dispara evento de suspensión en cascada | `02-aggregates:10`, [invariante 6](../Domain/04-invariants-and-rules.md) | sin eventos de dominio | **FALTA** |
+| Suspensión en cascada de productos del vendedor | [invariante 6](../Domain/04-invariants-and-rules.md) (`04-invariants`) | — | **FALTA** |
 | `UserStatus`: Activo, Bloqueado | [ZENTRIC.md](../Domain/ZENTRIC.md) Dom.1 | `Active, Blocked, Deleted` | OK + extra |
 
 ## 2. Buyer
@@ -25,7 +25,7 @@ contradice la especificación.
 | Direcciones adicionales (opcional, añadir/quitar) | [ZENTRIC.md](../Domain/ZENTRIC.md) Dom.2 | `Buyer.cs:45-70` | OK |
 | Estado comercial | [ZENTRIC.md](../Domain/ZENTRIC.md) Dom.2 | `IsActiveForCommerce` | OK |
 | Agregado `Buyer` declarado en la spec de dominio | [01-models.md](../Domain/01-models.md), `02-aggregates` | existe en código | **FALTA en spec** |
-| Sin almacenamiento de medios de pago | invariante 9 (`04-invariants`) | `PaymentTokens` (`Buyer.cs:13,112-139`) | **CONTRA** |
+| Sin almacenamiento de medios de pago | [invariante 9](../Domain/04-invariants-and-rules.md) (`04-invariants`) | `PaymentTokens` (`Buyer.cs:13,112-139`) | **CONTRA** |
 | Dirección como VO `Address` | [02-value-objects.md](../Domain/02-value-objects.md) | `string` (`Buyer.cs:10-11`) | **DESVIADO** |
 
 ## 3. Catalog (productos)
@@ -35,13 +35,13 @@ contradice la especificación.
 | AR `Product` con `SellerId`, `Price`, `Type` | [01-models.md :2](../Domain/01-models.md#2-bounded-context-catalog-catalogo) | `Product.cs` | OK |
 | Propiedad `Title` | [01-models.md :2](../Domain/01-models.md#2-bounded-context-catalog-catalogo) | `Name` | **DESVIADO** |
 | `ProductStatus` = Published / Suspended / Discontinued | [02-value-objects.md](../Domain/02-value-objects.md), [ZENTRIC.md](../Domain/ZENTRIC.md) Dom.5 | `bool IsActive` + `DeletedAt` | **DESVIADO** |
-| Nace publicado sin aprobación ([CAT-01](../Domain/06-business-rules.md)) | invariante 5, `06-business-rules` [CAT-01](../Domain/06-business-rules.md) | `Product.cs:59` | OK |
+| Nace publicado sin aprobación ([CAT-01](../Domain/06-business-rules.md)) | [invariante 5](../Domain/04-invariants-and-rules.md), `06-business-rules` [CAT-01](../Domain/06-business-rules.md) | `Product.cs:59` | OK |
 | `Suspend()` reactivo | `02-aggregates:17` | existe | OK |
 | `Discontinue()` | `01-models:22` | — | **FALTA** |
-| `ProductVariant` (SKU) con `VariantId` | `02-aggregates:18-19`, `03-value-objects:15` | `ProductVariant.cs` + `Product.AddVariant()` | **OK** (ADR-0002) |
-| Variante obligatoria solo en físicos ([CAT-03](../Domain/06-business-rules.md)) | [06-business-rules.md](../Domain/06-business-rules.md) [CAT-03](../Domain/06-business-rules.md), ADR-0003 ([Q-10](questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = C3) | constructor + `UpdateType` + `RemoveVariant` + `CanBeSold` en `Product.cs` | **OK** (sub-decisiones [Q-12](questions-for-owner.md#sub-decisiones-propuesto-ver-q-12) `[PROPUESTO]`) |
+| `ProductVariant` (SKU) con `VariantId` | `02-aggregates:18-19`, `03-value-objects:15` | `ProductVariant.cs` + `Product.AddVariant()` | **OK** ([ADR-0002](../Adr/0002-clave-inventario-variantid.md)) |
+| Variante obligatoria solo en físicos ([CAT-03](../Domain/06-business-rules.md)) | [06-business-rules.md](../Domain/06-business-rules.md) [CAT-03](../Domain/06-business-rules.md), [ADR-0003](../Adr/0003-variante-obligatoria-productos-fisicos.md) ([Q-10](questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = [C3](../Adr/0003-variante-obligatoria-productos-fisicos.md)) | constructor + `UpdateType` + `RemoveVariant` + `CanBeSold` en `Product.cs` | **OK** (sub-decisiones [Q-12](questions-for-owner.md#sub-decisiones-propuesto-ver-q-12) `[PROPUESTO]`) |
 | Atributos de variante (Talla/Color) | `02-aggregates:18` | `VariantAttribute` (nombre + valor) | **OK** `[PROPUESTO]` ([Q-11](questions-for-owner.md#q-11-detalle-del-modelo-de-atributos-de-variante-abierta)) |
-| SKU único dentro del producto | consecuencia de ADR-0002 / [INV-03](../Domain/06-business-rules.md) | `Product.AddVariant()` rechaza SKU duplicado | **OK** (decisión, unicidad global pendiente en persistencia) |
+| SKU único dentro del producto | consecuencia de [ADR-0002](../Adr/0002-clave-inventario-variantid.md) / [INV-03](../Domain/06-business-rules.md) | `Product.AddVariant()` rechaza SKU duplicado | **OK** (decisión, unicidad global pendiente en persistencia) |
 | `UpdatePrice(Money)` | `01-models:22` | `Product.cs:92` | OK |
 | Soft delete / restaurar producto | no especificado | `Delete()` / `Restore()` | **PENDIENTE** documentar |
 
@@ -56,14 +56,14 @@ contradice la especificación.
 | AR de stock con `WarehouseId` y cantidades | `01-models` [Inventory.cs:3](../Zentric.Domain/Inventories/Inventory.cs#L3) | `Inventory.cs` | OK |
 | Nombre `InventoryItem` | `01-models:31` | `Inventory` | **DESVIADO** |
 | `AvailableQuantity` (ortografía) | toda la spec | `AvalibleQuantity` | **DESVIADO (typo)** |
-| Clave de stock = `VariantId` (SKU) | `02-aggregates:29`, `03-value-objects:15`, [INV-03](../Domain/06-business-rules.md) | `Inventory.VariantId` | **OK** (ADR-0002) |
-| Clave de stock = `(VariantId, WarehouseId)` | [INV-03](../Domain/06-business-rules.md) (ADR-0002) | `VariantId` + `WarehouseId` | **OK** |
+| Clave de stock = `VariantId` (SKU) | `02-aggregates:29`, `03-value-objects:15`, [INV-03](../Domain/06-business-rules.md) | `Inventory.VariantId` | **OK** ([ADR-0002](../Adr/0002-clave-inventario-variantid.md)) |
+| Clave de stock = `(VariantId, WarehouseId)` | [INV-03](../Domain/06-business-rules.md) ([ADR-0002](../Adr/0002-clave-inventario-variantid.md)) | `VariantId` + `WarehouseId` | **OK** |
 | `Reserve(qty)` | `01-models:35` | `ReserveStock(qty)` | DESVIADO (naming) |
 | `Release(qty)` | `01-models:35` | `ReturnToAvalible(qty)` | DESVIADO (naming) |
 | `Deduct(qty)` | `01-models:35` | `DispatchStock(qty)` (con defecto H-01) | PARCIAL |
 | `Adjust(qty)` para devoluciones | `01-models:35`, servicio de devoluciones | `UpdateQuantities` / `AddStock` / `ReciveReturnedStock` | DESVIADO |
-| `ManualAdjust(qty, UserId, Role)` con regla dura | `02-aggregates:34`, invariante 4 | ningún método recibe `Role` | **FALTA** |
-| `AvailableQuantity` nunca negativo | [INV-01](../Domain/06-business-rules.md), invariante 1 | protegido (`Inventory.cs:33,60,99,116,132`) | OK |
+| `ManualAdjust(qty, UserId, Role)` con regla dura | `02-aggregates:34`, [invariante 4](../Domain/04-invariants-and-rules.md) | ningún método recibe `Role` | **FALTA** |
+| `AvailableQuantity` nunca negativo | [INV-01](../Domain/06-business-rules.md), [invariante 1](../Domain/04-invariants-and-rules.md) | protegido (`Inventory.cs:33,60,99,116,132`) | OK |
 | Cantidad dañada no reservable | [ZENTRIC.md](../Domain/ZENTRIC.md) 11 | `DamagedQuantity` existe; no bloquea la reserva | **PARCIAL** |
 | Movimientos: Ingreso, Reserva, Salida, Ajuste, Devolución | [ZENTRIC.md](../Domain/ZENTRIC.md) Dom.6 | 5 operaciones presentes | OK |
 
@@ -73,10 +73,10 @@ contradice la especificación.
 |---|---|---|---|
 | AR `CustomerOrder` con `BuyerId`, `Items`, `TotalAmount`, `Status` | `01-models` [Buyer.cs[:4](../Domain/ZENTRIC.md#dominio-4-gestion-de-bodegas)](../Zentric.Domain/Buyers/Buyer.cs#L4) | `Orders/CustomerOrder.cs` | **PARCIAL** — `Items` (no `Lines`); `TotalAmount` con moneda "USD" **inventada** ([Buyer.cs:24](../Zentric.Domain/Buyers/Buyer.cs#L24)) |
 | `OrderLine` (variante, cantidad, precio unitario, total, tipo) | `01-models:43`, `02-aggregates:41` | `Orders/Entities/OrderItem.cs` | **DESVIADO** (nombre: `OrderItem`) |
-| `FlatShippingFee` | `02-aggregates:40`, invariante 7 | — | **FALTA** |
+| `FlatShippingFee` | `02-aggregates:40`, [invariante 7](../Domain/04-invariants-and-rules.md) | — | **FALTA** |
 | Estados `Cart`, `PendingPayment`, `Paid`, `PartiallyDelivered`, `Completed`, `Cancelled` | `02-value-objects:45-51` | `Orders/Enums/OrderStatus.cs` | **PARCIAL** — la Ley (Dom.7) fija Cart, PendingPayment, Paid, Dispatched, Delivered; faltan `PartiallyDelivered`, `Completed`, `Cancelled` |
 | `ConfirmPayment()`, `CancelEarly()`, `ApplyPartialRefund()` | `02-aggregates:42-45` | `MarkAsPaid()`, `Dispatch()`, `Deliver()` | **DESVIADO** — sin cancelación ni reembolso parcial |
-| `PaymentReceipt` (simulación de pasarela) | invariante 9 | — | **FALTA** |
+| `PaymentReceipt` (simulación de pasarela) | [invariante 9](../Domain/04-invariants-and-rules.md) | — | **FALTA** |
 | Timeout de reserva 15 min ([PED-01](../Domain/06-business-rules.md)) | `06-business-rules` [PED-01](../Domain/06-business-rules.md), `07-lifecycle` | — | **FALTA** — y la reserva preventiva tampoco existe (**H-10**) |
 | Pedido entregado **no modificable** | [ZENTRIC.md :11](../Domain/ZENTRIC.md#11-validaciones-criticas) (Validaciones Críticas) | `CustomerOrder.EnsureNotDelivered()` ([CustomerOrder.cs:152-159](../Zentric.Domain/Orders/CustomerOrder.cs#L152-L159)) | **OK** (con prueba) |
 
@@ -104,7 +104,7 @@ contradice la especificación.
 |---|---|---|
 | H-01 | `Inventory.cs:109-123`: `DispatchStock` valida `AvalibleQuantity` y decrementa `ReservedQuantity`; puede dejar el reservado negativo | Rompe el balance de stock — severidad **alta** |
 | H-02 | `Inventory.cs:58-79`: `UpdateQuantities` sobrescribe los tres contadores saltándose las operaciones de negocio | Setter anémico: anula invariantes — severidad **alta** |
-| H-03 | `Buyer.cs:13,112-139`: `PaymentTokens` contradice la invariante 9 | Regla de negocio violada por diseño — **media** |
+| H-03 | `Buyer.cs:13,112-139`: `PaymentTokens` contradice la [invariante 9](../Domain/04-invariants-and-rules.md) | Regla de negocio violada por diseño — **media** |
 | H-04 | `Warehouse.cs:206-209` y `Inventory.cs:167`: `MarkAsDeleted()` duplica `Delete()` | API redundante y lenguaje ambiguo — **baja** |
 | H-05 | `User.cs:29-43`: `IdentityDocument` ausente pese a ser obligatorio y único | No se puede registrar un usuario conforme a spec — **alta** |
 | H-06 | `DateTime.UtcNow` usado directamente en entidades de dominio: **46 usos en 5 archivos** (`Buyer` 8, `Inventory` 9, `Product` 10, `User` 10, `Warehouse` 9) | Reglas temporales (timeout 15 min) y pruebas no deterministas — **media** |

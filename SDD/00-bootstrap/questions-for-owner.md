@@ -17,7 +17,7 @@ resolvió por decisión del agente (regla de cero asunciones, [AGENTS.md :0.3](.
 - **Logística:** cuando hubo fraccionamiento se crean múltiples `Shipment`.
 
 Registrado en [SDD/Adr/0001-reserva-fragmentacion-contingencia.md](../Adr/0001-reserva-fragmentacion-contingencia.md) y aplicado a
-[SDD/Domain/04-invariants-and-rules.md](../Domain/04-invariants-and-rules.md) (invariante 3),
+[SDD/Domain/04-invariants-and-rules.md](../Domain/04-invariants-and-rules.md) ([invariante 3](../Domain/04-invariants-and-rules.md)),
 [SDD/Domain/06-business-rules.md](../Domain/06-business-rules.md) ([INV-02](../Domain/06-business-rules.md)) y
 [SDD/Domain/services/inventory-reservation-service.md :4](../Domain/services/inventory-reservation-service.md#4-flujo-logico-y-reglas-invariantes).
 
@@ -118,13 +118,13 @@ validación de formato (¿qué país/formato?); **(b)** añadirlo opcional; **(c
 eliminarlo de la spec por no aplicar al negocio. Si es (a), se necesita el
 formato exacto. Desbloquea [R-03](risks-and-gaps.md)/[T-006](migration-to-sdd-plan.md).
 
-## [Q-08](#q-08-r-07-buyerpaymenttokens-contra-la-invariante-9) ([R-07](risks-and-gaps.md)) — `Buyer.PaymentTokens` contra la invariante 9
+## [Q-08](#q-08-r-07-buyerpaymenttokens-contra-la-invariante-9) ([R-07](risks-and-gaps.md)) — `Buyer.PaymentTokens` contra la [invariante 9](../Domain/04-invariants-and-rules.md)
 
-La invariante 9 dice: "No se almacenan tarjetas de crédito ni billeteras… el
+La [invariante 9](../Domain/04-invariants-and-rules.md) dice: "No se almacenan tarjetas de crédito ni billeteras… el
 Dominio avanza de estado con una simple entidad `PaymentReceipt`". El código
 almacena `PaymentTokens`. Opciones: **(a)** eliminar `PaymentTokens` y crear
 `PaymentReceipt`; **(b)** mantener tokens (referencias opacas del proveedor, no
-datos de tarjeta) y **enmendar** la invariante 9; **(c)** dejar `PaymentTokens`
+datos de tarjeta) y **enmendar** la [invariante 9](../Domain/04-invariants-and-rules.md); **(c)** dejar `PaymentTokens`
 fuera del agregado `Buyer`. Requiere además la decisión de la pasarela.
 
 ## [Q-09](#q-09-naming-canonico-pendiente) — Naming canónico pendiente
@@ -143,7 +143,7 @@ masivo ahora (coste mínimo) o se difiere? Desbloquea [T-008](migration-to-sdd-p
   unidad de stock, [INV-03](../Domain/06-business-rules.md)).
 - Un producto `Digital` ([CAT-02](../Domain/06-business-rules.md): sin logística ni inventario) **puede** nacer sin
   variantes.
-- Aplicación en código ([T-010c](migration-to-sdd-plan.md), ADR-0003): constructor rechaza `Physical` sin
+- Aplicación en código ([T-010c](migration-to-sdd-plan.md), [ADR-0003](../Adr/0003-variante-obligatoria-productos-fisicos.md)): constructor rechaza `Physical` sin
   variantes; `UpdateType(Physical)` exige variante; `RemoveVariant` no puede
   dejar un `Physical` sin variantes; `CanBeSold` exige variante vendible en
   `Physical`. Suite: 164/164 PASS.
@@ -182,9 +182,9 @@ Puntos a confirmar:
 
 **Bloquea:** [T-010b](migration-to-sdd-plan.md) (refinamiento de catálogo). **No** bloquea la reserva ni el inventario.
 
-## [Q-12](#sub-decisiones-propuesto-ver-q-12) — Sub-decisiones `[PROPUESTO]` de ADR-0003 (variante obligatoria) · ABIERTA
+## [Q-12](#sub-decisiones-propuesto-ver-q-12) — Sub-decisiones `[PROPUESTO]` de [ADR-0003](../Adr/0003-variante-obligatoria-productos-fisicos.md) (variante obligatoria) · ABIERTA
 
-Al aplicar [Q-10](#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = C3 el agente tomó 4 sub-decisiones que **van más allá del texto
+Al aplicar [Q-10](#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = [C3](../Adr/0003-variante-obligatoria-productos-fisicos.md) el agente tomó 4 sub-decisiones que **van más allá del texto
 literal** de la respuesta y requieren tu confirmación:
 
 1. `HasVariant` cuenta solo variantes **no eliminadas lógicamente** (una variante
@@ -199,7 +199,7 @@ literal** de la respuesta y requieren tu confirmación:
    o añadir otra (se eligió no lanzar porque el borrado lógico es ciclo de vida
    de datos, no mutación de contrato).
 
-**Si confirmas:** se marcan `[CONFIRMADO]` en ADR-0003. **Si corriges alguna:**
+**Si confirmas:** se marcan `[CONFIRMADO]` en [ADR-0003](../Adr/0003-variante-obligatoria-productos-fisicos.md). **Si corriges alguna:**
 indica el número (p. ej. `[Q-12](#sub-decisiones-propuesto-ver-q-12).2 = no`) y se ajusta código + pruebas + ADR.
 **Bloquea:** el cierre definitivo de [T-010c](migration-to-sdd-plan.md) (el código ya está aplicado y en
 verde, pero con etiqueta `[PROPUESTO]` en estos 4 puntos).

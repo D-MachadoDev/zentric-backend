@@ -17,7 +17,7 @@ Representa a cualquier individuo con acceso a la plataforma (Comprador, Vendedor
 ### Aggregate Root: `Product`
 Representa un bien ofrecido por un Vendedor.
 - **Propiedades:** `Id` (ProductId), `VendorId` (UserId), `Title` (string), `Description` (string), `Price` (Money), `Type` (ProductType - Físico o Digital), `Status` (ProductStatus).
-- **Entidades Hijas: `ProductVariant`** — combinación vendible del producto (ej. Talla/Color). Su `Id` **es** el `VariantId` y actúa como SKU para el inventario (ADR-0002). Se compone de atributos: `VariantAttribute` (nombre + valor). El SKU es único dentro del producto.
+- **Entidades Hijas: `ProductVariant`** — combinación vendible del producto (ej. Talla/Color). Su `Id` **es** el `VariantId` y actúa como SKU para el inventario ([ADR-0002](../Adr/0002-clave-inventario-variantid.md)). Se compone de atributos: `VariantAttribute` (nombre + valor). El SKU es único dentro del producto.
 - **Reglas de Negocio:**
   - Al crearse, su estado es `Published` automáticamente (sin flujo de aprobación).
   - **Variante obligatoria solo para físicos ([CAT-03](06-business-rules.md)):** un producto `Physical`
@@ -36,7 +36,7 @@ Espacio físico donde se almacenan los productos.
 ### Aggregate Root: `InventoryItem`
 El control transaccional del stock de una variante específica (SKU) en una bodega específica.
 - **Propiedades:** `Id` (InventoryItemId), `VariantId` (VariantId), `WarehouseId` (WarehouseId), `AvailableQuantity` (int), `ReservedQuantity` (int).
-- **Clave de stock:** la pareja `(VariantId, WarehouseId)`, según ADR-0002.
+- **Clave de stock:** la pareja `(VariantId, WarehouseId)`, según [ADR-0002](../Adr/0002-clave-inventario-variantid.md).
 - **Reglas de Negocio:** `AvailableQuantity` nunca puede ser negativo bajo ninguna circunstancia (invariante crítica).
 - **Comportamientos:** `Reserve(quantity)`, `Release(quantity)`, `Deduct(quantity)`, `Adjust(quantity)`, `ManualAdjust(quantity, userId, role)`.
 

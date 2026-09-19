@@ -18,7 +18,7 @@ Este documento consolida y lista las reglas de negocio estrictas de Zentric. El 
 - **[CAT-03](06-business-rules.md) (Variante obligatoria en físicos):** un producto `Physical` exige al
   menos una variante, porque la variante es la unidad de stock ([INV-03](06-business-rules.md)): sin ella
   no hay inventario ni reserva posible. Un producto `Digital` ([CAT-02](06-business-rules.md)) puede nacer
-  sin variantes. *(Decisión del owner el 2026-09-17 — [Q-10](../00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = C3; ver
+  sin variantes. *(Decisión del owner el 2026-09-17 — [Q-10](../00-bootstrap/questions-for-owner.md#9-cuarta-iteracion-adr-0003-variante-obligatoria-en-fisicos-q-10-c3) = [C3](../Adr/0003-variante-obligatoria-productos-fisicos.md); ver
   [SDD/Adr/0003-variante-obligatoria-productos-fisicos.md](../Adr/0003-variante-obligatoria-productos-fisicos.md).)*
 
 ## 4. Excepciones Logísticas

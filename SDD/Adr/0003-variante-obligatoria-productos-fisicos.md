@@ -1,4 +1,4 @@
-# ADR-0003 — Variante obligatoria solo para productos físicos
+# [ADR-0003](0003-variante-obligatoria-productos-fisicos.md) — Variante obligatoria solo para productos físicos
 
 ```yaml
 id: 0003
@@ -12,7 +12,7 @@ related_question: [Q-10](../00-bootstrap/questions-for-owner.md#9-cuarta-iteraci
 
 ## Contexto
 
-El ADR-0002 decidió que el inventario se lleva por `VariantId` (SKU), pero dejó
+El [ADR-0002](0002-clave-inventario-variantid.md) decidió que el inventario se lleva por `VariantId` (SKU), pero dejó
 explícitamente abierto si todo producto debe tener al menos una variante. Sin esa
 decisión quedaba un estado inalcanzable (riesgo [R-10](../00-bootstrap/risks-and-gaps.md)): un producto `Physical` sin
 variantes no puede tener inventario ni reservarse, y el
