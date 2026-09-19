@@ -250,6 +250,25 @@ Representa el compromiso comercial formal. Su ciclo de vida es el proceso centra
 
 5.  **Entregado / Finalizado:** Conclusión satisfactoria de la entrega.
 
+
+## DOMINIO 8. Gestin de Logstica y Despachos (Fulfillment) 
+Deriva del pedido del cliente para organizar la entrega fsica por parte de cada vendedor.
+### Ciclo de Estados del Despacho
+1. **Pendiente de Empaque:** Esperando procesamiento en bodega.
+2. **Empacado:** Listo para recoleccin.
+3. **Despachado:** Entregado a la transportadora.
+4. **Entregado:** Recibido por el comprador.
+5. **Cancelado por Quiebre:** Cancelacin unilateral del vendedor por falta fsica de stock (Stock Fantasma).
+
+## DOMINIO 9. Gestin de Facturacin y Pagos 
+Administrar el proceso financiero derivado de los pedidos.
+- **Alcance:** Validacin de transacciones, generacin de facturas y conciliacin de pagos a vendedores (split de pagos).
+
+## DOMINIO 10. Gestin de Devoluciones y Reembolsos 
+Garantizar la resolucin de conflictos posventa.
+- **Regla:** Las devoluciones no estn permitidas para productos digitales.
+- **Estados de Devolucin:** Solicitada, Aprobada, Rechazada, Reembolsada.
+
 # RESTRICCIONES Y CONTROL DE CALIDAD 
 
 ## 10. Restricciones Generales 
@@ -295,3 +314,21 @@ Representa el compromiso comercial formal. Su ciclo de vida es el proceso centra
 |                            |               |              |                   |             |
 | Reembolsos                 |               |              |                   |             |
 +----------------------------+---------------+--------------+-------------------+-------------+
+
+
+---
+# [ADDENDUM - DICTADO POR OWNER]
+*Seccin aadida tras la clarificacin oficial de vacos en la especificacin original.*
+
+## DOMINIO 8. Gestin de Logstica y Despachos (Fulfillment)
+- **Estados:** Empacado y Despachado. 
+- **Regla (Stock Fantasma):** No debera ocurrir, pero en caso de haber un quiebre de stock fantasma, el pedido se cancela con devolucin obligatoria para no retener stock irreal.
+
+## DOMINIO 9. Gestin de Devoluciones y Reembolsos
+- **Regla (Prohibicin):** Est **prohibido** devolver productos digitales.
+- **Flujo Fsico:** El operador logstico inspecciona que el producto est en buen estado. Si es as, requiere la aprobacin del Vendedor. Si ambas se cumplen, el producto vuelve al stock en el inventario con la etiqueta Usado.
+
+## DOMINIO 10. Gestin de Facturacin y Pagos
+- **Factura Maestra:** Entregada al cliente con el total de la transaccin.
+- **Detalle Zentric:** Detalle transaccional desglosado para control de plataforma.
+- **Factura de Vendedor:** Factura propia detallando el monto que le corresponde al Vendedor (Split).

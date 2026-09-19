@@ -2,8 +2,10 @@ namespace Zentric.Domain.Users.ValueObjects
 {
     public sealed class FullName : IEquatable<FullName>
     {
-        public string FirstName { get; }
-        public string LastName { get; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
+
+        private FullName() { FirstName = ""; LastName = ""; }
 
         public FullName(string firstName, string lastName)
         {

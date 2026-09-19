@@ -8,9 +8,10 @@ namespace Zentric.Domain.Inventories
         // producto tiene su propio control de stock por bodega.
         public Guid VariantId { get; private set; }
         public Guid WarehouseId { get; private set; }
-        public int AvalibleQuantity { get; private set; }
+        public int AvailableQuantity { get; private set; }
         public int ReservedQuantity { get; private set; }
         public int DamagedQuantity { get; private set; }
+        public int UsedQuantity { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public DateTime? DeletedAt { get; private set; }
@@ -21,7 +22,7 @@ namespace Zentric.Domain.Inventories
             // For EF Core
         }
         
-        public Inventory(Guid variantId, Guid warehouseId, int avalibleQuantity, int reservedQuantity, int damagedQuantity)
+        public Inventory(Guid variantId, Guid warehouseId, int availableQuantity, int reservedQuantity, int damagedQuantity, int usedQuantity = 0)
         {
             if (variantId == Guid.Empty)
             {
@@ -33,9 +34,9 @@ namespace Zentric.Domain.Inventories
                 throw new ArgumentException("WarehouseId is required.", nameof(warehouseId));
             }
 
-            if (avalibleQuantity < 0)
+            if (availableQuantity < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(avalibleQuantity), "Available quantity cannot be negative.");
+                throw new ArgumentOutOfRangeException(nameof(availableQuantity), "Available quantity cannot be negative.");
             }
 
             if (reservedQuantity < 0)
@@ -51,18 +52,19 @@ namespace Zentric.Domain.Inventories
             Id = Guid.NewGuid();
             VariantId = variantId;
             WarehouseId = warehouseId;
-            AvalibleQuantity = avalibleQuantity;
+            this.AvailableQuantity = availableQuantity;
             ReservedQuantity = reservedQuantity;
             DamagedQuantity = damagedQuantity;
+            UsedQuantity = usedQuantity;
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
         }
 
-        public void UpdateQuantities(int avalibleQuantity, int reservedQuantity, int damagedQuantity)
+        public void UpdateQuantities(int availableQuantity, int reservedQuantity, int damagedQuantity, int usedQuantity = 0)
         {
-            if (avalibleQuantity < 0)
+            if (availableQuantity < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(avalibleQuantity), "Available quantity cannot be negative.");
+                throw new ArgumentOutOfRangeException(nameof(availableQuantity), "Available quantity cannot be negative.");
             }
 
             if (reservedQuantity < 0)
@@ -74,10 +76,10 @@ namespace Zentric.Domain.Inventories
             {
                 throw new ArgumentOutOfRangeException(nameof(damagedQuantity), "Damaged quantity cannot be negative.");
             }
-
-            AvalibleQuantity = avalibleQuantity;
+            this.AvailableQuantity = availableQuantity;
             ReservedQuantity = reservedQuantity;
             DamagedQuantity = damagedQuantity;
+            UsedQuantity = usedQuantity;
             UpdatedAt = DateTime.UtcNow;
         }
 
@@ -88,7 +90,7 @@ namespace Zentric.Domain.Inventories
                 throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity to add must be greater than zero.");
             }
 
-            AvalibleQuantity += quantity;
+            AvailableQuantity += quantity;
             UpdatedAt = DateTime.UtcNow;
         }
 
@@ -99,12 +101,12 @@ namespace Zentric.Domain.Inventories
                 throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity to reserve must be greater than zero.");
             }
 
-            if (AvalibleQuantity < quantity)
+            if (AvailableQuantity < quantity)
             {
                 throw new ArgumentOutOfRangeException(nameof(quantity), "Not enough available stock to reserve.");
             }
 
-            AvalibleQuantity -= quantity;
+            AvailableQuantity -= quantity;
             ReservedQuantity += quantity;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -116,7 +118,7 @@ namespace Zentric.Domain.Inventories
                 throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity to dispatch must be greater than zero.");
             }
 
-            if (AvalibleQuantity < quantity)
+            if (AvailableQuantity < quantity)
             {
                 throw new ArgumentOutOfRangeException(nameof(quantity), "Not enough available stock.");
             }
@@ -132,17 +134,17 @@ namespace Zentric.Domain.Inventories
                 throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity to mark as damaged must be greater than zero.");
             }
 
-            if (AvalibleQuantity < quantity)
+            if (AvailableQuantity < quantity)
             {
                 throw new ArgumentOutOfRangeException(nameof(quantity), "Not enough available stock to mark as damaged.");
             }
 
-            AvalibleQuantity -= quantity;
+            AvailableQuantity -= quantity;
             DamagedQuantity += quantity;
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void ReturnToAvalible(int quantity)
+        public void ReturnToAvailable(int quantity)
         {
             // INV-01 / invariante 1 (SDD/Domain/06-business-rules.md §1,
             // SDD/Domain/04-invariants-and-rules.md §1): AvailableQuantity nunca puede
@@ -159,23 +161,31 @@ namespace Zentric.Domain.Inventories
             }
 
             ReservedQuantity -= quantity;
-            AvalibleQuantity += quantity;
+            AvailableQuantity += quantity;
             UpdatedAt = DateTime.UtcNow;
         }
 
+        
+        public void ReturnToUsedStock(int quantity)
+        {
+            if (quantity <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity must be greater than zero.");
+            }
+            UsedQuantity += quantity;
+            UpdatedAt = DateTime.UtcNow;
+        }
         public void ReciveReturnedStock(int quantity)
         {
             if (quantity <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity to receive must be greater than zero.");
             }
-
-            AvalibleQuantity += quantity;
+            AvailableQuantity += quantity;
             UpdatedAt = DateTime.UtcNow;
         }
 
-
-        //? Validar esto un inventario se puede eliminar si tiene existencias físicas, si tiene existencias físicas no se puede eliminar, se debe transferir a otro inventario o ajustar a cero.
+//? Validar esto un inventario se puede eliminar si tiene existencias físicas, si tiene existencias físicas no se puede eliminar, se debe transferir a otro inventario o ajustar a cero.
         public void MarkAsDeleted()
         {
             if (IsDeleted)
@@ -183,7 +193,7 @@ namespace Zentric.Domain.Inventories
                 throw new InvalidOperationException("Inventory is already deleted.");
             }
 
-            if (AvalibleQuantity > 0 || ReservedQuantity > 0 || DamagedQuantity > 0)
+            if (AvailableQuantity > 0 || ReservedQuantity > 0 || DamagedQuantity > 0)
             {
                 throw new InvalidOperationException("No puedes eliminar un inventario que aún tiene existencias físicas. Debes transferirlas, ajustarlas a cero o despacharlas primero.");
             }
@@ -195,3 +205,8 @@ namespace Zentric.Domain.Inventories
     }
     
 }
+
+
+
+
+

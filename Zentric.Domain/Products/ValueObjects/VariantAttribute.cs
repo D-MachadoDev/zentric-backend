@@ -10,8 +10,10 @@ namespace Zentric.Domain.Products.ValueObjects
     /// </summary>
     public sealed class VariantAttribute : IEquatable<VariantAttribute>
     {
-        public string Name { get; }
-        public string Value { get; }
+        public string Name { get; private set; }
+        public string Value { get; private set; }
+
+        private VariantAttribute() { Name = ""; Value = ""; }
 
         public VariantAttribute(string name, string value)
         {

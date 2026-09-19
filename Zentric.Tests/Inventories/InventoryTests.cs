@@ -24,7 +24,7 @@ public sealed class InventoryTests
         Assert.NotEqual(Guid.Empty, inventory.Id);
         Assert.Equal(VariantId, inventory.VariantId);
         Assert.Equal(WarehouseId, inventory.WarehouseId);
-        Assert.Equal(7, inventory.AvalibleQuantity);
+        Assert.Equal(7, inventory.AvailableQuantity);
         Assert.Equal(2, inventory.ReservedQuantity);
         Assert.Equal(1, inventory.DamagedQuantity);
         Assert.False(inventory.IsDeleted);
@@ -74,7 +74,7 @@ public sealed class InventoryTests
         var inventory = CreateInventory(available: 5);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => inventory.ReserveStock(6));
-        Assert.Equal(5, inventory.AvalibleQuantity);
+        Assert.Equal(5, inventory.AvailableQuantity);
     }
 
     [Theory]
@@ -94,7 +94,7 @@ public sealed class InventoryTests
 
         inventory.ReserveStock(4);
 
-        Assert.Equal(6, inventory.AvalibleQuantity);
+        Assert.Equal(6, inventory.AvailableQuantity);
         Assert.Equal(4, inventory.ReservedQuantity);
     }
 
@@ -105,7 +105,7 @@ public sealed class InventoryTests
 
         inventory.AddStock(5);
 
-        Assert.Equal(7, inventory.AvalibleQuantity);
+        Assert.Equal(7, inventory.AvailableQuantity);
     }
 
     [Theory]
@@ -135,7 +135,7 @@ public sealed class InventoryTests
         var inventory = CreateInventory(available: 3);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => inventory.MarkAsDamaged(4));
-        Assert.Equal(3, inventory.AvalibleQuantity);
+        Assert.Equal(3, inventory.AvailableQuantity);
         Assert.Equal(0, inventory.DamagedQuantity);
     }
 
@@ -146,44 +146,44 @@ public sealed class InventoryTests
 
         inventory.MarkAsDamaged(2);
 
-        Assert.Equal(3, inventory.AvalibleQuantity);
+        Assert.Equal(3, inventory.AvailableQuantity);
         Assert.Equal(2, inventory.DamagedQuantity);
     }
 
     [Fact]
-    public void ReturnToAvalible_QuantityGreaterThanReserved_ThrowsArgumentOutOfRangeException()
+    public void ReturnToAvailable_QuantityGreaterThanReserved_ThrowsArgumentOutOfRangeException()
     {
         var inventory = CreateInventory(available: 0, reserved: 2);
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => inventory.ReturnToAvalible(3));
+        Assert.Throws<ArgumentOutOfRangeException>(() => inventory.ReturnToAvailable(3));
     }
 
     [Fact]
-    public void ReturnToAvalible_ValidQuantity_MovesUnitsBackToAvailable()
+    public void ReturnToAvailable_ValidQuantity_MovesUnitsBackToAvailable()
     {
         var inventory = CreateInventory(available: 0, reserved: 5);
 
-        inventory.ReturnToAvalible(5);
+        inventory.ReturnToAvailable(5);
 
-        Assert.Equal(5, inventory.AvalibleQuantity);
+        Assert.Equal(5, inventory.AvailableQuantity);
         Assert.Equal(0, inventory.ReservedQuantity);
     }
 
     /// <summary>
     /// Regresión del hallazgo H-08 (SDD/00-bootstrap/spec-conformance-matrix.md §7):
-    /// ReturnToAvalible no validaba cantidades no positivas como el resto de las
+    /// ReturnToAvailable no validaba cantidades no positivas como el resto de las
     /// operaciones, lo que permitía dejar AvailableQuantity por debajo de cero y
     /// violar INV-01. Prueba asociada a la corrección T-003.
     /// </summary>
     [Theory]
     [InlineData(0)]
     [InlineData(-100)]
-    public void ReturnToAvalible_NonPositiveQuantity_ThrowsArgumentOutOfRangeException(int quantity)
+    public void ReturnToAvailable_NonPositiveQuantity_ThrowsArgumentOutOfRangeException(int quantity)
     {
         var inventory = CreateInventory(available: 0, reserved: 5);
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => inventory.ReturnToAvalible(quantity));
-        Assert.True(inventory.AvalibleQuantity >= 0, "INV-01: el stock disponible nunca puede ser negativo.");
+        Assert.Throws<ArgumentOutOfRangeException>(() => inventory.ReturnToAvailable(quantity));
+        Assert.True(inventory.AvailableQuantity >= 0, "INV-01: el stock disponible nunca puede ser negativo.");
     }
 
     [Fact]
@@ -193,7 +193,7 @@ public sealed class InventoryTests
 
         inventory.ReciveReturnedStock(1);
 
-        Assert.Equal(2, inventory.AvalibleQuantity);
+        Assert.Equal(2, inventory.AvailableQuantity);
     }
 
     [Theory]

@@ -32,6 +32,13 @@ Write-Host "Origen : $Source"
 Write-Host "Destino: $Destination"
 
 if ($PSCmdlet.ShouldProcess($Destination, 'Copiar skill')) {
+    # Validacion previa: no se destruye el destino si el origen esta incompleto.
+    # (v6.0.0 es un SKILL.md monolitico; 'references' solo existe en layouts antiguos.)
+    $referencesDir = Join-Path $Source 'references'
+    if (-not (Test-Path $referencesDir)) {
+        Write-Host "Aviso: no hay carpeta 'references' en el origen (layout monolitico v6+). Solo se copiara SKILL.md."
+    }
+
     if (Test-Path $Destination) {
         Remove-Item -Recurse -Force $Destination
     }
@@ -39,7 +46,10 @@ if ($PSCmdlet.ShouldProcess($Destination, 'Copiar skill')) {
     New-Item -ItemType Directory -Force -Path $Destination | Out-Null
 
     Copy-Item -Path (Join-Path $Source 'SKILL.md') -Destination $Destination -Force
-    Copy-Item -Path (Join-Path $Source 'references') -Destination $Destination -Recurse -Force
+
+    if (Test-Path $referencesDir) {
+        Copy-Item -Path $referencesDir -Destination $Destination -Recurse -Force
+    }
 
     # Los scripts de mantenimiento no necesitan viajar al directorio de skills.
     Write-Host 'Skill sincronizada. Archivos copiados:'

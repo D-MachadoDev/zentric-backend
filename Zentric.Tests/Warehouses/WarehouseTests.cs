@@ -1,3 +1,4 @@
+using Zentric.Domain.Products.Enums;
 using Zentric.Domain.Warehouses;
 using Zentric.Domain.Warehouses.Enum;
 
@@ -14,26 +15,26 @@ namespace Zentric.Tests.Warehouses;
 /// </summary>
 public sealed class WarehouseTests
 {
-    private static readonly Guid SellerId = Guid.NewGuid();
+    private static readonly Guid VendorId = Guid.NewGuid();
 
     private static Warehouse CreateMarketplaceWarehouse()
         => new("Bodega Central", "Calle 1 # 2-3", 1000, WarehouseType.Marketplace, null);
 
     private static Warehouse CreateSellerWarehouse()
-        => new("Bodega del vendedor", "Carrera 9 # 10-11", 50, WarehouseType.Seller, SellerId);
+        => new("Bodega del vendedor", "Carrera 9 # 10-11", 50, WarehouseType.Vendor, VendorId);
 
     [Fact]
     public void Constructor_MarketplaceWithSeller_ThrowsInvalidOperationException()
     {
         Assert.Throws<InvalidOperationException>(
-            () => new Warehouse("Bodega", "Calle 1", 10, WarehouseType.Marketplace, SellerId));
+            () => new Warehouse("Bodega", "Calle 1", 10, WarehouseType.Marketplace, VendorId));
     }
 
     [Fact]
     public void Constructor_SellerWarehouseWithoutSeller_ThrowsInvalidOperationException()
     {
         Assert.Throws<InvalidOperationException>(
-            () => new Warehouse("Bodega", "Calle 1", 10, WarehouseType.Seller, null));
+            () => new Warehouse("Bodega", "Calle 1", 10, WarehouseType.Vendor, null));
     }
 
     [Fact]
@@ -42,7 +43,7 @@ public sealed class WarehouseTests
         var warehouse = CreateMarketplaceWarehouse();
 
         Assert.NotEqual(Guid.Empty, warehouse.Id);
-        Assert.Null(warehouse.SellerId);
+        Assert.Null(warehouse.VendorId);
         Assert.Equal(WarehouseType.Marketplace, warehouse.Type);
         Assert.True(warehouse.IsActive);
         Assert.False(warehouse.IsDeleted);
@@ -53,8 +54,8 @@ public sealed class WarehouseTests
     {
         var warehouse = CreateSellerWarehouse();
 
-        Assert.Equal(SellerId, warehouse.SellerId);
-        Assert.Equal(WarehouseType.Seller, warehouse.Type);
+        Assert.Equal(VendorId, warehouse.VendorId);
+        Assert.Equal(WarehouseType.Vendor, warehouse.Type);
     }
 
     [Fact]
@@ -222,3 +223,5 @@ public sealed class WarehouseTests
         Assert.Throws<InvalidOperationException>(() => warehouse.Restore());
     }
 }
+
+

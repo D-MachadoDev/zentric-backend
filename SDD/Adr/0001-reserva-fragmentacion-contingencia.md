@@ -7,7 +7,7 @@ status: accepted
 date: 2026-09-17
 decided_by: owner del proyecto
 supersedes: []
-related_contradiction: C-01 (SDD/00-bootstrap/risks-and-gaps.md)
+related_contradiction: [C-01](../00-bootstrap/risks-and-gaps.md) (SDD/00-bootstrap/risks-and-gaps.md)
 ```
 
 ## Contexto
@@ -15,11 +15,11 @@ related_contradiction: C-01 (SDD/00-bootstrap/risks-and-gaps.md)
 La especificación de dominio contenía dos reglas incompatibles para la reserva de
 stock distribuido:
 
-- `SDD/Domain/04-invariants-and-rules.md` (invariante 3): "No Fraccionamiento de
+- [`SDD/Domain/04-invariants-and-rules.md`](../Domain/04-invariants-and-rules.md) (invariante 3): "No Fraccionamiento de
   Variante… toda la cantidad debe surtirse desde **una (1) sola bodega**… Los
   envíos de un mismo SKU no se dividen para evitar costos exorbitantes."
-- `SDD/Domain/06-business-rules.md` (INV-02) y
-  `SDD/Domain/services/inventory-reservation-service.md` §4: el servicio "tiene
+- [`SDD/Domain/06-business-rules.md`](../Domain/06-business-rules.md) (INV-02) y
+  [SDD/Domain/services/inventory-reservation-service.md :4](../Domain/services/inventory-reservation-service.md#4-flujo-logico-y-reglas-invariantes): el servicio "tiene
   permitido **fraccionar** la reserva en ambas bodegas".
 
 Esto bloqueaba cualquier implementación del `InventoryReservationService`, del
@@ -74,14 +74,14 @@ Ejemplos normativos (bodega A = 6, bodega B = 4):
 
 ## Documentos actualizados en la misma decisión
 
-- `SDD/Domain/04-invariants-and-rules.md` — invariante 3 reescrita.
-- `SDD/Domain/06-business-rules.md` — INV-02 reescrita.
-- `SDD/Domain/services/inventory-reservation-service.md` — reglas de prioridad,
+- [`SDD/Domain/04-invariants-and-rules.md`](../Domain/04-invariants-and-rules.md) — invariante 3 reescrita.
+- [`SDD/Domain/06-business-rules.md`](../Domain/06-business-rules.md) — INV-02 reescrita.
+- [`SDD/Domain/services/inventory-reservation-service.md`](../Domain/services/inventory-reservation-service.md) — reglas de prioridad,
   bodega única y fraccionamiento de contingencia.
-- `SDD/00-bootstrap/risks-and-gaps.md` — C-01 cerrada.
-- `SDD/00-bootstrap/questions-for-owner.md` — Q-01 resuelta.
-- `SDD/00-bootstrap/migration-to-sdd-plan.md` — T-004/T-013/T-014 desbloqueadas
-  respecto a Q-01.
+- [`SDD/00-bootstrap/risks-and-gaps.md`](../00-bootstrap/risks-and-gaps.md) — [C-01](../00-bootstrap/risks-and-gaps.md) cerrada.
+- [`SDD/00-bootstrap/questions-for-owner.md`](../00-bootstrap/questions-for-owner.md) — [Q-01](../00-bootstrap/questions-for-owner.md#q-01-c-01-se-permite-fraccionar-la-reserva-entre-bodegas-resuelta-2026-09-17) resuelta.
+- [`SDD/00-bootstrap/migration-to-sdd-plan.md`](../00-bootstrap/migration-to-sdd-plan.md) — [T-004](../00-bootstrap/migration-to-sdd-plan.md)/[T-013](../00-bootstrap/migration-to-sdd-plan.md)/[T-014](../00-bootstrap/migration-to-sdd-plan.md) desbloqueadas
+  respecto a [Q-01](../00-bootstrap/questions-for-owner.md#q-01-c-01-se-permite-fraccionar-la-reserva-entre-bodegas-resuelta-2026-09-17).
 
 ## Estado
 

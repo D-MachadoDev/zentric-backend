@@ -1,3 +1,4 @@
+using Zentric.Domain.Products.Enums;
 using Zentric.Domain.Products;
 using Zentric.Domain.Products.ValueObjects;
 
@@ -238,3 +239,4 @@ public sealed class ProductVariantTests
         Assert.Throws<NotSupportedException>(() => attributes.Add(new VariantAttribute("Color", "Rojo")));
     }
 }
+

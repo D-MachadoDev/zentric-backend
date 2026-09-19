@@ -15,19 +15,19 @@ namespace Zentric.Tests.Products;
 /// </summary>
 public sealed class ProductTests
 {
-    private static readonly Guid SellerId = Guid.NewGuid();
+    private static readonly Guid VendorId = Guid.NewGuid();
 
     //! IA: Q-10 = C3 (ADR-0003) — un producto Fisico exige al menos una variante, por
     // eso el helper por defecto crea un Digital (CAT-02: sin logistica ni inventario).
     private static Product CreateProduct(ProductType type = ProductType.Digital)
-        => new("Camiseta", "Camiseta de algodón", new Money(25.50m, "USD"), SellerId, type);
+        => new("Camiseta", "Camiseta de algodón", new Money(25.50m, "USD"), VendorId, type);
 
     private static Product CreatePhysicalProduct(string sku = "CAM-M")
         => new(
             "Camiseta",
             "Camiseta de algodón",
             new Money(25.50m, "USD"),
-            SellerId,
+            VendorId,
             ProductType.Physical,
             new List<(string Sku, IEnumerable<VariantAttribute> Attributes)>
             {
@@ -40,8 +40,8 @@ public sealed class ProductTests
         var product = CreateProduct();
 
         Assert.NotEqual(Guid.Empty, product.Id);
-        Assert.Equal(SellerId, product.SellerId);
-        Assert.True(product.IsActive);
+        Assert.Equal(VendorId, product.VendorId);
+        Assert.Equal(ProductStatus.Published, product.Status);
         Assert.True(product.CanBeSold);
         Assert.False(product.IsDeleted);
     }
@@ -49,7 +49,7 @@ public sealed class ProductTests
     [Fact]
     public void Constructor_ValidData_TrimsTextFields()
     {
-        var product = new Product("  Camiseta  ", "  Tela  ", new Money(1m, "USD"), SellerId, ProductType.Digital);
+        var product = new Product("  Camiseta  ", "  Tela  ", new Money(1m, "USD"), VendorId, ProductType.Digital);
 
         Assert.Equal("Camiseta", product.Name);
         Assert.Equal("Tela", product.Description);
@@ -59,7 +59,7 @@ public sealed class ProductTests
     public void Constructor_EmptyName_ThrowsArgumentException()
     {
         var exception = Assert.Throws<ArgumentException>(
-            () => new Product(" ", "Descripción", new Money(1m, "USD"), SellerId, ProductType.Physical));
+            () => new Product(" ", "Descripción", new Money(1m, "USD"), VendorId, ProductType.Physical));
 
         Assert.Equal("name", exception.ParamName);
     }
@@ -68,30 +68,30 @@ public sealed class ProductTests
     public void Constructor_EmptyDescription_ThrowsArgumentException()
     {
         Assert.Throws<ArgumentException>(
-            () => new Product("Camiseta", " ", new Money(1m, "USD"), SellerId, ProductType.Physical));
+            () => new Product("Camiseta", " ", new Money(1m, "USD"), VendorId, ProductType.Physical));
     }
 
     [Fact]
-    public void Constructor_EmptySellerId_ThrowsArgumentException()
+    public void Constructor_EmptyVendorId_ThrowsArgumentException()
     {
         var exception = Assert.Throws<ArgumentException>(
             () => new Product("Camiseta", "Descripción", new Money(1m, "USD"), Guid.Empty, ProductType.Physical));
 
-        Assert.Equal("sellerId", exception.ParamName);
+        Assert.Equal("vendorId", exception.ParamName);
     }
 
     [Fact]
     public void Constructor_UndefinedProductType_ThrowsArgumentOutOfRangeException()
     {
         Assert.Throws<ArgumentOutOfRangeException>(
-            () => new Product("Camiseta", "Descripción", new Money(1m, "USD"), SellerId, (ProductType)99));
+            () => new Product("Camiseta", "Descripción", new Money(1m, "USD"), VendorId, (ProductType)99));
     }
 
     [Fact]
     public void Constructor_NullPrice_ThrowsArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(
-            () => new Product("Camiseta", "Descripción", null!, SellerId, ProductType.Physical));
+            () => new Product("Camiseta", "Descripción", null!, VendorId, ProductType.Physical));
     }
 
     [Fact]
@@ -121,7 +121,7 @@ public sealed class ProductTests
 
         product.Suspend();
 
-        Assert.False(product.IsActive);
+        Assert.NotEqual(ProductStatus.Published, product.Status);
         Assert.False(product.CanBeSold);
     }
 
@@ -142,7 +142,7 @@ public sealed class ProductTests
 
         product.Publish();
 
-        Assert.True(product.IsActive);
+        Assert.Equal(ProductStatus.Published, product.Status);
         Assert.True(product.CanBeSold);
     }
 
@@ -152,7 +152,7 @@ public sealed class ProductTests
         var product = CreateProduct();
         product.Delete();
 
-        Assert.Throws<InvalidOperationException>(() => product.Deactivate());
+        Assert.Throws<InvalidOperationException>(() => product.Suspend());
     }
 
     [Fact]
@@ -321,7 +321,7 @@ public sealed class ProductTests
     public void Constructor_PhysicalWithoutVariants_ThrowsArgumentException()
     {
         var exception = Assert.Throws<ArgumentException>(
-            () => new Product("Camiseta", "Algodón", new Money(1m, "USD"), SellerId, ProductType.Physical));
+            () => new Product("Camiseta", "Algodón", new Money(1m, "USD"), VendorId, ProductType.Physical));
 
         Assert.Equal("variants", exception.ParamName);
     }
@@ -334,7 +334,7 @@ public sealed class ProductTests
                 "Camiseta",
                 "Algodón",
                 new Money(1m, "USD"),
-                SellerId,
+                VendorId,
                 ProductType.Physical,
                 new List<(string Sku, IEnumerable<VariantAttribute> Attributes)>()));
     }
@@ -342,7 +342,7 @@ public sealed class ProductTests
     [Fact]
     public void Constructor_DigitalWithoutVariants_CreatesProductWithoutVariants()
     {
-        var product = new Product("Ebook", "PDF", new Money(1m, "USD"), SellerId, ProductType.Digital);
+        var product = new Product("Ebook", "PDF", new Money(1m, "USD"), VendorId, ProductType.Digital);
 
         Assert.Empty(product.Variants);
         Assert.False(product.HasVariant);
@@ -367,7 +367,7 @@ public sealed class ProductTests
             "Ebook",
             "PDF",
             new Money(1m, "USD"),
-            SellerId,
+            VendorId,
             ProductType.Digital,
             new List<(string Sku, IEnumerable<VariantAttribute> Attributes)>
             {
@@ -388,7 +388,7 @@ public sealed class ProductTests
         };
 
         Assert.Throws<InvalidOperationException>(
-            () => new Product("Camiseta", "Algodón", new Money(1m, "USD"), SellerId, ProductType.Physical, seeds));
+            () => new Product("Camiseta", "Algodón", new Money(1m, "USD"), VendorId, ProductType.Physical, seeds));
     }
 
     [Fact]
@@ -478,3 +478,9 @@ public sealed class ProductTests
         Assert.False(product.CanBeSold);
     }
 }
+
+
+
+
+
+

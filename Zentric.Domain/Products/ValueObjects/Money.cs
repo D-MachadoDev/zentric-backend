@@ -2,8 +2,10 @@ namespace Zentric.Domain.Products.ValueObjects
 {
     public sealed class Money : IEquatable<Money>
     {
-        public decimal Amount { get; }
-        public string Currency { get; }
+        public decimal Amount { get; private set; }
+        public string Currency { get; private set; }
+
+        private Money() { Currency = ""; }
 
         public Money(decimal amount, string currency)
         {

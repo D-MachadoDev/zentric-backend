@@ -6,12 +6,12 @@ namespace Zentric.Domain.Products
     public sealed class Product
     {
         public Guid Id { get; init; }
-        public Guid SellerId { get; private set; } // INIT?
+        public Guid VendorId { get; private set; } // INIT?
         public string Name { get; private set; }
         public string Description { get; private set; }
         public Money Price { get; private set; }
         public ProductType Type { get; private set; }
-        public bool IsActive { get; private set; }
+        public ProductStatus Status { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public DateTime? DeletedAt { get; private set; }
@@ -25,7 +25,7 @@ namespace Zentric.Domain.Products
         public bool HasSellableVariant => _variants.Any(variant => variant.CanBeSold);
 
         public bool CanBeSold =>
-            IsActive
+            Status == ProductStatus.Published
             && !IsDeleted
             && (Type == ProductType.Digital || HasSellableVariant);
 
@@ -40,7 +40,6 @@ namespace Zentric.Domain.Products
             Name = null!;
             Description = null!;
             Price = null!;
-   
         }
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace Zentric.Domain.Products
             string name,
             string description,
             Money price,
-            Guid sellerId,
+            Guid vendorId,
             ProductType type,
             IEnumerable<(string Sku, IEnumerable<VariantAttribute> Attributes)>? variants = null)
         {
@@ -68,9 +67,9 @@ namespace Zentric.Domain.Products
                 throw new ArgumentException("Product description cannot be empty.", nameof(description));
             }
 
-            if (sellerId == Guid.Empty)
+            if (vendorId == Guid.Empty)
             {
-                throw new ArgumentException("The product must belong to a seller.", nameof(sellerId));
+                throw new ArgumentException("The product must belong to a seller.", nameof(vendorId));
             }
             if (!Enum.IsDefined(typeof(ProductType), type))
             {
@@ -91,12 +90,12 @@ namespace Zentric.Domain.Products
             }
 
             Id = Guid.NewGuid();
-            SellerId = sellerId;
+            VendorId = vendorId;
             Name = name.Trim();
             Description = description.Trim();
             Price = price;
             Type = type;
-            IsActive = true;
+            Status = ProductStatus.Published;
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
             DeletedAt = null;
@@ -267,50 +266,40 @@ namespace Zentric.Domain.Products
             // TODO: Domain event ProductDescriptionUpdated
         }
 
-        public void Activate()
-        {
-            if (IsDeleted)
-            {
-                throw new InvalidOperationException("Cannot activate a deleted product.");
-            }
-
-            if (IsActive)
-            {
-                throw new InvalidOperationException("Product is already active.");
-            }
-
-            IsActive = true;
-            UpdatedAt = DateTime.UtcNow;
-
-            // TODO: Domain event ProductActivated
-        }
-
-        public void Deactivate()
-        {
-            if (IsDeleted)
-            {
-                throw new InvalidOperationException("Cannot deactivate a deleted product.");
-            }
-
-            if (!IsActive)
-            {
-                throw new InvalidOperationException("Product is already inactive.");
-            }
-
-            IsActive = false;
-            UpdatedAt = DateTime.UtcNow;
-
-            // TODO: Domain event ProductDeactivated
-        }
-
         public void Publish()
         {
-            Activate();
+            if (IsDeleted)
+            {
+                throw new InvalidOperationException("Cannot publish a deleted product.");
+            }
+
+            if (Status == ProductStatus.Published)
+            {
+                throw new InvalidOperationException("Product is already published.");
+            }
+
+            Status = ProductStatus.Published;
+            UpdatedAt = DateTime.UtcNow;
+
+            // TODO: Domain event ProductPublished
         }
 
         public void Suspend()
         {
-            Deactivate();
+            if (IsDeleted)
+            {
+                throw new InvalidOperationException("Cannot suspend a deleted product.");
+            }
+
+            if (Status == ProductStatus.Suspended)
+            {
+                throw new InvalidOperationException("Product is already suspended.");
+            }
+
+            Status = ProductStatus.Suspended;
+            UpdatedAt = DateTime.UtcNow;
+
+            // TODO: Domain event ProductSuspended
         }
 
         public void Delete()
@@ -321,7 +310,7 @@ namespace Zentric.Domain.Products
             }
 
             DeletedAt = DateTime.UtcNow;
-            IsActive = false;
+            Status = ProductStatus.Discontinued;
             UpdatedAt = DeletedAt.Value;
 
             // TODO: Domain event ProductDeleted
@@ -335,10 +324,11 @@ namespace Zentric.Domain.Products
             }
 
             DeletedAt = null;
-            IsActive = true;
+            Status = ProductStatus.Published;
             UpdatedAt = DateTime.UtcNow;
 
             // TODO: Domain event ProductRestored
         }
     }
 }
+

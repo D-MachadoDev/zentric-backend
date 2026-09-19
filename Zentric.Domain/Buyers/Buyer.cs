@@ -10,7 +10,7 @@ public sealed class Buyer
         public string MainAddress { get; private set; } //! Value Object? Podría ser un Value Object de Address, pero por simplicidad lo dejamos como string.
         public List<string> AdditionalAddresses { get; private set; }
         public bool IsActiveForCommerce { get; private set; }
-        public List<string> PaymentTokens { get; private set; }
+        
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
 
@@ -18,7 +18,7 @@ public sealed class Buyer
         {
             MainAddress = null!;
             AdditionalAddresses = new List<string>();
-            PaymentTokens = new List<string>();
+            
         }
 
         public Buyer(Guid userId, string mainAddress)
@@ -36,7 +36,7 @@ public sealed class Buyer
             UserId = userId; // Vinculamos 1 a 1
             MainAddress = mainAddress;
             AdditionalAddresses = new List<string>();
-            PaymentTokens = new List<string>();
+            
             IsActiveForCommerce = true; // Empieza listo para comprar
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
@@ -109,34 +109,9 @@ public sealed class Buyer
             // TODO: Domain event BuyerCommerceResumed
         }
 
-        public void AddPaymentToken(string token)
-        {
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                throw new ArgumentException("Payment token cannot be empty.");
-            }
+        
 
-            if (PaymentTokens.Contains(token))
-            {
-                throw new InvalidOperationException("This payment method is already registered.");
-            }
-
-            PaymentTokens.Add(token);
-            UpdatedAt = DateTime.UtcNow;
-
-            // TODO: Domain event BuyerPaymentTokenAdded
-        }
-
-        public void RemovePaymentToken(string token)
-        {
-            if (!PaymentTokens.Remove(token))
-            {
-                throw new InvalidOperationException("Payment token not found.");
-            }
-            UpdatedAt = DateTime.UtcNow;
-
-            // TODO: Domain event BuyerPaymentTokenRemoved
-        }
+        
 
     }
 }

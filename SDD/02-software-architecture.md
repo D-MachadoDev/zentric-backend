@@ -1,14 +1,14 @@
 # 02. Software Architecture — Zentric
 
-> Documento exigido por `AGENTS.md` §0.1. **Derivado** de `AGENTS.md` (§1, §2, §3,
-> §6) y de `SDD/Domain/01-domain-overview.md`, más el estado observado del
+> Documento exigido por [AGENTS.md :0.1](../AGENTS.md#01-consulta-obligatoria-antes-de-codificar). **Derivado** de [`AGENTS.md`](../AGENTS.md) (:1, :2, :3,
+> :6) y de [`SDD/Domain/01-domain-overview.md`](Domain/01-domain-overview.md), más el estado observado del
 > repositorio. No introduce decisiones nuevas: consolida y enlaza.
 
 ## 1. Estilo arquitectónico
 
 `[CONFIRMADO]` Arquitectura **Hexagonal (Puertos y Adaptadores)** + **DDD** con
 **CQRS**, **Mediator**, **Repository**, **Unit of Work** y **Result Pattern**
-(`AGENTS.md` §1). El flujo de dependencias es unidireccional hacia el centro.
+([AGENTS.md :1](../AGENTS.md#1-vision-general-del-proyecto)). El flujo de dependencias es unidireccional hacia el centro.
 
 ## 2. Proyectos y regla de dependencia
 
@@ -42,7 +42,7 @@ la regla se cumple en el único proyecto existente.
 
 ## 3. Puertos y adaptadores
 
-`[CONFIRMADO]` `AGENTS.md` §2.2 y `SDD/Domain/05-ports.md`:
+`[CONFIRMADO]` [AGENTS.md :2.2](../AGENTS.md#22-puertos-y-adaptadores) y [`SDD/Domain/05-ports.md`](Domain/05-ports.md):
 
 - **Puertos de salida:** interfaces en `Application` o `Domain` (p. ej.
   `IUserRepository`, `IDomainEventDispatcher`). Hoy existen en
@@ -53,17 +53,17 @@ la regla se cumple en el único proyecto existente.
 
 ## 4. Modelado táctico
 
-`[CONFIRMADO]` `AGENTS.md` §2.3:
+`[CONFIRMADO]` [AGENTS.md :2.3](../AGENTS.md#23-modelado-de-dominio-tactico):
 
 - Entidades y raíces de agregado con identidad propia, sin setters públicos
   anémicos; la mutación ocurre por métodos de negocio que validan invariantes.
 - Value Objects estrictamente inmutables.
 - Agregados pequeños con límites transaccionales duros
-  (`SDD/Domain/02-aggregates-and-entities.md` §1).
+  ([SDD/Domain/02-aggregates-and-entities.md :1](Domain/02-aggregates-and-entities.md#1-identity-module)).
 
 ## 5. Tratamiento de errores por capa
 
-`[CONFIRMADO]` `AGENTS.md` §3:
+`[CONFIRMADO]` [AGENTS.md :3](../AGENTS.md#3-tratamiento-de-errores-y-excepciones-organizado-por-capa):
 
 | Capa | Regla |
 |---|---|
@@ -76,13 +76,13 @@ Prohibido usar excepciones para el flujo lógico habitual.
 
 ## 6. Inyección de dependencias
 
-`[CONFIRMADO]` `AGENTS.md` §6: cada capa expone su propio método de extensión de
+`[CONFIRMADO]` [AGENTS.md :6](../AGENTS.md#6-inyeccion-de-dependencias-di): cada capa expone su propio método de extensión de
 registro; `Zentric.Api` es el Composition Root y el único autorizado a ensamblar
 las capas.
 
 ## 7. Convenciones de código
 
-`[CONFIRMADO]` `AGENTS.md` §1 y §5:
+`[CONFIRMADO]` [AGENTS.md :1](../AGENTS.md#1-vision-general-del-proyecto) y :5:
 
 - Código en **inglés**; comentarios y documentación en **español**.
 - Interfaces con prefijo `I`; `PascalCase` para tipos y miembros; `camelCase` para
@@ -94,7 +94,7 @@ las capas.
 
 ## 8. Comandos oficiales
 
-`[CONFIRMADO]` `AGENTS.md` §7:
+`[CONFIRMADO]` [AGENTS.md :7](../AGENTS.md#7-comandos-de-verificacion-y-compilacion):
 
 ```powershell
 dotnet restore
@@ -106,26 +106,30 @@ dotnet test
 
 | Elemento | Objetivo | Estado real |
 |---|---|---|
-| `Zentric.Domain` aislado | sí | **cumple** |
+| `Zentric.Domain` aislado | sí | **cumple** (verificado en el `.csproj`, 2026-09-18) |
 | Organización por módulo de dominio | — | **cumple** (carpeta por contexto) |
-| `Zentric.Application` | existe | **no existe** |
-| `Zentric.Infrastructure` | existe | **no existe** |
-| `Zentric.Api` | existe | **no existe** |
-| Proyecto de pruebas | existe | **no existe** |
-| `Result<T>` | en Application/Infrastructure | **no existe** (la spec de servicios lo requiere) |
-| Eventos de dominio + dispatcher | puerto en Domain/Application | **no existen** |
-| Abstracción de tiempo | para reglas temporales | **no existe** (`DateTime.UtcNow` directo, 46 usos) |
-| IDs fuertemente tipados | `record struct` | **no existen** (`Guid` plano) |
+| `Zentric.Application` | existe | **existe** (parcial: 3 commands, 2 puertos, `Result<T>`, sin validadores) |
+| `Zentric.Infrastructure` | existe | **existe** (parcial: `ZentricDbContext` + 2 repositorios + 2 migraciones sin aplicar) |
+| `Zentric.Api` | existe | **existe** (parcial: 3 endpoints, middleware simplificado) |
+| Proyecto de pruebas | existe | **existe** (178 pruebas en verde, todas de dominio) |
+| `Result<T>` | en Application/Infrastructure | **existe** (`Application/Common/Models/Result.cs`); no se usa en servicios de dominio (no hay servicios) |
+| Eventos de dominio + dispatcher | puerto en Domain/Application | **no existen** (`// TODO` en su lugar → [H-14](00-bootstrap/spec-conformance-matrix.md)) |
+| Abstracción de tiempo | para reglas temporales | **no existe** (`DateTime.UtcNow` directo, [H-06](00-bootstrap/spec-conformance-matrix.md)) |
+| IDs fuertemente tipados | `record struct` | **no existen** (`Guid` plano, G-07) |
+| Regla de dependencia | unidireccional hacia el centro | **cumple** (`Domain` ← `Application` ← `Infrastructure` ← `Api`) |
+| Aislamiento EF ↔ dominio | entidades EF separadas (:4.2) | **no cumple** ([H-13](00-bootstrap/spec-conformance-matrix.md): el `DbContext` mapea los agregados de dominio) |
+| Validación de entrada (FluentValidation) | obligatoria en Application | **cumple** desde SPEC-007: `ValidationBehavior<,>` + 3 validadores (21 pruebas) |
+| Middleware global + RFC 7807 | en Api | **cumple** en código desde SPEC-007 (`AddProblemDetails()` + `UseExceptionHandler()`); `[PENDIENTE]` verificación por HTTP real |
 
-Detalle y evidencia: `SDD/00-bootstrap/spec-conformance-matrix.md`.
+Detalle y evidencia: [`SDD/00-bootstrap/spec-conformance-matrix.md`](00-bootstrap/spec-conformance-matrix.md).
 
 ## 10. Riesgos arquitectónicos abiertos
 
 `[RIESGO]` Añadir `Infrastructure` (EF Core) antes de resolver los mapeos del
 modelo obligaría a escribir y reescribir mapeos y migraciones. Orden recomendado:
 estabilizar el dominio (Fases 1–3 del roadmap) y recién entonces construir
-persistencia y API (`SDD/00-bootstrap/migration-to-sdd-plan.md`).
+persistencia y API ([`SDD/00-bootstrap/migration-to-sdd-plan.md`](00-bootstrap/migration-to-sdd-plan.md)).
 
 `[RIESGO]` La ausencia de `.editorconfig`, analizadores y CI permite que el
 estilo y las reglas arquitectónicas se degraden sin que nada lo detecte
-(ver R-08 del bootstrap).
+(ver [R-08](00-bootstrap/risks-and-gaps.md) del bootstrap).

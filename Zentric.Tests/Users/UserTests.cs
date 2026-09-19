@@ -1,3 +1,4 @@
+using Zentric.Domain.Products.Enums;
 using Zentric.Domain.Users;
 using Zentric.Domain.Users.Enums;
 using Zentric.Domain.Users.ValueObjects;
@@ -206,3 +207,4 @@ public sealed class UserTests
         Assert.Throws<InvalidOperationException>(() => user.DeleteByAdmin());
     }
 }
+

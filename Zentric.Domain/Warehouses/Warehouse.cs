@@ -9,7 +9,7 @@ namespace Zentric.Domain.Warehouses
         public string Location { get; private set; } // Value object GLOBAL
         public int Capacity { get; private set; }
         public WarehouseType Type { get; private set; }
-        public Guid? SellerId { get; init; } // Opcional (nulo si es de Zentric)
+        public Guid? VendorId { get; init; } // Opcional (nulo si es de Zentric)
         public bool IsActive { get; private set; } // puede ser un enum close open active inactive mantenimiento
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
@@ -24,7 +24,7 @@ namespace Zentric.Domain.Warehouses
             Location = null!;
         }
 
-        public Warehouse(string name, string location, int capacity, WarehouseType type, Guid? sellerId)
+        public Warehouse(string name, string location, int capacity, WarehouseType type, Guid? vendorId)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -41,12 +41,12 @@ namespace Zentric.Domain.Warehouses
                 throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity cannot be negative.");
             }
 
-            if (type == WarehouseType.Marketplace && sellerId.HasValue)
+            if (type == WarehouseType.Marketplace && vendorId.HasValue)
             {
                 throw new InvalidOperationException("Marketplace warehouses cannot have a seller assigned.");
             }
 
-            if (type == WarehouseType.Seller && !sellerId.HasValue)
+            if (type == WarehouseType.Vendor && !vendorId.HasValue)
             {
                 throw new InvalidOperationException("Seller warehouses must have the owner seller ID.");
             }
@@ -56,7 +56,7 @@ namespace Zentric.Domain.Warehouses
             Location = location.Trim();
             Capacity = capacity;
             Type = type;
-            SellerId = sellerId;
+                        this.VendorId = vendorId;
             IsActive = true;
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
@@ -209,3 +209,6 @@ namespace Zentric.Domain.Warehouses
         }
     }
 }
+
+
+

@@ -8,18 +8,19 @@
 En este proyecto aplicamos **Spec-Driven Development (SDD)**. La documentación en la carpeta `/SDD` es la **Fuente Única de Verdad (Single Source of Truth - SSoT)**.
 
 ### 0.0 Skill de ingeniería SDD (obligatoria)
-*   La metodología operativa de todo agente en este repositorio vive en la skill **`generic-sdd-agent` v3.0.0** (router + referencias):
-    - Fuente de verdad versionada: `.agents/skills/generic-sdd-agent/` (`SKILL.md` + `references/`).
-    - Copia instalada para carga automática: `%USERPROFILE%\.agents\skills\generic-sdd-agent\` (regenerar con `scripts/sync-skill.ps1`; **no editar la copia a mano**).
-    - Overlay específico del repo: `references/10-zentric-overlay.md` (comandos, capas, lenguaje ubicuo canónico y protocolo del repositorio).
-*   Cuando exista conflicto, la prioridad es: decisión del owner → `AGENTS.md` → `SDD/` → overlay de la skill → resto de referencias.
-*   `generic-sdd-agent.md` (raíz, v2.0.0) queda **superseded** por la skill: no editarlo ni citarlo como vigente.
+*   La metodología operativa de todo agente en este repositorio vive en la skill **`generic-sdd-agent` v6.0.0** (documento único):
+    - Fuente de verdad versionada: `.agents/skills/generic-sdd-agent/SKILL.md` (v6.0.0, monolítico; **ya no usa `references/`**).
+    - Copia instalada para carga automática: `%USERPROFILE%\.agents\skills\generic-sdd-agent\` (regenerar con `.agents/skills/generic-sdd-agent/scripts/sync-skill.ps1`; **no editar la copia a mano**).
+    - Overlay del repositorio: integrado en **este [`AGENTS.md`](AGENTS.md)** (:0–:8) más el contexto persistente de [`SDD/SDD.md`](SDD/SDD.md).
+*   **Contexto persistente (huella mínima):** [`AGENTS.md`](AGENTS.md) (contrato operativo) + [`SDD/SDD.md`](SDD/SDD.md) (memoria viva: mapa de entidades, decisiones/ADDENDA, verificación, riesgos y estado). [`SDD/SDD.md`](SDD/SDD.md) **no duplica** las specs: las indexa y apunta a ellas.
+*   Cuando exista conflicto, la prioridad es: decisión del owner → [`AGENTS.md`](AGENTS.md) → [`SDD/Domain/ZENTRIC.md`](SDD/Domain/ZENTRIC.md) (Ley) → resto de `SDD/` → skill.
+*   `generic-sdd-agent.md` (raíz, v2.0.0) quedó **superseded** y fue **ELIMINADO el 2026-09-18** por autorización del Owner (el propio archivo pedía autorización para su eliminación). La skill **v6.0.0** es el único punto de entrada metodológico vigente.
 
 ### 0.1 Consulta Obligatoria Antes de Codificar
 Antes de generar o modificar código, el agente **DEBE** consultar la documentación correspondiente en `/SDD`:
 
-*   **Para contexto del negocio global:** Lee `SDD/01-system-overview.md`.
-*   **Para entender el flujo general y las capas:** Lee `SDD/02-software-architecture.md` para asimilar la Arquitectura Hexagonal y la regla de dependencia.
+*   **Para contexto del negocio global:** Lee [`SDD/01-system-overview.md`](SDD/01-system-overview.md).
+*   **Para entender el flujo general y las capas:** Lee [`SDD/02-software-architecture.md`](SDD/02-software-architecture.md) para asimilar la Arquitectura Hexagonal y la regla de dependencia.
 *   **Para el contexto de negocio específico y reglas puras (Bounded Context):** Revisa los archivos dentro de `SDD/Domain/`. Aquí habitan las invariantes, el modelado y las reglas de negocio.
 *   **Para orquestación, puertos de salida y casos de uso:** Revisa los archivos en `SDD/Application/`.
 *   **Para acceso a datos, ORM y adaptadores:** Revisa los archivos en `SDD/Infrastructure/`.
@@ -37,7 +38,15 @@ Antes de generar o modificar código, el agente **DEBE** consultar la documentac
 *   El agente tiene prohibido inventar sinónimos al traducir la especificación a código. Las variables, clases, métodos, interfaces y entidades de base de datos **DEBEN usar exactamente los mismos términos** definidos en el Glosario y en los modelos de `/SDD/` (por ejemplo, si la spec dice `Buyer`, nunca usar `Customer` o `Client`).
 
 ### 0.5 Trazabilidad y Progreso
-*   El agente debe registrar el progreso (por ejemplo, marcando con checkboxes `[x]`) de las tareas implementadas dentro de los documentos aplicables en `/SDD/`, o en un archivo de seguimiento dedicado (`TRACKING.md` / `TODO.md`), para que siempre exista trazabilidad clara entre la especificación y el código implementado.
+*   El agente debe registrar el progreso (por ejemplo, marcando con checkboxes [x]) de las tareas implementadas dentro de los documentos aplicables en /SDD/, o en un archivo de seguimiento dedicado (TRACKING.md / TODO.md), para que siempre exista trazabilidad clara entre la especificacion y el codigo implementado.
+
+### 0.6 Autonomia de Flujo (No Interrumpir Innecesariamente)
+*   Si el agente finaliza y verifica (tests 100% en verde) una capa completa (ej. Dominio), **DEBE avanzar automaticamente** a la siguiente capa arquitectonica (ej. Aplicacion -> Infraestructura) segun el patron Hexagonal, sin detenerse a preguntar "¿que quieres hacer ahora?", limitandose a informar al usuario de los hitos logrados.
+
+### 0.7 Inmutabilidad de los Documentos "Biblia" y Registro de Cambios
+*   Los documentos entregados directamente por el cliente o definidos como la "Ley" (ej. ZENTRIC.md) son **INTOCABLES** por el agente en cuanto a su redaccion inventada.
+*   Si existen vacios en la "Ley", el agente aplicara el "Freno de Mano" y obligatoriamente **pedira al Owner que dicte las reglas exactas**.
+*   **Marcado de Trazabilidad:** Si el Owner aprueba o dicta modificaciones sobre la especificacion original, el agente debe registrar y marcar explicitamente que adiciones se le hicieron a la "Biblia" (ej. agregando [ADDENDUM - DICTADO POR OWNER]), para mantener total claridad entre el documento original del cliente y la expansion del modelo.
 
 ---
 
@@ -96,7 +105,12 @@ El flujo de dependencias es unidireccional y siempre apunta hacia el centro (Dom
 - **Value Objects:** Conceptos del dominio sin identidad propia.
   - **Regla:** Deben ser estrictamente inmutables.
 
----
+
+### 2.4. Auditoria de Mapeo Completo (Anti-Amnesia de Entidades)
+*   **Problema a evitar:** Es una falla critica en proyectos empresariales olvidar entidades en la persistencia por concentrarse solo en los requerimientos nuevos.
+*   **Mandato:** Al construir o inicializar la capa de Infraestructura (ej. DbContext, Repositorios, Migraciones), el agente tiene **PROHIBIDO** basarse unicamente en el contexto de la conversacion reciente. Debe escanear **OBLIGATORIAMENTE** el proyecto Zentric.Domain completo (o SDD/Domain) para garantizar que el **100% de los Agregados Raiz** del sistema sean integrados (ej. DbSets).
+
+
 
 ## 3. Tratamiento de Errores y Excepciones (Organizado por Capa)
 
@@ -195,5 +209,10 @@ dotnet restore
 - [ ] ¿Se actualizó la trazabilidad/estado (checklists) en los archivos aplicables tras la implementación?
 - [ ] ¿La solución compila sin advertencias ni errores (`dotnet build`)?
 - [ ] ¿No se introdujeron secretos, tokens o credenciales en el código?
+- [ ] (Infraestructura) ¿Se verifico mediante un escaneo transversal de 'Zentric.Domain' que ninguna entidad preexistente haya quedado por fuera del DbContext (Anti-Amnesia)?
 
 ---
+
+
+
+
