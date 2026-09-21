@@ -1,13 +1,16 @@
 using Zentric.Domain.Returns.Enums;
 using Zentric.Domain.Products.Enums;
+using Zentric.Domain.Common.Models;
+using Zentric.Domain.Returns.Events;
 
 namespace Zentric.Domain.Returns
 {
-    public sealed class ReturnRequest
+    public sealed class ReturnRequest : Entity
     {
         public Guid Id { get; init; }
         public Guid CustomerOrderId { get; private set; }
         public Guid VariantId { get; private set; }
+        public Guid WarehouseId { get; private set; }
         public int Quantity { get; private set; }
         public ReturnStatus Status { get; private set; }
         public bool IsGoodCondition { get; private set; }
@@ -17,7 +20,7 @@ namespace Zentric.Domain.Returns
 
         private ReturnRequest() { }
 
-        public ReturnRequest(Guid customerOrderId, Guid variantId, int quantity, ProductType productType)
+        public ReturnRequest(Guid customerOrderId, Guid variantId, Guid warehouseId, int quantity, ProductType productType)
         {
             if (productType == ProductType.Digital)
             {
@@ -26,11 +29,13 @@ namespace Zentric.Domain.Returns
 
             if (customerOrderId == Guid.Empty) throw new ArgumentException("Customer order required.", nameof(customerOrderId));
             if (variantId == Guid.Empty) throw new ArgumentException("Variant required.", nameof(variantId));
+            if (warehouseId == Guid.Empty) throw new ArgumentException("Warehouse required.", nameof(warehouseId));
             if (quantity <= 0) throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity must be greater than zero.");
 
             Id = Guid.NewGuid();
             CustomerOrderId = customerOrderId;
             VariantId = variantId;
+            WarehouseId = warehouseId;
             Quantity = quantity;
             Status = ReturnStatus.Requested;
             IsGoodCondition = false;
@@ -48,19 +53,19 @@ namespace Zentric.Domain.Returns
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void ApproveByVendor()
+        public void ApproveByVendor(bool isSameWarehouseAndVendor)
         {
             if (Status != ReturnStatus.Requested)
                 throw new InvalidOperationException("Only requested returns can be approved.");
 
-            if (!IsGoodCondition)
-                throw new InvalidOperationException("Cannot approve a return if the item is not in good condition.");
+            if (!isSameWarehouseAndVendor && !IsGoodCondition)
+                throw new InvalidOperationException("For separate logistics, cannot approve a return if the item has not been inspected as good condition.");
 
             VendorApproved = true;
             Status = ReturnStatus.Approved;
             UpdatedAt = DateTime.UtcNow;
             
-            // TODO: Evento para devolver al stock con etiqueta Usado
+            AddDomainEvent(new ReturnApprovedEvent(Id, VariantId, WarehouseId, Quantity));
         }
 
         public void Reject()

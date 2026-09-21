@@ -17,7 +17,7 @@ public sealed class UserTests
     private const string PasswordHash = "hashed-password";
 
     private static User CreateActiveUser(UserRole role = UserRole.Buyer)
-        => new(new FullName("Juan", "Perez"), new Email("juan.perez@zentric.com"), PasswordHash, role);
+        => new("1234567890", new FullName("Juan", "Perez"), new Email("juan.perez@zentric.com"), PasswordHash, role);
 
     [Fact]
     public void Constructor_ValidData_CreatesActiveUser()
@@ -34,16 +34,25 @@ public sealed class UserTests
     public void Constructor_EmptyPasswordHash_ThrowsArgumentException()
     {
         var exception = Assert.Throws<ArgumentException>(
-            () => new User(new FullName("Juan", "Perez"), new Email("juan@zentric.com"), " ", UserRole.Buyer));
+            () => new User("1234567890", new FullName("Juan", "Perez"), new Email("juan@zentric.com"), " ", UserRole.Buyer));
 
         Assert.Equal("passwordHash", exception.ParamName);
+    }
+
+    [Fact]
+    public void Constructor_EmptyIdentityDocument_ThrowsArgumentException()
+    {
+        var exception = Assert.Throws<ArgumentException>(
+            () => new User(" ", new FullName("Juan", "Perez"), new Email("juan@zentric.com"), PasswordHash, UserRole.Buyer));
+
+        Assert.Equal("identityDocument", exception.ParamName);
     }
 
     [Fact]
     public void Constructor_UndefinedRole_ThrowsArgumentOutOfRangeException()
     {
         Assert.Throws<ArgumentOutOfRangeException>(
-            () => new User(new FullName("Juan", "Perez"), new Email("juan@zentric.com"), PasswordHash, (UserRole)99));
+            () => new User("1234567890", new FullName("Juan", "Perez"), new Email("juan@zentric.com"), PasswordHash, (UserRole)99));
     }
 
     [Fact]

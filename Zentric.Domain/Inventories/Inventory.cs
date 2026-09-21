@@ -60,29 +60,6 @@ namespace Zentric.Domain.Inventories
             UpdatedAt = CreatedAt;
         }
 
-        public void UpdateQuantities(int availableQuantity, int reservedQuantity, int damagedQuantity, int usedQuantity = 0)
-        {
-            if (availableQuantity < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(availableQuantity), "Available quantity cannot be negative.");
-            }
-
-            if (reservedQuantity < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(reservedQuantity), "Reserved quantity cannot be negative.");
-            }
-
-            if (damagedQuantity < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(damagedQuantity), "Damaged quantity cannot be negative.");
-            }
-            this.AvailableQuantity = availableQuantity;
-            ReservedQuantity = reservedQuantity;
-            DamagedQuantity = damagedQuantity;
-            UsedQuantity = usedQuantity;
-            UpdatedAt = DateTime.UtcNow;
-        }
-
         public void AddStock(int quantity)
         {
             if (quantity <= 0)
@@ -118,9 +95,9 @@ namespace Zentric.Domain.Inventories
                 throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity to dispatch must be greater than zero.");
             }
 
-            if (AvailableQuantity < quantity)
+            if (ReservedQuantity < quantity)
             {
-                throw new ArgumentOutOfRangeException(nameof(quantity), "Not enough available stock.");
+                throw new ArgumentOutOfRangeException(nameof(quantity), "Not enough reserved stock to dispatch.");
             }
 
             ReservedQuantity -= quantity;
@@ -175,6 +152,26 @@ namespace Zentric.Domain.Inventories
             UsedQuantity += quantity;
             UpdatedAt = DateTime.UtcNow;
         }
+
+        public void ReconcileGhostStock(int ghostQuantity)
+        {
+            if (ghostQuantity <= 0)
+                throw new ArgumentOutOfRangeException(nameof(ghostQuantity), "Ghost quantity must be greater than zero.");
+
+            if (ReservedQuantity < ghostQuantity)
+                throw new InvalidOperationException("Cannot reconcile more ghost stock than is reserved.");
+
+            ReservedQuantity -= ghostQuantity;
+            
+            // Regla de negocio: Si hubo quiebre por stock fantasma, debemos asegurar 
+            // que AvailableQuantity quede en 0 para que no vuelva a pasar.
+            if (AvailableQuantity > 0)
+            {
+                AvailableQuantity = 0;
+            }
+            UpdatedAt = DateTime.UtcNow;
+        }
+
         public void ReciveReturnedStock(int quantity)
         {
             if (quantity <= 0)

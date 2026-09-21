@@ -1,6 +1,6 @@
 using MediatR;
 using Zentric.Application.Common.Models;
-using Zentric.Application.Orders.Ports;
+using Zentric.Domain.Orders.Ports;
 using Zentric.Domain.Orders;
 
 namespace Zentric.Application.Orders.Commands

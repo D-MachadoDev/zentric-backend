@@ -1,29 +1,20 @@
 using Microsoft.EntityFrameworkCore;
-using Zentric.Domain.Orders;
-using Zentric.Domain.Logistics;
-using Zentric.Domain.Returns;
-using Zentric.Domain.Billing;
-using Zentric.Domain.Users;
-using Zentric.Domain.Buyers;
-using Zentric.Domain.Products;
-using Zentric.Domain.Inventories;
-using Zentric.Domain.Warehouses;
-using Zentric.Domain.Users.ValueObjects;
+using Zentric.Infrastructure.Persistence.Models;
 
 namespace Zentric.Infrastructure.Persistence
 {
     public class ZentricDbContext : DbContext
     {
-        public DbSet<CustomerOrder> CustomerOrders => Set<CustomerOrder>();
-        public DbSet<FulfillmentOrder> FulfillmentOrders => Set<FulfillmentOrder>();
-        public DbSet<ReturnRequest> ReturnRequests => Set<ReturnRequest>();
-        public DbSet<Invoice> Invoices => Set<Invoice>();
+        public DbSet<CustomerOrderDbModel> CustomerOrders => Set<CustomerOrderDbModel>();
+        public DbSet<FulfillmentOrderDbModel> FulfillmentOrders => Set<FulfillmentOrderDbModel>();
+        public DbSet<ReturnRequestDbModel> ReturnRequests => Set<ReturnRequestDbModel>();
+        public DbSet<InvoiceDbModel> Invoices => Set<InvoiceDbModel>();
         
-        public DbSet<User> Users => Set<User>();
-        public DbSet<Buyer> Buyers => Set<Buyer>();
-        public DbSet<Product> Products => Set<Product>();
-        public DbSet<Inventory> Inventories => Set<Inventory>();
-        public DbSet<Warehouse> Warehouses => Set<Warehouse>();
+        public DbSet<UserDbModel> Users => Set<UserDbModel>();
+        public DbSet<BuyerDbModel> Buyers => Set<BuyerDbModel>();
+        public DbSet<ProductDbModel> Products => Set<ProductDbModel>();
+        public DbSet<InventoryDbModel> Inventories => Set<InventoryDbModel>();
+        public DbSet<WarehouseDbModel> Warehouses => Set<WarehouseDbModel>();
 
         public ZentricDbContext(DbContextOptions<ZentricDbContext> options) : base(options)
         {
@@ -33,60 +24,84 @@ namespace Zentric.Infrastructure.Persistence
         {
             base.OnModelCreating(modelBuilder);
             
-            modelBuilder.Entity<CustomerOrder>(b =>
+            modelBuilder.Entity<CustomerOrderDbModel>(b =>
             {
                 b.HasKey(o => o.Id);
-                b.OwnsMany(o => o.Items, i =>
+                b.HasMany(o => o.Items)
+                 .WithOne(i => i.CustomerOrder)
+                 .HasForeignKey(i => i.CustomerOrderId)
+                 .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<OrderItemDbModel>(b =>
+            {
+                b.HasKey(o => o.Id);
+                b.OwnsOne(o => o.UnitPrice, u => 
                 {
-                    i.WithOwner().HasForeignKey(x => x.CustomerOrderId);
-                    i.HasKey(x => x.Id);
-                    i.OwnsOne(x => x.UnitPrice);
+                    u.Property(p => p.Amount).HasColumnName("UnitPriceAmount");
+                    u.Property(p => p.Currency).HasColumnName("UnitPriceCurrency");
                 });
             });
 
-            modelBuilder.Entity<FulfillmentOrder>(b =>
+            modelBuilder.Entity<FulfillmentOrderDbModel>(b =>
             {
                 b.HasKey(f => f.Id);
-                b.OwnsMany(f => f.Shipments, s =>
-                {
-                    s.WithOwner().HasForeignKey(x => x.FulfillmentOrderId);
-                    s.HasKey(x => x.Id);
-                });
+                b.HasMany(f => f.Shipments)
+                 .WithOne(s => s.FulfillmentOrder)
+                 .HasForeignKey(s => s.FulfillmentOrderId)
+                 .OnDelete(DeleteBehavior.Cascade);
             });
             
-            modelBuilder.Entity<Invoice>(b => 
+            modelBuilder.Entity<ShipmentDbModel>().HasKey(s => s.Id);
+
+            modelBuilder.Entity<InvoiceDbModel>(b => 
             {
                 b.HasKey(i => i.Id);
-                b.OwnsOne(i => i.TotalAmount);
+                b.OwnsOne(i => i.TotalAmount, a => 
+                {
+                    a.Property(p => p.Amount).HasColumnName("TotalAmount");
+                    a.Property(p => p.Currency).HasColumnName("Currency");
+                });
             });
 
-            modelBuilder.Entity<User>(b => 
+            modelBuilder.Entity<UserDbModel>(b => 
             {
                 b.HasKey(u => u.Id);
-                b.OwnsOne(u => u.FullName);
-                b.Property(u => u.Email).HasConversion(e => e.Value, v => new Email(v));
             });
 
-            modelBuilder.Entity<Buyer>().HasKey(b => b.UserId);
-            modelBuilder.Entity<Inventory>().HasKey(i => i.Id);
-            modelBuilder.Entity<Warehouse>().HasKey(w => w.Id);
+            modelBuilder.Entity<BuyerDbModel>().HasKey(b => b.UserId);
+            modelBuilder.Entity<ReturnRequestDbModel>().HasKey(r => r.Id);
+            modelBuilder.Entity<InventoryDbModel>().HasKey(i => i.Id);
+            modelBuilder.Entity<WarehouseDbModel>().HasKey(w => w.Id);
             
-            modelBuilder.Entity<Product>(b =>
+            modelBuilder.Entity<ProductDbModel>(b =>
             {
                 b.HasKey(p => p.Id);
-                b.OwnsOne(p => p.Price);
-                b.OwnsMany(p => p.Variants, v => 
+                b.OwnsOne(p => p.Price, u => 
                 {
-                    v.WithOwner().HasForeignKey(x => x.ProductId);
-                    v.HasKey(x => x.Id);
-                    v.OwnsMany(x => x.Attributes, a => 
-                    {
-                        a.WithOwner().HasForeignKey("VariantId");
-                        a.HasKey("VariantId", "Name");
-                    });
+                    u.Property(x => x.Amount).HasColumnName("PriceAmount");
+                    u.Property(x => x.Currency).HasColumnName("PriceCurrency");
+                });
+                b.HasMany(p => p.Variants)
+                 .WithOne(v => v.Product)
+                 .HasForeignKey(v => v.ProductId)
+                 .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<ProductVariantDbModel>(b => 
+            {
+                b.HasKey(v => v.Id);
+                b.OwnsMany(v => v.Attributes, a => 
+                {
+                    a.WithOwner().HasForeignKey("VariantId");
+                    a.HasKey("VariantId", "Name");
                 });
             });
         }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return await base.SaveChangesAsync(cancellationToken);
+        }
     }
 }
-

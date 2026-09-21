@@ -7,6 +7,7 @@ namespace Zentric.Domain.Users
     public sealed class User
     {
         public Guid Id { get; init; }
+        public string IdentityDocument { get; private set; }
         public FullName FullName { get; private set; }
         public Email Email { get; private set; }
         public string PasswordHash { get; private set; }
@@ -21,17 +22,20 @@ namespace Zentric.Domain.Users
 
         private User()
         {
+            IdentityDocument = null!;
             FullName = null!;
             Email = null!;
             PasswordHash = null!;
         } // For EF Core
 
-        public User(FullName fullName, Email email, string passwordHash, UserRole role)
+        public User(string identityDocument, FullName fullName, Email email, string passwordHash, UserRole role)
         {
+            if (string.IsNullOrWhiteSpace(identityDocument)) throw new ArgumentException("Identity document cannot be empty.", nameof(identityDocument));
             if (string.IsNullOrWhiteSpace(passwordHash)) throw new ArgumentException("Password hash cannot be empty.", nameof(passwordHash));
             if (!Enum.IsDefined(role)) throw new ArgumentOutOfRangeException(nameof(role), "Invalid user role.");
 
             Id = Guid.NewGuid();
+            IdentityDocument = identityDocument;
             FullName = fullName;
             Email = email;
             PasswordHash = passwordHash;

@@ -118,16 +118,6 @@ public sealed class InventoryTests
         Assert.Throws<ArgumentOutOfRangeException>(() => inventory.AddStock(quantity));
     }
 
-    [Theory]
-    [InlineData(-1, 0, 0)]
-    [InlineData(0, -1, 0)]
-    [InlineData(0, 0, -1)]
-    public void UpdateQuantities_NegativeValue_ThrowsArgumentOutOfRangeException(int available, int reserved, int damaged)
-    {
-        var inventory = CreateInventory();
-
-        Assert.Throws<ArgumentOutOfRangeException>(() => inventory.UpdateQuantities(available, reserved, damaged));
-    }
 
     [Fact]
     public void MarkAsDamaged_QuantityGreaterThanAvailable_ThrowsArgumentOutOfRangeException()

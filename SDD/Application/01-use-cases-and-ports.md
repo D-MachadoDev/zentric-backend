@@ -26,21 +26,27 @@ Se definen interfaces (Repositorios) en la capa de aplicación, que serán imple
 
 ## 4. Casos de Uso (Commands) - Logística (Fulfillment)
 - **`CreateFulfillmentOrderCommand`**: Genera un `FulfillmentOrder` derivado de un pedido pagado.
-- **`DispatchFulfillmentCommand`**: Marca como despachado.
-
-> `[CONTRADICCIÓN]` **(2026-09-18)** `CreateFulfillmentOrderCommand` existe
-> (`Zentric.Application/Logistics/Commands/`), pero **no valida que el pedido esté pagado** y
-> `DispatchFulfillmentCommand` **no existe**.
+- **`PackFulfillmentOrderCommand`**: Pasa a PendingPack a Packed.
+- **`DispatchFulfillmentCommand`**: Marca como despachado (Shipped).
+- **`CancelFulfillmentOrderDueToNoStockCommand`**: [SPEC-008] Caso crítico. Cancela el despacho, llama a Inventario para ejecutar `ReconcileGhostStock` (asegurando AvailableQuantity en 0) y abre automáticamente el `ReturnRequest` para iniciar el reembolso.
 
 ## 5. Casos de Uso (Commands) - Devoluciones (Returns)
-- **`RequestReturnCommand`**: Crea el request inicial.
-- **`ApproveReturnCommand`**: Flujo de aprobación dual (logística + vendor) que interactúa con el inventario para invocar `ReturnToUsedStock()`.
+- **`RequestReturnCommand`**: Crea el request inicial (`ReturnStatus.Requested`). Bloquea si es Producto Digital.
+- **`InspectReturnCommand`**: Inspección física inicial por logística (`IsGoodCondition`).
+- **`ApproveReturnByVendorCommand`**: [SPEC-008] Flujo de aprobación. Si el operador logístico y el vendor son el mismo (`isSameWarehouseAndVendor`), aprueba directo saltando la inspección. Luego interactúa con `IInventoryRepository` para invocar `ReturnToUsedStock()`.
 
-## 6. Casos de Uso (Commands) - Catálogo (Products)
+## 6. Casos de Uso (Commands) - Facturación (Billing)
+- **`GenerateInvoicesCommand`**: [SPEC-008] Dado un `CustomerOrderId`, genera:
+  1. `InvoiceType.Master` (Para el comprador por el total).
+  2. `InvoiceType.ZentricDetail` (Fee de plataforma).
+  3. `InvoiceType.VendorDetail` (Split para los vendedores).
+  Guarda en `IInvoiceRepository`.
+
+## 7. Casos de Uso (Commands) - Catálogo (Products)
 - **`CreateProductCommand`**: Crea producto y sus variantes forzosas.
 - **`PublishProductCommand`**: Publica el producto.
 
-## 7. Validaciones
+## 8. Validaciones
 Todas las entradas de los usuarios, como emails, GUIDs vacíos, cantidades negativas o valores monetarios, deben validarse con FluentValidation antes del handler.
 
 > `[CONFIRMADO]` **(SPEC-007, 2026-09-18)** Implementado: `ValidationBehavior<TRequest, TResponse>`

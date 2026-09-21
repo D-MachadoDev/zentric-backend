@@ -4,7 +4,7 @@ using Zentric.Domain.Products.ValueObjects;
 
 namespace Zentric.Domain.Orders
 {
-    public sealed class CustomerOrder
+    public sealed class CustomerOrder : Zentric.Domain.Common.Models.Entity
     {
         public Guid Id { get; init; }
         public Guid BuyerId { get; private set; }
@@ -106,8 +106,15 @@ namespace Zentric.Domain.Orders
                 throw new InvalidOperationException("Cannot checkout an empty cart.");
             }
 
+            if (DateTime.UtcNow - CreatedAt > TimeSpan.FromMinutes(15))
+            {
+                throw new InvalidOperationException("Cart reservation has expired (15-minute timeout).");
+            }
+
             Status = OrderStatus.PendingPayment;
             UpdatedAt = DateTime.UtcNow;
+
+            AddDomainEvent(new Zentric.Domain.Orders.Events.OrderCreatedDomainEvent(Id, TotalAmount.Amount, _items.ToList()));
         }
 
         public void MarkAsPaid()
@@ -121,6 +128,8 @@ namespace Zentric.Domain.Orders
 
             Status = OrderStatus.Paid;
             UpdatedAt = DateTime.UtcNow;
+
+            AddDomainEvent(new Zentric.Domain.Orders.Events.OrderPaidDomainEvent(Id));
         }
 
         public void Dispatch()

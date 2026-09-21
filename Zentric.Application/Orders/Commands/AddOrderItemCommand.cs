@@ -1,8 +1,10 @@
 using MediatR;
 using Zentric.Application.Common.Models;
-using Zentric.Application.Orders.Ports;
+using Zentric.Domain.Orders.Ports;
 using Zentric.Domain.Orders.Enums;
 using Zentric.Domain.Products.ValueObjects;
+
+using Zentric.Domain.Inventories.Ports;
 
 namespace Zentric.Application.Orders.Commands
 {
@@ -10,34 +12,38 @@ namespace Zentric.Application.Orders.Commands
 
     public class AddOrderItemCommandHandler : IRequestHandler<AddOrderItemCommand, Result>
     {
-        private readonly ICustomerOrderRepository _repository;
+        private readonly ICustomerOrderRepository _orderRepository;
+        private readonly IInventoryRepository _inventoryRepository;
 
-        public AddOrderItemCommandHandler(ICustomerOrderRepository repository)
+        public AddOrderItemCommandHandler(ICustomerOrderRepository orderRepository, IInventoryRepository inventoryRepository)
         {
-            _repository = repository;
+            _orderRepository = orderRepository;
+            _inventoryRepository = inventoryRepository;
         }
 
         public async Task<Result> Handle(AddOrderItemCommand request, CancellationToken cancellationToken)
         {
-            var order = await _repository.GetByIdAsync(request.OrderId, cancellationToken);
+            var order = await _orderRepository.GetByIdAsync(request.OrderId, cancellationToken);
             if (order == null)
             {
                 return Result.Failure("Order not found.");
             }
 
-            // Precondición de negocio explícita: se informa el fallo como Result en lugar de
-            // capturar la excepción que lanza el agregado. AGENTS.md §3.2 prohíbe el try-catch
-            // genérico en la capa de Aplicación y exige representar los fallos previsibles
-            // con Result; las excepciones catastróficas suben al middleware global (§3.4).
             if (order.Status != OrderStatus.Cart)
             {
                 return Result.Failure("Items can only be added while the order is in the Cart status.");
             }
 
+            var totalAvailable = await _inventoryRepository.GetTotalAvailableStockAsync(request.VariantId, cancellationToken);
+            if (totalAvailable < request.Quantity)
+            {
+                return Result.Failure("Not enough available stock.");
+            }
+
             var money = new Money(request.UnitPrice, request.Currency);
 
             order.AddItem(request.VariantId, request.Quantity, money);
-            await _repository.UpdateAsync(order, cancellationToken);
+            await _orderRepository.UpdateAsync(order, cancellationToken);
             return Result.Success();
         }
     }

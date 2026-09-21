@@ -3,12 +3,13 @@ using Zentric.Domain.Logistics.Enums;
 
 namespace Zentric.Domain.Logistics
 {
-    public sealed class FulfillmentOrder
+    public sealed class FulfillmentOrder : Zentric.Domain.Common.Models.Entity
     {
         public Guid Id { get; init; }
         public Guid CustomerOrderId { get; private set; }
         public Guid VendorId { get; private set; }
         public FulfillmentStatus Status { get; private set; }
+        public string? CancellationReason { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
 
@@ -30,30 +31,47 @@ namespace Zentric.Domain.Logistics
             Id = Guid.NewGuid();
             CustomerOrderId = customerOrderId;
             VendorId = vendorId;
-            Status = FulfillmentStatus.Packed; // Según dictamen, es el estado base de logística.
+            Status = FulfillmentStatus.PendingPack; // ADDENDUM: Nace en Pendiente de Empaque
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
         }
 
         public void AddShipment(Guid warehouseId, string trackingNumber)
         {
-            if (Status == FulfillmentStatus.CancelledNoStock)
+            if (Status == FulfillmentStatus.Cancelled)
                 throw new InvalidOperationException("Cannot add shipments to a cancelled order.");
 
             _shipments.Add(new Shipment(Id, warehouseId, trackingNumber));
             UpdatedAt = DateTime.UtcNow;
         }
 
+        public void Pack()
+        {
+            if (Status == FulfillmentStatus.Cancelled)
+                throw new InvalidOperationException("Cannot pack a cancelled order.");
+
+            if (Status != FulfillmentStatus.PendingPack)
+                throw new InvalidOperationException("Order must be in PendingPack state to be packed.");
+
+            Status = FulfillmentStatus.Packed;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
         public void Dispatch()
         {
-            if (Status == FulfillmentStatus.CancelledNoStock)
+            if (Status == FulfillmentStatus.Cancelled)
                 throw new InvalidOperationException("Cannot dispatch a cancelled order.");
 
-            if (Status == FulfillmentStatus.Dispatched)
-                throw new InvalidOperationException("Order is already dispatched.");
+            if (Status != FulfillmentStatus.Packed)
+                throw new InvalidOperationException("Order must be packed before being dispatched.");
 
             Status = FulfillmentStatus.Dispatched;
             UpdatedAt = DateTime.UtcNow;
+
+            foreach (var shipment in _shipments)
+            {
+                AddDomainEvent(new Zentric.Domain.Logistics.Events.PhysicalProductShippedDomainEvent(shipment.Id, Id));
+            }
         }
         
         public void Deliver()
@@ -70,10 +88,11 @@ namespace Zentric.Domain.Logistics
             if (Status == FulfillmentStatus.Dispatched || Status == FulfillmentStatus.Delivered)
                 throw new InvalidOperationException("Cannot cancel a dispatched or delivered order due to stock ghost.");
 
-            Status = FulfillmentStatus.CancelledNoStock;
+            Status = FulfillmentStatus.Cancelled;
+            CancellationReason = "Stock Fantasma";
             UpdatedAt = DateTime.UtcNow;
-            // TODO: Domain event para detonar reembolso
+            
+            AddDomainEvent(new Zentric.Domain.Logistics.Events.PartialFulfillmentCancelledDomainEvent(Id, CancellationReason));
         }
     }
 }
-

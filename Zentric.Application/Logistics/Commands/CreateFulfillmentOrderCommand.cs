@@ -1,6 +1,6 @@
 using MediatR;
 using Zentric.Application.Common.Models;
-using Zentric.Application.Logistics.Ports;
+using Zentric.Domain.Logistics.Ports;
 using Zentric.Domain.Logistics;
 
 namespace Zentric.Application.Logistics.Commands

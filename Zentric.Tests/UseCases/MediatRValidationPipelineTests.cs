@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Zentric.Application.Common.Behaviors;
 using Zentric.Application.Logistics.Commands;
-using Zentric.Application.Logistics.Ports;
+using Zentric.Domain.Logistics.Ports;
 using Zentric.Application.Orders.Commands;
-using Zentric.Application.Orders.Ports;
+using Zentric.Domain.Orders.Ports;
 using Zentric.Domain.Logistics;
 using Zentric.Domain.Orders;
 using Zentric.Domain.Products.ValueObjects;
@@ -59,6 +59,16 @@ namespace Zentric.Tests.UseCases
                 => Task.CompletedTask;
         }
 
+        private sealed class FakeInventoryRepository : Zentric.Domain.Inventories.Ports.IInventoryRepository
+        {
+            public Task AddAsync(Zentric.Domain.Inventories.Inventory inventory, CancellationToken cancellationToken = default) => Task.CompletedTask;
+            public Task<Zentric.Domain.Inventories.Inventory?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) => Task.FromResult<Zentric.Domain.Inventories.Inventory?>(null);
+            public Task<IEnumerable<Zentric.Domain.Inventories.Inventory>> GetByVariantIdAsync(Guid variantId, CancellationToken cancellationToken = default) => Task.FromResult<IEnumerable<Zentric.Domain.Inventories.Inventory>>(new List<Zentric.Domain.Inventories.Inventory>());
+            public Task<Zentric.Domain.Inventories.Inventory?> GetByVariantAndWarehouseAsync(Guid variantId, Guid warehouseId, CancellationToken cancellationToken = default) => Task.FromResult<Zentric.Domain.Inventories.Inventory?>(null);
+            public Task<int> GetTotalAvailableStockAsync(Guid variantId, CancellationToken cancellationToken = default) => Task.FromResult(999);
+            public Task UpdateAsync(Zentric.Domain.Inventories.Inventory inventory, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        }
+
         /// <summary>Reproduce el registro de servicios de la capa de presentación.</summary>
         private static (IMediator Mediator, FakeCustomerOrderRepository Orders) BuildMediator()
         {
@@ -70,6 +80,11 @@ namespace Zentric.Tests.UseCases
             services.AddLogging();
             services.AddSingleton<ICustomerOrderRepository>(orders);
             services.AddSingleton<IFulfillmentOrderRepository, FakeFulfillmentOrderRepository>();
+            services.AddSingleton<Zentric.Domain.Inventories.Ports.IInventoryRepository, FakeInventoryRepository>();
+            services.AddSingleton<Zentric.Application.Common.Ports.IUnitOfWork>(new Moq.Mock<Zentric.Application.Common.Ports.IUnitOfWork>().Object);
+            services.AddSingleton<Zentric.Domain.Products.Ports.IProductRepository>(new Moq.Mock<Zentric.Domain.Products.Ports.IProductRepository>().Object);
+            services.AddSingleton<Zentric.Domain.Inventories.Services.InventoryReservationService>(new Zentric.Domain.Inventories.Services.InventoryReservationService(new FakeInventoryRepository()));
+
             services.AddValidatorsFromAssemblyContaining<CreateCartCommand>();
             services.AddMediatR(cfg =>
             {

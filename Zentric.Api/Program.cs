@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Zentric.Infrastructure.Persistence;
 using Zentric.Application.Orders.Commands;
-using Zentric.Infrastructure.Repositories;
-using Zentric.Application.Orders.Ports;
-using Zentric.Application.Logistics.Ports;
+using Zentric.Infrastructure.Persistence.Repositories;
+using Zentric.Domain.Orders.Ports;
+using Zentric.Domain.Logistics.Ports;
 using FluentValidation;
 using Zentric.Application.Common.Behaviors;
 
@@ -21,9 +21,20 @@ builder.Services.AddDbContext<ZentricDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly("Zentric.Infrastructure")));
 
-// Register Repositories
-builder.Services.AddScoped<ICustomerOrderRepository, CustomerOrderRepository>();
-builder.Services.AddScoped<IFulfillmentOrderRepository, FulfillmentOrderRepository>();
+// Register Repositories and UnitOfWork
+builder.Services.AddScoped<Zentric.Application.Common.Ports.IUnitOfWork, Zentric.Infrastructure.Persistence.UnitOfWork>();
+builder.Services.AddScoped<Zentric.Infrastructure.Persistence.IDomainEventDispatcher, Zentric.Infrastructure.Persistence.DomainEventDispatcher>();
+builder.Services.AddScoped<Zentric.Domain.Users.Ports.IUserRepository, UserRepository>();
+builder.Services.AddScoped<Zentric.Domain.Products.Ports.IProductRepository, ProductRepository>();
+builder.Services.AddScoped<Zentric.Domain.Inventories.Ports.IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<Zentric.Domain.Warehouses.Ports.IWarehouseRepository, WarehouseRepository>();
+builder.Services.AddScoped<Zentric.Domain.Orders.Ports.ICustomerOrderRepository, CustomerOrderRepository>();
+builder.Services.AddScoped<Zentric.Domain.Logistics.Ports.IFulfillmentOrderRepository, FulfillmentOrderRepository>();
+builder.Services.AddScoped<Zentric.Domain.Returns.Ports.IReturnRequestRepository, ReturnRequestRepository>();
+builder.Services.AddScoped<Zentric.Domain.Billing.Ports.IInvoiceRepository, InvoiceRepository>();
+
+// Register Background Services
+builder.Services.AddHostedService<Zentric.Infrastructure.BackgroundServices.CheckoutTimeoutService>();
 
 // Register MediatR + validación de entrada (FluentValidation): AGENTS.md §4.3 y SDD/Application §1 y §7.
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCartCommand>();
@@ -32,6 +43,8 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(CreateCartCommand).Assembly);
     cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
 });
+builder.Services.AddScoped<Zentric.Domain.Returns.Services.ReturnsApprovalService>();
+builder.Services.AddScoped<Zentric.Domain.Inventories.Services.InventoryReservationService>();
 
 var app = builder.Build();
 

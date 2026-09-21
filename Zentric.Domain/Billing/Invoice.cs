@@ -12,7 +12,7 @@ namespace Zentric.Domain.Billing
         public Money TotalAmount { get; private set; }
         public DateTime IssuedAt { get; private set; }
 
-        private Invoice() { }
+        private Invoice() { TotalAmount = null!; }
 
         // Factura Maestra para el cliente (Comprador)
         public static Invoice CreateMaster(Guid customerOrderId, Money totalAmount)
@@ -45,6 +45,23 @@ namespace Zentric.Domain.Billing
                 VendorId = vendorId,
                 Type = InvoiceType.VendorDetail,
                 TotalAmount = vendorTotalAmount,
+                IssuedAt = DateTime.UtcNow
+            };
+        }
+
+        // Factura detalle para la plataforma Zentric (Comisiones/Fees)
+        public static Invoice CreateZentricDetail(Guid customerOrderId, Money zentricFeeAmount)
+        {
+            ArgumentNullException.ThrowIfNull(zentricFeeAmount);
+            if (customerOrderId == Guid.Empty) throw new ArgumentException("Order ID is required.");
+
+            return new Invoice
+            {
+                Id = Guid.NewGuid(),
+                CustomerOrderId = customerOrderId,
+                VendorId = null,
+                Type = InvoiceType.ZentricDetail,
+                TotalAmount = zentricFeeAmount,
                 IssuedAt = DateTime.UtcNow
             };
         }
