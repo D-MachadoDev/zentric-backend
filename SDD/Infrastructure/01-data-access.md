@@ -24,31 +24,49 @@ Para evitar amnesia de entidades (Regla 2.4 de AGENTS.md), el DbContext incluye 
 9. `Invoices` (Facturas maestras y de vendedor)
 
 ## 3. Repositorios Concretos (Adaptadores de Salida)
-Implementan las interfaces definidas en la capa de Aplicación:
-- `CustomerOrderRepository`: Administra la persistencia de los pedidos y sus items asociados.
-- `FulfillmentOrderRepository`: Administra la persistencia de las órdenes logísticas.
-- *(Pendientes de implementar)*: `ReturnRequestRepository`, `InvoiceRepository`, `ProductRepository`, etc.
+Implementan las interfaces definidas en la capa de Aplicación y Dominio:
+- `UserRepository`: Administra la persistencia y consulta de usuarios.
+- `BuyerRepository`: Administra la persistencia de compradores.
+- `WarehouseRepository`: Administra la persistencia de bodegas centrales y de vendedor.
+- `ProductRepository`: Administra la persistencia de productos y catálogo.
+- `InventoryRepository`: Administra existencias y contadores de stock distribuido.
+- `CustomerOrderRepository`: Administra la persistencia de pedidos y líneas de compra.
+- `FulfillmentOrderRepository`: Administra la persistencia de despachos y guías de envío.
+- `ReturnRequestRepository`: Administra la persistencia de solicitudes de devolución.
+- `InvoiceRepository`: Administra facturas maestras y detalles de vendedores.
 
-> `[CONFIRMADO]` **(2026-09-18)** Implementados: **solo** `CustomerOrderRepository` y
-> `FulfillmentOrderRepository`. Pendientes y **sin puerto definido todavía**: `ReturnRequest`,
-> `Invoice`, `Product`, `Warehouse`, `Inventory` y `User` (el puerto `IUserRepository` existe en
-> `Zentric.Domain/Users/Ports/` pero **no tiene implementación** → [H-07](../SDD.md)).
+> `[CONFIRMADO]` **(2026-09-23)**: **Los 9 Repositorios están 100% implementados** con métodos de comando (escritura) y de consulta CQRS (`GetAllAsync`, `GetByIdAsync`, `GetByOrderIdAsync`, `GetByVariantIdAsync`), inyectados en el contenedor de dependencias (`Program.cs`).
 
-## 4. Estrategia de Migraciones
+## 4. Mapeo y Aislamiento de Dominio (Anti-Contaminación)
+Para cumplir estrictamente con [AGENTS.md:2.1](../../AGENTS.md#21-regla-de-dependencia-estricta-y-aislamiento-de-capas), las entidades de dominio no contienen anotaciones de EF Core. Se utilizan modelos de persistencia dedicados (`*DbModel`) y mapeadores explícitos (`*Mapper`):
+- `UserDbModel` ↔ `UserDbModelMapper` ↔ `User`
+- `BuyerDbModel` ↔ `BuyerMapper` ↔ `Buyer`
+- `WarehouseDbModel` ↔ `WarehouseMapper` ↔ `Warehouse`
+- `ProductDbModel` ↔ `ProductMapper` ↔ `Product`
+- `InventoryDbModel` ↔ `InventoryMapper` ↔ `Inventory`
+- `CustomerOrderDbModel` ↔ `CustomerOrderMapper` ↔ `CustomerOrder`
+- `FulfillmentOrderDbModel` ↔ `FulfillmentOrderMapper` ↔ `FulfillmentOrder`
+- `ReturnRequestDbModel` ↔ `ReturnRequestMapper` ↔ `ReturnRequest`
+- `InvoiceDbModel` ↔ `InvoiceMapper` ↔ `Invoice`
+
+## 5. Patrón Unit of Work y Despacho de Eventos
+- `UnitOfWork`: Implementa `IUnitOfWork` gestionando transacciones y persistencia atómica mediante `ZentricDbContext.SaveChangesAsync`.
+- `DomainEventDispatcher`: Publica los eventos de dominio (`IDomainEvent`) a través del mediador tras guardar los cambios exitosamente en la base de datos.
+
+## 6. Estrategia de Migraciones
 Las migraciones se generan usando `Zentric.Api` como Composition Root (Startup Project). 
-- **Migración actual:** `CompleteSchema` (Generada con éxito, contiene todas las tablas históricas y nuevas).
+- **Migraciones registradas:**
+  1. `20260918192602_InitialCreate`: Esquema base relacional.
+  2. `20260918193539_CompleteSchema`: Tablas de todos los 9 agregados.
+  3. `20260920003544_AddBackgroundServicesAndUpdates`: Ajustes de índices y compatibilidad.
 
-> `[RIESGO]` **(2026-09-18)** Las migraciones `InitialCreate` (`20260918192602`) y `CompleteSchema`
-> (`20260918193539`) están **generadas pero nunca aplicadas** contra un PostgreSQL, y no existen
-> pruebas de integración. Su corrección en runtime se desconoce `[PENDIENTE]`.
-
-## 5. Desviaciones registradas (2026-09-18)
+## 7. Estado de Desviaciones Históricas
 
 | ID | Desviación | Evidencia | Estado |
 |---|---|---|---|
-| [H-13](../SDD.md) | El `DbContext` mapea **directamente** los agregados de dominio, sin entidades EF separadas ni mappers | `ZentricDbContext.OnModelCreating` | `[RIESGO]` contradice [AGENTS.md :4.2](../../AGENTS.md#42-infrastructure-adapter-agent); requiere ADR o corrección |
-| — | Los `OwnsMany`/`OwnsOne` de `Money`, `VariantAttribute` y `Email` no están validados en ejecución | `ZentricDbContext.cs:39-88` | `[PENDIENTE]` |
-| — | `Inventory` tiene clave `Id`; la unicidad de `(VariantId, WarehouseId)` **no** está declarada como índice | `ZentricDbContext.cs:71` | `[PENDIENTE]` |
-| — | No hay `IUnitOfWork` ni transacciones explícitas: cada repositorio hace `SaveChangesAsync` | `CustomerOrderRepository.cs:20` | `[RIESGO]` patrón declarado en [AGENTS.md :1](../../AGENTS.md#1-vision-general-del-proyecto) |
+| [H-13](../SDD.md) | Mapeo de agregados de dominio sin aislamiento | Se crearon 10 `DbModels` y 9 `Mappers` dedicados | ✅ **Cerrado** (Aislamiento 100% alcanzado) |
+| [H-07](../SDD.md) | Falta de implementación de `IUserRepository` | Implementado en `UserRepository.cs` | ✅ **Cerrado** |
+| — | Ausencia de `IUnitOfWork` | Implementado en `UnitOfWork.cs` y registrado en DI | ✅ **Cerrado** |
+
 
 

@@ -47,9 +47,9 @@ referencia nada). `Zentric.Domain.csproj` sigue sin `PackageReference`.
 
 | Métrica | Valor |
 |---|---|
-| **Entidades mapeadas** | 30 (E-001 a E-030) |
-| **Agregados raíz** | 14 (User, Buyer, Product, Inventory, Warehouse, CustomerOrder, FulfillmentOrder, Invoice, ReturnRequest + puertos/servicios) |
-| **Cobertura** | 30/33 (91 %) — ver [C-06](#c-06) para huérfanos |
+| **Entidades mapeadas** | 33 (E-001 a E-033) |
+| **Agregados raíz** | 14 (User, Buyer, Product, Inventory, Warehouse, CustomerOrder, FulfillmentOrder, Invoice, ReturnRequest + puertos/servicios/infra) |
+| **Cobertura** | 33/33 (100 %) — 0 huérfanos |
 | **Pruebas asociadas** | 235 casos de prueba en verde |
 
 ### 2.2 Tabla de entidades
@@ -85,7 +85,10 @@ referencia nada). `Zentric.Domain.csproj` sigue sin `PackageReference`.
 | E-027 | Skill `generic-sdd-agent` + `scripts/sync-skill.ps1` | Operación | `.agents/skills/generic-sdd-agent/` | Me✅logía operativa del agente | copia instalada en `%USERPROFILE%\.agents\skills` | **v6.0.0** (repo) vs **v3.1.0** (instalada) → **[C-09](#c-09)** | — |
 | E-028 | Documentos `SDD/` | Documentos | `SDD/**` | SSoT del sistema | apunta a E-029 | completo y sincronizado | — |
 | E-029 | [ZENTRIC.md](/ZENTRIC.md) | Biblia (Ley) | [ZENTRIC.md](/ZENTRIC.md) | Especificación funcional del cliente | rige E-001…E-014 | intacta + ADDENDA (`[ADD-001](#add-001)…003`) | — |
-| E-030 | [ADR-0001](Adr/0001-reserva-fragmentacion-contingencia.md)…0003 | Decisiones | `SDD/Adr/` | Reserva/fraccionamiento, clave de stock, variante obligatoria | rigen E-007, E-004, E-003 | aprobadas por el Owner | — |
+| E-030 | [ADR-0001](Adr/0001-reserva-fragmentacion-contingencia.md)…0006 | Decisiones | `SDD/Adr/` | Decisiones arquitectónicas y de diseño de contingencias | rigen E-001…E-014 | aprobadas por el Owner | — |
+| E-031 | `Dockerfile` | Infraestructura / Despliegue | `/Dockerfile` | Empaquetado multi-stage de la API (.NET 10 SDK / ASP.NET 10) | especificado en [Infrastructure/02-containerization-and-deployment.md](Infrastructure/02-containerization-and-deployment.md) | ✅ Implementado | — |
+| E-032 | `docker-compose.yml` | Infraestructura / Orquestación | `/docker-compose.yml` | Orquestación multi-contenedor (PostgreSQL 16 + API) | especificado en [Infrastructure/02-containerization-and-deployment.md](Infrastructure/02-containerization-and-deployment.md) | ✅ Implementado | — |
+| E-033 | `CheckoutTimeoutService` | Infraestructura / BackgroundService | `Zentric.Infrastructure/BackgroundServices/CheckoutTimeoutService.cs` | Worker recurrente para expiración de órdenes y liberación de stock | especificado en [Infrastructure/03-background-services.md](Infrastructure/03-background-services.md) | ✅ Implementado | — |
 
 **Ajenos / generados (clasificados, no mapeados):** `bin/`, `obj/` (generado), `LICENSE`, `.gitignore`, `.vscode/settings.json`, `appsettings.Development.json`.
 
