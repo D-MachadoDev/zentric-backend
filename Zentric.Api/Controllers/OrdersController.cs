@@ -38,5 +38,13 @@ namespace Zentric.Api.Controllers
             if (result.IsFailure) return BadRequest(new ProblemDetails { Detail = result.Error });
             return Ok();
         }
+
+        [HttpPost("{orderId}/pay")]
+        public async Task<IActionResult> Pay(Guid orderId)
+        {
+            var result = await _mediator.Send(new PayOrderCommand(orderId));
+            if (result.IsFailure) return BadRequest(new ProblemDetails { Detail = result.Error });
+            return Ok();
+        }
     }
 }
