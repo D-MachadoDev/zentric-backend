@@ -127,7 +127,7 @@ flowchart TD
     Application --> Domain
     Infrastructure --> Domain
     Infrastructure --> Application
-    Presentation -.->|Composition Root (DI)| Infrastructure
+    Presentation -.->|Composition Root DI| Infrastructure
 ```
 
 ### Reglas Arquitectónicas
