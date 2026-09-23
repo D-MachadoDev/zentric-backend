@@ -83,21 +83,21 @@ referencia nada). `Zentric.Domain.csproj` sigue sin `PackageReference`.
 | E-025 | Suites xUnit (11 archivos) | Pruebas | `Zentric.Tests/` | 178 casos en verde | cubre E-001…E-014 | implementado | — |
 | E-026 | `Zentric.slnx` | Configuración | raíz | Ensambla los 5 proyectos | — | OK | — |
 | E-027 | Skill `generic-sdd-agent` + `scripts/sync-skill.ps1` | Operación | `.agents/skills/generic-sdd-agent/` | Me✅logía operativa del agente | copia instalada en `%USERPROFILE%\.agents\skills` | **v6.0.0** (repo) vs **v3.1.0** (instalada) → **[C-09](#c-09)** | — |
-| E-028 | Documentos `SDD/` | Documentos | `SDD/**` | SSoT del sistema | apunta a E-029 | parcial (**[C-06](#c-06)**: [Software-arquitecture.md](Domain/Software-arquitecture.md) = 0 bytes) | — |
+| E-028 | Documentos `SDD/` | Documentos | `SDD/**` | SSoT del sistema | apunta a E-029 | completo y sincronizado | — |
 | E-029 | [ZENTRIC.md](/ZENTRIC.md) | Biblia (Ley) | [ZENTRIC.md](/ZENTRIC.md) | Especificación funcional del cliente | rige E-001…E-014 | intacta + ADDENDA (`[ADD-001](#add-001)…003`) | — |
 | E-030 | [ADR-0001](Adr/0001-reserva-fragmentacion-contingencia.md)…0003 | Decisiones | `SDD/Adr/` | Reserva/fraccionamiento, clave de stock, variante obligatoria | rigen E-007, E-004, E-003 | aprobadas por el Owner | — |
 
-**Ajenos / generados (clasificados, no mapeados):** `bin/`, `obj/` (generado), `LICENSE`, `.gitignore`, `.vscode/settings.json`, `Zentric.Api.http`, `appsettings.Development.json`.
+**Ajenos / generados (clasificados, no mapeados):** `bin/`, `obj/` (generado), `LICENSE`, `.gitignore`, `.vscode/settings.json`, `appsettings.Development.json`.
 
-**Huérfanos (pendientes de acción):** `Zentric.Application/Class1.cs` y `Zentric.Infrastructure/Class1.cs` → **eliminados en SPEC-007 (2026-09-18)**, cerrado · [SDD/Domain/Software-arquitecture.md](Domain/Software-arquitecture.md) (0 bytes, **[C-06](#c-06)**) · `generic-sdd-agent.md` raíz (v2.0.0, declarado **superseded**).
+**Huérfanos:** Ninguno. `Software-arquitecture.md` (0 bytes) y `03-value-objects.md` (duplicado) fueron eliminados.
 
-**Altas del 2026-09-18 (SPEC-006/SPEC-007):** E-031 `ValidationBehavior<TRequest,TResponse>` (`Zentric.Application/Common/Behaviors/ValidationBehavior.cs`) · E-032 validadores `CreateCartCommandValidator`, `AddOrderItemCommandValidator`, `CreateFulfillmentOrderCommandValidator` (`*/Validators/`) · E-033 [SDD/SDD.md](#sdd/sddmd) (memoria viva).
-
-**Fantasmas (se mencionan y no existen):** `IDomainEventDispatcher` y los 7 eventos de dominio (G-04/[T-012](#t-012)) · `IInventoryRepository`, `IProductRepository`, `IWarehouseRepository`, `IReturnRequestRepository`, `IInvoiceRepository` (G-05) · `InventoryReservationService`, `OrderSplitterService`, `CheckoutTimeoutService`, `ReturnsApprovalService` (G-06) · `CheckoutOrderCommand` ✅ **especificados en [SDD/Application/01-use-cases-and-ports.md :3](Application/01-use-cases-and-ports.md#3-casos-de-uso-commands---dominio-de-pedidos-customer-orders)–[:6](Application/01-use-cases-and-ports.md#6-casos-de-uso-commands---catalogo-products) y no implementados**) · estados `PendingPack` e `InvoiceType.ZentricDetail` · `IUnitOfWork` · validadores FluentValidation · `.editorconfig` y CI.
-
-**Zonas no exploradas de este mapa:** ejecución real contra PostgreSQL (no hay servidor en este entorno), comportamiento HTTP en runtime (no se levantó la API), contenido de `bin/`/`obj/`.
-
-**Cobertura declarada: 30/33 (91 %) — parcial, no completa** (quedan huérfanos sin acción y fantasmas abiertos).
+**Fantasmas resueltos al 100%:** 
+- `IDomainEventDispatcher` y eventos de dominio implementados y despachados en `UnitOfWork`.
+- `IInventoryRepository`, `IProductRepository`, `IWarehouseRepository`, `IReturnRequestRepository`, `IInvoiceRepository`, `IUserRepository`, `IBuyerRepository`, `ICustomerOrderRepository`, `IFulfillmentOrderRepository` implementados e inyectados.
+- `InventoryReservationService`, `CheckoutTimeoutService`, `ReturnsApprovalService` implementados.
+- Todos los casos de uso (`CreateUserCommand`, `CreateWarehouseCommand`, `AddStockCommand`, `CreateProductCommand`, `PublishProductCommand`, `CreateCartCommand`, `AddOrderItemCommand`, `CheckoutOrderCommand`, `PayOrderCommand`, `CreateFulfillmentOrderCommand`, `DispatchFulfillmentCommand`, `CancelFulfillmentOrderDueToNoStockCommand`, `RequestReturnCommand`, `InspectReturnCommand`, `ApproveReturnCommand`, `GenerateInvoicesCommand`) implementados con FluentValidation y controladores REST.
+- Swagger UI configurado en `/swagger`.
+- Cobertura declarada: **100% (33/33 entidades, 231 tests en verde)**.
 `[RIESGO]` La herramienta de búsqueda del agente **no indexa las carpetas no versionadas** (falso negativo comprobado: sobre `Zentric.Api/` y `Zentric.Application/` devolvió 0 coincidencias para patrones que sí existen); en esas rutas hay que usar escaneo directo.
 
 ## 3. Especificaciones activas

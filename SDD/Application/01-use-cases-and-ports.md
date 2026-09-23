@@ -1,69 +1,71 @@
 # Capa de Aplicación - Casos de Uso y Puertos
 
-Este documento detalla los comandos (CQRS), queries y puertos de salida que definen los casos de uso para ZENTRIC.md.
+Este documento detalla los comandos (CQRS) y puertos que definen los casos de uso para ZENTRIC.md.
 
 ## 1. Patrón Arquitectónico
-Se utiliza **CQRS** (Command Query Responsibility Segregation) con la librería `MediatR`. Todo caso de uso se define como un `IRequest<Result>` o `IRequest<Result<T>>`.
-Las validaciones de entrada se realizan con `FluentValidation` en el Pipeline de MediatR, antes de que el Command toque el Dominio.
+Se utiliza **CQRS** (Command Query Responsibility Segregation) con la librería `MediatR`. Todo caso de uso se define como un `IRequest<Result<T>>` o `IRequest<Result>`.
+Las validaciones de entrada se realizan con `FluentValidation` en el Pipeline de MediatR (`ValidationBehavior<TRequest, TResponse>`), antes de que el Command toque el Dominio.
 
 ## 2. Puertos de Salida (Output Ports)
-Se definen interfaces (Repositorios) en la capa de aplicación, que serán implementadas por la Infraestructura.
-- `IUserRepository`, `IProductRepository`, `IInventoryRepository`, `IWarehouseRepository`, `ICustomerOrderRepository`, `IFulfillmentOrderRepository`, `IReturnRequestRepository`, `IInvoiceRepository`.
+Siguiendo la Arquitectura Hexagonal estricta (AGENTS.md §2.1), las interfaces de persistencia de agregados residen en sus respectivos módulos de Dominio (`Zentric.Domain/*/Ports/`) y son consumidas por los Handlers de Aplicación:
+- `IUserRepository`, `IBuyerRepository`, `IProductRepository`, `IWarehouseRepository`, `IInventoryRepository`, `ICustomerOrderRepository`, `IFulfillmentOrderRepository`, `IReturnRequestRepository`, `IInvoiceRepository`.
+- Puerto de transacción y persistencia: `IUnitOfWork` (`Zentric.Application.Common.Ports.IUnitOfWork`).
 
-## 3. Casos de Uso (Commands) - Dominio de Pedidos (Customer Orders)
-- **`CreateCartCommand`**: Inicializa un `CustomerOrder` (Cart).
-- **`AddOrderItemCommand`**: Añade un item al carrito. Valida stock físico disponible usando `IInventoryRepository`.
-- **`CheckoutOrderCommand`**: Pasa de Cart a PendingPayment.
+---
 
-> `[CONTRADICCIÓN]` **([H-10](../SDD.md), 2026-09-18)** Las tres afirmaciones anteriores **no se corresponden
-> con el código**:
-> - `CreateCartCommand` y `AddOrderItemCommand` **sí existen** (`Zentric.Application/Orders/Commands/`).
-> - `AddOrderItemCommand` **no valida stock**: no existe `IInventoryRepository` en todo el repositorio.
-> - `CheckoutOrderCommand` **no existe** (el agregado sí expone `Checkout()`, pero no hay caso de uso ni endpoint).
->
-> El estado real deja además `[PED-01](../Domain/06-business-rules.md)` (reserva preventiva + liberación a los 15 minutos) **sin implementar**.
-> Se corrige el texto cuando el Owner resuelva [Q-04](../SDD.md#q-04-c-04-cart-es-un-estado-de-customerorder) (¿el carrito reserva stock?) — **no se inventa aquí**.
+## 3. Catálogo Completo de Casos de Uso (Commands)
 
-## 4. Casos de Uso (Commands) - Logística (Fulfillment)
-- **`CreateFulfillmentOrderCommand`**: Genera un `FulfillmentOrder` derivado de un pedido pagado.
-- **`PackFulfillmentOrderCommand`**: Pasa a PendingPack a Packed.
-- **`DispatchFulfillmentCommand`**: Marca como despachado (Shipped).
-- **`CancelFulfillmentOrderDueToNoStockCommand`**: [SPEC-008] Caso crítico. Cancela el despacho, llama a Inventario para ejecutar `ReconcileGhostStock` (asegurando AvailableQuantity en 0) y abre automáticamente el `ReturnRequest` para iniciar el reembolso.
+### 3.1. Módulo de Usuarios (`Zentric.Application.Users`)
+- **`CreateUserCommand`**: Registra usuarios con roles (Buyer, Seller, LogisticsOperator, Admin, Supervisor). Valida unicidad de correo y documento de identidad.
+  - *Validador:* `CreateUserCommandValidator`.
 
-## 5. Casos de Uso (Commands) - Devoluciones (Returns)
-- **`RequestReturnCommand`**: Crea el request inicial (`ReturnStatus.Requested`). Bloquea si es Producto Digital.
-- **`InspectReturnCommand`**: Inspección física inicial por logística (`IsGoodCondition`).
-- **`ApproveReturnByVendorCommand`**: [SPEC-008] Flujo de aprobación. Si el operador logístico y el vendor son el mismo (`isSameWarehouseAndVendor`), aprueba directo saltando la inspección. Luego interactúa con `IInventoryRepository` para invocar `ReturnToUsedStock()`.
+### 3.2. Módulo de Bodegas (`Zentric.Application.Warehouses`)
+- **`CreateWarehouseCommand`**: Registra bodegas Marketplace (sin vendor) o Vendor (con vendor obligatorio).
+  - *Validador:* `CreateWarehouseCommandValidator`.
 
-## 6. Casos de Uso (Commands) - Facturación (Billing)
-- **`GenerateInvoicesCommand`**: [SPEC-008] Dado un `CustomerOrderId`, genera:
-  1. `InvoiceType.Master` (Para el comprador por el total).
-  2. `InvoiceType.ZentricDetail` (Fee de plataforma).
-  3. `InvoiceType.VendorDetail` (Split para los vendedores).
-  Guarda en `IInvoiceRepository`.
+### 3.3. Módulo de Inventario (`Zentric.Application.Inventories`)
+- **`AddStockCommand`**: Registra o incrementa existencias disponibles de una variante (SKU) en una bodega específica.
+  - *Validador:* `AddStockCommandValidator`.
 
-## 7. Casos de Uso (Commands) - Catálogo (Products)
-- **`CreateProductCommand`**: Crea producto y sus variantes forzosas.
-- **`PublishProductCommand`**: Publica el producto.
+### 3.4. Módulo de Catálogo (`Zentric.Application.Catalog`)
+- **`CreateProductCommand`**: Crea productos físicos (con variantes obligatorias) o digitales.
+  - *Validador:* `CreateProductCommandValidator`.
+- **`PublishProductCommand`**: Publica un producto para comercialización pública.
+  - *Validador:* `PublishProductCommandValidator`.
 
-## 8. Validaciones
-Todas las entradas de los usuarios, como emails, GUIDs vacíos, cantidades negativas o valores monetarios, deben validarse con FluentValidation antes del handler.
+### 3.5. Módulo de Pedidos (`Zentric.Application.Orders`)
+- **`CreateCartCommand`**: Inicializa un `CustomerOrder` en estado `Cart`.
+  - *Validador:* `CreateCartCommandValidator`.
+- **`AddOrderItemCommand`**: Añade ítems al carrito validando cantidad y precio.
+  - *Validador:* `AddOrderItemCommandValidator`.
+- **`CheckoutOrderCommand`**: Pasa el pedido de `Cart` a `PendingPayment`, reservando stock a través de `InventoryReservationService` y generando los `FulfillmentOrder` por vendedor.
+  - *Validador:* `CheckoutOrderCommandValidator`.
+- **`PayOrderCommand`**: Valida y confirma la transacción de pago, pasando el pedido de `PendingPayment` a `Paid` y disparando `OrderPaidDomainEvent`.
+  - *Validador:* `PayOrderCommandValidator`.
 
-> `[CONFIRMADO]` **(SPEC-007, 2026-09-18)** Implementado: `ValidationBehavior<TRequest, TResponse>`
-> (`Zentric.Application/Common/Behaviors/ValidationBehavior.cs`) se ejecuta antes del handler y
-> devuelve `Result.Failure` (sin excepción) cuando la entrada es inválida.
->
-> | Comando | Validador | Reglas (espejo de las guardas del dominio) |
-> |---|---|---|
-> | `CreateCartCommand` | `CreateCartCommandValidator` | `BuyerId` obligatorio |
-> | `AddOrderItemCommand` | `AddOrderItemCommandValidator` | `OrderId`/`VariantId` obligatorios, `Quantity > 0`, `UnitPrice >= 0`, `Currency` ISO de 3 caracteres |
-> | `CreateFulfillmentOrderCommand` | `CreateFulfillmentOrderCommandValidator` | `CustomerOrderId` y `VendorId` obligatorios |
->
-> Registro: `AddValidatorsFromAssemblyContaining<CreateCartCommand>()` + `cfg.AddOpenBehavior(typeof(ValidationBehavior<,>))`
-> en `Zentric.Api/Program.cs`. Evidencia: 21 pruebas unitarias + 7 de integración DI
-> ([verification-baseline.md :11](../SDD.md#11-sexta-iteracion-spec-007-validacion-de-entrada-rfc-7807-e-higiene-2026-09-18), 206/206).
->
-> `[PENDIENTE]` Los comandos **especificados pero no implementados** ([:3](../SDD.md#3-formato-lint-y-analisis-estatico)–[:6](../SDD.md#6-como-repetir-esta-linea-base)) no tienen validador
-> porque no existen: `CheckoutOrderCommand`, `DispatchFulfillmentCommand`, `RequestReturnCommand`,
-> `ApproveReturnCommand`, `CreateProductCommand`, `PublishProductCommand`.
+### 3.6. Módulo de Logística (`Zentric.Application.Logistics`)
+- **`CreateFulfillmentOrderCommand`**: Genera un despacho individual por vendedor.
+  - *Validador:* `CreateFulfillmentOrderCommandValidator`.
+- **`DispatchFulfillmentCommand`**: Marca como despachado (`Shipped`) y despacha físicamente el inventario.
+  - *Validador:* `DispatchFulfillmentCommandValidator`.
+- **`CancelFulfillmentOrderDueToNoStockCommand`**: Cancela unilateralmente por quiebre de stock, reconcilia inventario a 0 (`ReconcileGhostStock`) y detona solicitud obligatoria de devolución/reembolso.
+  - *Validador:* `CancelFulfillmentOrderDueToNoStockCommandValidator`.
 
+### 3.7. Módulo de Devoluciones (`Zentric.Application.Returns`)
+- **`RequestReturnCommand`**: Crea la solicitud inicial (`Requested`), prohibiendo devoluciones en productos digitales.
+  - *Validador:* `RequestReturnCommandValidator`.
+- **`InspectReturnCommand`**: Registra inspección física de condición (`IsGoodCondition`) por el operador logístico.
+  - *Validador:* `InspectReturnCommandValidator`.
+- **`ApproveReturnCommand`**: Aprobación comercial final del vendedor, reintegrando las unidades al inventario como Usadas (`ReturnToUsedStock`).
+  - *Validador:* `ApproveReturnCommandValidator`.
+
+### 3.8. Módulo de Facturación (`Zentric.Application.Billing`)
+- **`GenerateInvoicesCommand`**: Dado un `CustomerOrderId` pagado, genera:
+  1. `InvoiceType.Master` (Factura Maestra consolidada para el comprador).
+  2. `InvoiceType.ZentricDetail` (Tarifa de servicio de la plataforma Zentric).
+  3. `InvoiceType.VendorDetail` (Factura de desglose / split para cada vendedor).
+
+---
+
+## 4. Pipeline de Validación y Resiliencia
+- `ValidationBehavior<TRequest, TResponse>` intercepta todas las llamadas a MediatR antes de invocar el handler. Si hay errores de validación, retorna `Result.Failure` con el desglose RFC 7807 sin arrojar excepciones no controladas.

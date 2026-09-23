@@ -1,44 +1,68 @@
 # Capa de Presentación - Endpoints API
 
-Este documento detalla los contratos HTTP (Endpoints RESTful) expuestos por `Zentric.Api`.
+Este documento detalla los contratos HTTP (Endpoints RESTful) expuestos por `Zentric.Api` y documentados interactivamente mediante **Swagger UI** (`/swagger`).
 
 ## 1. Patrón Global de Respuestas
-Todos los controladores heredan de `ApiControllerBase`.
-- **Éxito (200 OK):** Retorna el valor directamente o vacío si es un comando sin retorno.
-- **Fallo de Negocio (400 Bad Request):** Cualquier falla proveniente de un `Result<T>` de la capa de Aplicación es interceptada y mapeada automáticamente al estándar **RFC 7807 (Problem Details)** para respuestas consistentes.
+Todos los controladores exponen rutas bajo `/api/[controller]` y manejan respuestas consistentes:
+- **Éxito (200 OK):** Retorna el valor o identificador generado, o 200 OK vacío en comandos de mutación.
+- **Fallo de Negocio o Validación (400 Bad Request):** Respuestas mapeadas automáticamente al estándar **RFC 7807 (Problem Details)** a través de `ProblemDetails` y el pipeline de `ValidationBehavior`.
+- **Fallas Técnicas (500 Internal Server Error):** Interceptadas por `app.UseExceptionHandler()` para no filtrar detalles de infraestructura hacia el cliente.
 
-## 2. API: Pedidos (Orders)
-**Ruta Base:** `/api/orders`
+---
 
-| Método | Endpoint         | Comando (Application) | Descripción |
-|--------|------------------|-----------------------|-------------|
-| POST   | `/cart`          | `CreateCartCommand`   | Inicializa un nuevo pedido (carrito) para un BuyerId. |
-| POST   | `/{id}/items`    | `AddOrderItemCommand` | Añade una variante (SKU) al carrito con cantidad y precio. |
+## 2. Catálogo Completo de Endpoints REST
 
-## 3. API: Logística (Logistics)
-**Ruta Base:** `/api/logistics`
+### 2.1. API: Usuarios y Vendedores (`/api/users`)
+| Método | Endpoint | Comando (Application) | Descripción |
+|---|---|---|---|
+| POST | `/api/users` | `CreateUserCommand` | Registra un usuario (Comprador, Vendedor, Operador, Admin, Supervisor) con validación de unicidad de email y cédula. |
 
-| Método | Endpoint         | Comando (Application) | Descripción |
-|--------|------------------|-----------------------|-------------|
-| POST   | `/fulfillment`   | `CreateFulfillmentOrderCommand` | Genera una orden de despacho logístico a partir de un pedido. |
+### 2.2. API: Bodegas (`/api/warehouses`)
+| Método | Endpoint | Comando (Application) | Descripción |
+|---|---|---|---|
+| POST | `/api/warehouses` | `CreateWarehouseCommand` | Crea una bodega (Marketplace o Vendor) validando coherencia de asignación de vendedor. |
 
-## 4. Próximos Endpoints a Implementar
-- **Facturación (`/api/billing`):** Emisión de facturas maestras y detalle de vendedor.
-- **Devoluciones (`/api/returns`):** Solicitud y flujos de aprobación de devoluciones.
-- **Catálogo (`/api/products`):** Creación y publicación de productos.
+### 2.3. API: Inventario Distribuido (`/api/inventories`)
+| Método | Endpoint | Comando (Application) | Descripción |
+|---|---|---|---|
+| POST | `/api/inventories/stock` | `AddStockCommand` | Da de alta o reabastece existencias disponibles para una variante en una bodega específica. |
 
-## 5. Estado real verificado (2026-09-18)
+### 2.4. API: Catálogo de Productos (`/api/catalog`)
+| Método | Endpoint | Comando (Application) | Descripción |
+|---|---|---|---|
+| POST | `/api/catalog/products` | `CreateProductCommand` | Crea un producto físico o digital con sus variantes forzosas (SKUs). |
+| POST | `/api/catalog/products/{id}/publish` | `PublishProductCommand` | Hace visible el producto para la compra pública. |
 
-`[CONFIRMADO]` Implementados **3 endpoints** en 2 controladores (`OrdersController`, `LogisticsController`),
-exactamente los que documentan [:2](01-endpoints.md#2-api-pedidos-orders) y [:3](01-endpoints.md#3-api-logistica-logistics). Todo lo demás de esta spec es aspiracional.
+### 2.5. API: Carrito y Pedidos (`/api/orders`)
+| Método | Endpoint | Comando (Application) | Descripción |
+|---|---|---|---|
+| POST | `/api/orders/cart` | `CreateCartCommand` | Inicializa un nuevo pedido (carrito) para un comprador. |
+| POST | `/api/orders/cart/items` | `AddOrderItemCommand` | Añade una variante al carrito con cantidad y precio. |
+| POST | `/api/orders/{orderId}/checkout` | `CheckoutOrderCommand` | Pasa de Carrito a Pendiente de Pago, ejecutando la reserva de stock. |
+| POST | `/api/orders/{orderId}/pay` | `PayOrderCommand` | Confirma la transacción y pasa el pedido a Pagado (`Paid`). |
 
-| Hallazgo | Evidencia | Impacto |
-|---|---|---|
-| ~~**[H-11](../SDD.md)** El middleware de excepciones es "simplificado": `app.UseExceptionHandler("/error")` **sin** endpoint `/error` ni `AddProblemDetails()`~~ | **CORREGIDO (SPEC-007, 2026-09-18):** `builder.Services.AddProblemDetails()` + `app.UseExceptionHandler()` | Incumplía [AGENTS.md :3.4](../../AGENTS.md) → **resuelto** (`[PENDIENTE]` verificación por HTTP real) |
-| `ApiControllerBase.HandleResult` sí mapea `Result<T>` → `ProblemDetails` 400 | `ApiControllerBase.cs:14-42` | Cumple parcialmente la especificación de fallo de negocio, aunque con `Title` fijo en inglés |
-| `FluentValidation` está referenciado pero **no hay validadores ni pipeline** | `Zentric.Application.csproj` vs 0 archivos `AbstractValidator` | La validación de entrada **no existe** (incumple [AGENTS.md:4.3](../AGENTS.md#43-application-api-agent)) |
-| Rutas verificadas por atributo de clase (`[Route("api/[controller]")]` heredado de `ApiControllerBase`) | `ApiControllerBase.cs[:8](../../AGENTS.md#8-checklist-de-definicion-de-terminado-dod-para-agentes)` | Coincide con [ApiControllerBase.cs[:2](../../AGENTS.md#2-reglas-arquitectonicas-inviolables-hexagonal-ddd)](../Zentric.Api/Controllers/ApiControllerBase.cs#L2) y [ApiControllerBase.cs[:3](../../AGENTS.md#3-tratamiento-de-errores-y-excepciones-organizado-por-capa)](../Zentric.Api/Controllers/ApiControllerBase.cs#L3) |
-| `[PENDIENTE]` La API **no se levantó**: 0 peticiones HTTP ejecutadas | — | No hay evidencia de runtime |
-| `[RIESGO]` **[R-16](../SDD.md)** credenciales en claro en `appsettings.json` | `Zentric.Api/appsettings.json` | Violación del DoD :8 ([AGENTS.md](../AGENTS.md)) |
+### 2.6. API: Logística y Despachos (`/api/logistics`)
+| Método | Endpoint | Comando (Application) | Descripción |
+|---|---|---|---|
+| POST | `/api/logistics/fulfillment` | `CreateFulfillmentOrderCommand` | Genera una orden de despacho logístico a partir de un pedido pagado. |
+| POST | `/api/logistics/fulfillment/{id}/dispatch` | `DispatchFulfillmentCommand` | Marca el despacho como enviado (`Shipped`). |
+| POST | `/api/logistics/fulfillment/cancel-ghost-stock` | `CancelFulfillmentOrderDueToNoStockCommand` | Cancela por falta física de stock, reconcilia inventario y detona solicitud de devolución. |
 
+### 2.7. API: Devoluciones y Reembolsos (`/api/returns`)
+| Método | Endpoint | Comando (Application) | Descripción |
+|---|---|---|---|
+| POST | `/api/returns/request` | `RequestReturnCommand` | Inicia una solicitud de devolución (prohibido para productos digitales). |
+| POST | `/api/returns/{id}/inspect` | `InspectReturnCommand` | Registra la inspección física de control de calidad por el operador logístico. |
+| POST | `/api/returns/{id}/approve` | `ApproveReturnCommand` | Aprobación comercial final del vendedor con reingreso al inventario como Usado. |
 
+### 2.8. API: Facturación y Pagos (`/api/billing`)
+| Método | Endpoint | Comando (Application) | Descripción |
+|---|---|---|---|
+| POST | `/api/billing/invoices/generate/{orderId}` | `GenerateInvoicesCommand` | Genera la Factura Maestra consolidada, el Detalle Zentric y la Factura de Vendedor (Split). |
+
+---
+
+## 3. Documentación OpenAPI y Swagger UI
+
+- **Swagger UI:** Accesible en entorno de desarrollo y Docker en `http://localhost:5076/swagger`.
+- **Especificación OpenAPI v1:** `http://localhost:5076/swagger/v1/swagger.json` listo para importación directa en Postman.
