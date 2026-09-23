@@ -83,6 +83,22 @@ namespace Zentric.Api.Controllers
             if (result.IsFailure) return BadRequest(new ProblemDetails { Detail = result.Error });
             return Ok();
         }
+
+        /// <summary>
+        /// Obtiene el estado, motivo y dictamen de inspección de una solicitud de devolución por su identificador.
+        /// </summary>
+        /// <param name="id">Identificador único (Guid) de la solicitud de devolución.</param>
+        /// <response code="200">Detalle de la devolución obtenido exitosamente.</response>
+        /// <response code="404">Solicitud de devolución no encontrada (RFC 7807 ProblemDetails).</response>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Zentric.Application.Returns.Queries.ReturnRequestDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetReturnById(Guid id)
+        {
+            var result = await _mediator.Send(new Zentric.Application.Returns.Queries.GetReturnByIdQuery(id));
+            if (result.IsFailure) return NotFound(new ProblemDetails { Detail = result.Error });
+            return Ok(result.Value);
+        }
     }
 
     /// <summary>

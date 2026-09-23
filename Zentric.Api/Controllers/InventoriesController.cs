@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Zentric.Application.Inventories.Commands;
+using Zentric.Application.Inventories.Queries;
 
 namespace Zentric.Api.Controllers
 {
@@ -37,6 +38,19 @@ namespace Zentric.Api.Controllers
         {
             var result = await _mediator.Send(command);
             if (result.IsFailure) return BadRequest(new ProblemDetails { Detail = result.Error });
+            return Ok(result.Value);
+        }
+
+        /// <summary>
+        /// Consulta las existencias físicas, reservas y stock disponible de una variante (SKU) en las bodegas.
+        /// </summary>
+        /// <param name="variantId">Identificador único (Guid) de la variante del producto.</param>
+        /// <response code="200">Lista de registros de inventario por bodega para la variante consultada.</response>
+        [HttpGet("{variantId}")]
+        [ProducesResponseType(typeof(IReadOnlyList<InventoryDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetInventoryByVariant(Guid variantId)
+        {
+            var result = await _mediator.Send(new GetInventoryByVariantQuery(variantId));
             return Ok(result.Value);
         }
     }

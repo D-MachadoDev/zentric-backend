@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Zentric.Application.Billing.Commands;
+using Zentric.Application.Billing.Queries;
 
 namespace Zentric.Api.Controllers
 {
@@ -38,6 +39,19 @@ namespace Zentric.Api.Controllers
         {
             var result = await _mediator.Send(new GenerateInvoicesCommand(orderId));
             if (result.IsFailure) return BadRequest(new ProblemDetails { Detail = result.Error });
+            return Ok(result.Value);
+        }
+
+        /// <summary>
+        /// Obtiene la lista de facturas emitidas para un pedido específico (Factura Maestra y Detalle Zentric).
+        /// </summary>
+        /// <param name="orderId">Identificador único (Guid) del pedido pagado.</param>
+        /// <response code="200">Lista de facturas del pedido obtenida exitosamente.</response>
+        [HttpGet("invoices/order/{orderId}")]
+        [ProducesResponseType(typeof(IReadOnlyList<InvoiceDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetInvoicesByOrder(Guid orderId)
+        {
+            var result = await _mediator.Send(new GetInvoicesByOrderQuery(orderId));
             return Ok(result.Value);
         }
     }

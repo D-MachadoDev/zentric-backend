@@ -50,7 +50,7 @@ referencia nada). `Zentric.Domain.csproj` sigue sin `PackageReference`.
 | **Entidades mapeadas** | 30 (E-001 a E-030) |
 | **Agregados raíz** | 14 (User, Buyer, Product, Inventory, Warehouse, CustomerOrder, FulfillmentOrder, Invoice, ReturnRequest + puertos/servicios) |
 | **Cobertura** | 30/33 (91 %) — ver [C-06](#c-06) para huérfanos |
-| **Pruebas asociadas** | 178 casos de prueba en verde |
+| **Pruebas asociadas** | 235 casos de prueba en verde |
 
 ### 2.2 Tabla de entidades
 
@@ -1329,5 +1329,6 @@ Evidencia: [verification-baseline.md :11](#verification-baselinemd-:11) (`build 
 | 2026-09-18 | Paquete NuGet `MediatR` 14.2.0 (`MediatR.xml` + stack trace) | Confirmada la firma `Handle(request, RequestHandlerDelegate<TResponse>, CancellationToken)` y `AddOpenBehavior(Type, ServiceLifetime)`; MediatR 14 exige `ILoggerFactory` y ejecuta comprobación de licencia ([Q-14](#q-14)) |
 | 2026-09-18 | `Zentric.Domain/Products/ValueObjects/Money.cs` | Guardas reales: `amount >= 0`, `currency` no vacía y de 3 caracteres tras `Trim().ToUpperInvariant()` → reglas espejadas en `AddOrderItemCommandValidator`, no inventadas |
 | 2026-09-23 | `Zentric.Api` & `SDD/Presentation/01-endpoints.md` | Configurado esquema de seguridad Bearer JWT interactivo en Swagger UI (`Authorize`), activada generación de comentarios XML (`GenerateDocumentationFile`), categorizados los 8 Bounded Contexts mediante `[Tags]` y documentados exhaustivamente los 16 endpoints con respuestas tipadas y RFC 7807 ProblemDetails. Suite verificada: 231/231 tests PASS, build 0/0. |
+| 2026-09-23 | `Zentric.Application`, `Zentric.Infrastructure` & `Zentric.Api` | Implementadas 8 Queries CQRS (10 endpoints GET) a través de los 8 dominios de negocio (Users, Warehouses, Catalog, Inventories, Orders, Logistics, Returns, Billing). Repositorios y adaptadores EF Core extendidos con métodos de lectura. Agregada suite de pruebas para Query Handlers (235/235 PASS). Publicado `README.md` exhaustivo de nivel empresarial y sincronizadas especificaciones SDD. |
 
 

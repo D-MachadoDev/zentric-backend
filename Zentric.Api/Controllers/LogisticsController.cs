@@ -79,5 +79,21 @@ namespace Zentric.Api.Controllers
             if (result.IsFailure) return BadRequest(new ProblemDetails { Detail = result.Error });
             return Ok(result.Value);
         }
+
+        /// <summary>
+        /// Obtiene el estado, vendedor, pedido y paquetes de envío de una orden de fulfillment por su identificador.
+        /// </summary>
+        /// <param name="id">Identificador único (Guid) de la orden de fulfillment.</param>
+        /// <response code="200">Detalle de la orden de fulfillment obtenido exitosamente.</response>
+        /// <response code="404">Orden de fulfillment no encontrada (RFC 7807 ProblemDetails).</response>
+        [HttpGet("fulfillment/{id}")]
+        [ProducesResponseType(typeof(Zentric.Application.Logistics.Queries.FulfillmentOrderDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetFulfillmentById(Guid id)
+        {
+            var result = await _mediator.Send(new Zentric.Application.Logistics.Queries.GetFulfillmentByIdQuery(id));
+            if (result.IsFailure) return NotFound(new ProblemDetails { Detail = result.Error });
+            return Ok(result.Value);
+        }
     }
 }

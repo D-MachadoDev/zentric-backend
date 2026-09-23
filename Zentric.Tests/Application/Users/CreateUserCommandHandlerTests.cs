@@ -37,6 +37,12 @@ namespace Zentric.Tests.Application.Users
             return Task.FromResult(Users.FirstOrDefault(u => u.Email.Equals(email)));
         }
 
+        public Task<IReadOnlyList<User>> GetAllAsync(Zentric.Domain.Users.Enums.UserRole? role = null, CancellationToken cancellationToken = default)
+        {
+            var res = role.HasValue ? Users.Where(u => u.Role == role.Value).ToList() : Users.ToList();
+            return Task.FromResult<IReadOnlyList<User>>(res);
+        }
+
         public Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(!Users.Any(u => u.Email.Equals(email)));

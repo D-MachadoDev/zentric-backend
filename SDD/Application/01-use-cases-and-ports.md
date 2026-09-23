@@ -67,5 +67,39 @@ Siguiendo la Arquitectura Hexagonal estricta (AGENTS.md §2.1), las interfaces d
 
 ---
 
-## 4. Pipeline de Validación y Resiliencia
+## 4. Catálogo Completo de Consultas (Queries CQRS)
+
+En cumplimiento de `ZENTRIC.md` OBJ-12 ("Consolidar información administrativa para consulta") y el rol del Supervisor, las siguientes consultas idempotentes de lectura proyectan datos sin mutar el estado del dominio:
+
+### 4.1. Consultas de Usuarios (`Zentric.Application.Users.Queries`)
+- **`GetUsersQuery(UserRole? Role)`**: Retorna la lista de usuarios del sistema con filtro opcional por rol (`Vendor`, `Buyer`, `Administrator`, `Supervisor`, `LogisticsOperator`). Proyecta `UserDto`.
+- **`GetUserByIdQuery(Guid Id)`**: Retorna la ficha técnica de un usuario por su identificador único.
+
+### 4.2. Consultas de Bodegas (`Zentric.Application.Warehouses.Queries`)
+- **`GetWarehousesQuery(Guid? VendorId)`**: Lista todas las bodegas activas con filtro opcional por vendedor (`VendorId`). Proyecta `WarehouseDto`.
+- **`GetWarehouseByIdQuery(Guid Id)`**: Retorna el detalle de una bodega por su ID.
+
+### 4.3. Consultas de Catálogo (`Zentric.Application.Catalog.Queries`)
+- **`GetProductsQuery(Guid? VendorId)`**: Lista los productos del catálogo con sus variantes vendibles y filtro opcional por vendedor. Proyecta `ProductDto`.
+- **`GetProductByIdQuery(Guid Id)`**: Retorna el detalle completo de un producto con sus dimensiones y variantes.
+
+### 4.4. Consultas de Inventario (`Zentric.Application.Inventories.Queries`)
+- **`GetInventoryByVariantQuery(Guid VariantId)`**: Retorna las existencias físicas distribuidas por bodega (disponible, reservado, usado, dañado) para una variante. Proyecta `InventoryDto`.
+
+### 4.5. Consultas de Órdenes (`Zentric.Application.Orders.Queries`)
+- **`GetOrderByIdQuery(Guid OrderId)`**: Retorna el estado del pedido (`Cart`, `PendingPayment`, `Paid`), total e ítems asociados. Proyecta `OrderDto`.
+
+### 4.6. Consultas de Logística (`Zentric.Application.Logistics.Queries`)
+- **`GetFulfillmentByIdQuery(Guid Id)`**: Retorna el estado del paquete de fulfillment, vendedor y números de guía (`TrackingNumber`). Proyecta `FulfillmentOrderDto`.
+
+### 4.7. Consultas de Devoluciones (`Zentric.Application.Returns.Queries`)
+- **`GetReturnByIdQuery(Guid Id)`**: Retorna el estado de la solicitud de devolución y el dictamen de inspección física. Proyecta `ReturnRequestDto`.
+
+### 4.8. Consultas de Facturación (`Zentric.Application.Billing.Queries`)
+- **`GetInvoicesByOrderQuery(Guid OrderId)`**: Retorna la lista de facturas emitidas para un pedido (Factura Maestra y Detalle Zentric). Proyecta `InvoiceDto`.
+
+---
+
+## 5. Pipeline de Validación y Resiliencia
 - `ValidationBehavior<TRequest, TResponse>` intercepta todas las llamadas a MediatR antes de invocar el handler. Si hay errores de validación, retorna `Result.Failure` con el desglose RFC 7807 sin arrojar excepciones no controladas.
+

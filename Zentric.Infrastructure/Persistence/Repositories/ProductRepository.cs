@@ -36,6 +36,22 @@ namespace Zentric.Infrastructure.Persistence.Repositories
             return dbModel == null ? null : ProductMapper.ToDomain(dbModel);
         }
 
+        public async Task<IReadOnlyList<Product>> GetAllAsync(Guid? vendorId = null, CancellationToken cancellationToken = default)
+        {
+            var query = _dbContext.Products
+                .Include(p => p.Variants)
+                .ThenInclude(v => v.Attributes)
+                .AsNoTracking();
+
+            if (vendorId.HasValue)
+            {
+                query = query.Where(p => p.VendorId == vendorId.Value);
+            }
+
+            var list = await query.ToListAsync(cancellationToken);
+            return list.Select(ProductMapper.ToDomain).ToList();
+        }
+
         public Task AddAsync(Product product, CancellationToken cancellationToken = default)
         {
             var dbModel = ProductMapper.ToDbModel(product);

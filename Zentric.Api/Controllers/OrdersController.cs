@@ -100,5 +100,21 @@ namespace Zentric.Api.Controllers
             if (result.IsFailure) return BadRequest(new ProblemDetails { Detail = result.Error });
             return Ok();
         }
+
+        /// <summary>
+        /// Obtiene el estado actual, comprador, total e ítems detallados de un pedido por su identificador único.
+        /// </summary>
+        /// <param name="id">Identificador único (Guid) del pedido.</param>
+        /// <response code="200">Detalle del pedido obtenido exitosamente.</response>
+        /// <response code="404">Pedido no encontrado (RFC 7807 ProblemDetails).</response>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Zentric.Application.Orders.Queries.OrderDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetOrderById(Guid id)
+        {
+            var result = await _mediator.Send(new Zentric.Application.Orders.Queries.GetOrderByIdQuery(id));
+            if (result.IsFailure) return NotFound(new ProblemDetails { Detail = result.Error });
+            return Ok(result.Value);
+        }
     }
 }

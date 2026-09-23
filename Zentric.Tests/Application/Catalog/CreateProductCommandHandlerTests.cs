@@ -42,6 +42,12 @@ namespace Zentric.Tests.Application.Catalog
             return Task.FromResult(Products.FirstOrDefault(p => p.Variants.Any(v => v.Id == variantId)));
         }
 
+        public Task<IReadOnlyList<Product>> GetAllAsync(Guid? vendorId = null, CancellationToken cancellationToken = default)
+        {
+            var res = vendorId.HasValue ? Products.Where(p => p.VendorId == vendorId.Value).ToList() : Products.ToList();
+            return Task.FromResult<IReadOnlyList<Product>>(res);
+        }
+
         public Task UpdateAsync(Product product, CancellationToken cancellationToken = default)
         {
             var existing = Products.FirstOrDefault(p => p.Id == product.Id);

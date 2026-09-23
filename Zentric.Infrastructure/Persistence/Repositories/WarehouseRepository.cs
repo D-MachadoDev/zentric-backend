@@ -25,6 +25,17 @@ namespace Zentric.Infrastructure.Persistence.Repositories
             return dbModel == null ? null : WarehouseMapper.ToDomain(dbModel);
         }
 
+        public async Task<IReadOnlyList<Warehouse>> GetAllAsync(Guid? vendorId = null, CancellationToken cancellationToken = default)
+        {
+            var query = _dbContext.Warehouses.AsNoTracking();
+            if (vendorId.HasValue)
+            {
+                query = query.Where(w => w.VendorId == vendorId.Value);
+            }
+            var list = await query.ToListAsync(cancellationToken);
+            return list.Select(WarehouseMapper.ToDomain).ToList();
+        }
+
         public Task AddAsync(Warehouse warehouse, CancellationToken cancellationToken = default)
         {
             var dbModel = WarehouseMapper.ToDbModel(warehouse);

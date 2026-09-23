@@ -37,6 +37,12 @@ namespace Zentric.Tests.Application.Warehouses
             return Task.FromResult(Warehouses.FirstOrDefault(w => w.Id == id));
         }
 
+        public Task<IReadOnlyList<Warehouse>> GetAllAsync(Guid? vendorId = null, CancellationToken cancellationToken = default)
+        {
+            var res = vendorId.HasValue ? Warehouses.Where(w => w.VendorId == vendorId.Value).ToList() : Warehouses.ToList();
+            return Task.FromResult<IReadOnlyList<Warehouse>>(res);
+        }
+
         public Task UpdateAsync(Warehouse warehouse, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;

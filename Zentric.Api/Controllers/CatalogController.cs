@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Zentric.Application.Catalog.Commands;
+using Zentric.Application.Catalog.Queries;
 
 namespace Zentric.Api.Controllers
 {
@@ -58,6 +59,38 @@ namespace Zentric.Api.Controllers
             var result = await _mediator.Send(new PublishProductCommand(productId));
             if (result.IsFailure) return BadRequest(new ProblemDetails { Detail = result.Error });
             return Ok();
+        }
+
+        /// <summary>
+        /// Obtiene el catálogo de productos registrados, con filtro opcional por vendedor.
+        /// </summary>
+        /// <remarks>
+        /// Permite a compradores y administradores consultar el catálogo general de productos o filtrar por proveedor (VendorId).
+        /// </remarks>
+        /// <param name="vendorId">Filtro opcional por identificador único del vendedor.</param>
+        /// <response code="200">Lista de productos obtenida exitosamente.</response>
+        [HttpGet("products")]
+        [ProducesResponseType(typeof(IReadOnlyList<ProductDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetProducts([FromQuery] Guid? vendorId = null)
+        {
+            var result = await _mediator.Send(new GetProductsQuery(vendorId));
+            return Ok(result.Value);
+        }
+
+        /// <summary>
+        /// Obtiene la ficha técnica detallada de un producto por su identificador único.
+        /// </summary>
+        /// <param name="id">Identificador único (Guid) del producto.</param>
+        /// <response code="200">Detalle del producto obtenido exitosamente.</response>
+        /// <response code="404">Producto no encontrado (RFC 7807 ProblemDetails).</response>
+        [HttpGet("products/{id}")]
+        [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetProductById(Guid id)
+        {
+            var result = await _mediator.Send(new GetProductByIdQuery(id));
+            if (result.IsFailure) return NotFound(new ProblemDetails { Detail = result.Error });
+            return Ok(result.Value);
         }
     }
 }

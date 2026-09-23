@@ -24,6 +24,15 @@ namespace Zentric.Infrastructure.Persistence.Repositories
             return dbModel == null ? null : InvoiceMapper.ToDomain(dbModel);
         }
 
+        public async Task<IReadOnlyList<Invoice>> GetByOrderIdAsync(Guid orderId, CancellationToken cancellationToken = default)
+        {
+            var list = await _dbContext.Invoices
+                .AsNoTracking()
+                .Where(i => i.CustomerOrderId == orderId)
+                .ToListAsync(cancellationToken);
+            return list.Select(InvoiceMapper.ToDomain).ToList();
+        }
+
         public Task AddAsync(Invoice invoice, CancellationToken cancellationToken = default)
         {
             var dbModel = InvoiceMapper.ToDbModel(invoice);
