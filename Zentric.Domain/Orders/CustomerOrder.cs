@@ -158,12 +158,29 @@ namespace Zentric.Domain.Orders
             UpdatedAt = DateTime.UtcNow;
         }
 
+        public void CancelDueToTimeout()
+        {
+            EnsureNotDelivered();
+
+            if (Status != OrderStatus.Cart && Status != OrderStatus.PendingPayment)
+            {
+                throw new InvalidOperationException("Only an order in Cart or PendingPayment status can be cancelled due to timeout.");
+            }
+
+            Status = OrderStatus.Cancelled;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
         private void EnsureNotDelivered()
         {
-            // Regla de Negocio SSoT: Un pedido en estado Delivered no podrá ser modificado bajo ninguna circunstancia.
+            // Regla de Negocio SSoT: Un pedido en estado Delivered o Cancelled no podrá ser modificado bajo ninguna circunstancia.
             if (Status == OrderStatus.Delivered)
             {
                 throw new InvalidOperationException("A delivered order cannot be modified under any circumstances.");
+            }
+            if (Status == OrderStatus.Cancelled)
+            {
+                throw new InvalidOperationException("A cancelled order cannot be modified under any circumstances.");
             }
         }
     }

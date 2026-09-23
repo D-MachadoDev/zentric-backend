@@ -50,7 +50,7 @@ referencia nada). `Zentric.Domain.csproj` sigue sin `PackageReference`.
 | **Entidades mapeadas** | 33 (E-001 a E-033) |
 | **Agregados raíz** | 14 (User, Buyer, Product, Inventory, Warehouse, CustomerOrder, FulfillmentOrder, Invoice, ReturnRequest + puertos/servicios/infra) |
 | **Cobertura** | 33/33 (100 %) — 0 huérfanos |
-| **Pruebas asociadas** | 235 casos de prueba en verde |
+| **Pruebas asociadas** | 238 casos de prueba en verde |
 
 ### 2.2 Tabla de entidades
 

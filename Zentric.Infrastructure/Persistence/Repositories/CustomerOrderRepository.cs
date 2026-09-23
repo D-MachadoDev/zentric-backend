@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Zentric.Domain.Orders.Ports;
 using Zentric.Domain.Orders;
+using Zentric.Domain.Orders.Enums;
 using Zentric.Infrastructure.Persistence.Mappers;
 
 namespace Zentric.Infrastructure.Persistence.Repositories
@@ -23,6 +24,16 @@ namespace Zentric.Infrastructure.Persistence.Repositories
                 .Include(o => o.Items)
                 .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
             return dbModel == null ? null : CustomerOrderMapper.ToDomain(dbModel);
+        }
+
+        public async Task<IReadOnlyList<CustomerOrder>> GetExpiredOrdersAsync(DateTime threshold, CancellationToken cancellationToken = default)
+        {
+            var list = await _dbContext.CustomerOrders
+                .Include(o => o.Items)
+                .Where(o => (o.Status == OrderStatus.Cart || o.Status == OrderStatus.PendingPayment) && o.UpdatedAt < threshold)
+                .ToListAsync(cancellationToken);
+
+            return list.Select(CustomerOrderMapper.ToDomain).ToList();
         }
 
         public Task AddAsync(CustomerOrder order, CancellationToken cancellationToken = default)

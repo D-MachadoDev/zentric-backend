@@ -28,6 +28,12 @@ namespace Zentric.Tests.Application.Orders
             return Task.FromResult(Orders.FirstOrDefault(o => o.Id == id));
         }
 
+        public Task<IReadOnlyList<CustomerOrder>> GetExpiredOrdersAsync(DateTime threshold, CancellationToken cancellationToken = default)
+        {
+            var result = (IReadOnlyList<CustomerOrder>)Orders.Where(o => o.UpdatedAt < threshold).ToList();
+            return Task.FromResult(result);
+        }
+
         public Task UpdateAsync(CustomerOrder order, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;

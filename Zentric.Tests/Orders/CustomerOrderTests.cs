@@ -88,6 +88,42 @@ namespace Zentric.Tests.Orders
             Assert.Throws<InvalidOperationException>(() => order.RemoveItem(order.Items.First().VariantId));
             Assert.Throws<InvalidOperationException>(() => order.MarkAsPaid());
         }
+
+        [Fact]
+        public void CancelDueToTimeout_WhenInCartOrPendingPayment_TransitionsToCancelled()
+        {
+            var cartOrder = new CustomerOrder(Guid.NewGuid());
+            cartOrder.CancelDueToTimeout();
+            Assert.Equal(OrderStatus.Cancelled, cartOrder.Status);
+
+            var pendingOrder = new CustomerOrder(Guid.NewGuid());
+            pendingOrder.AddItem(Guid.NewGuid(), 1, new Money(10, "USD"));
+            pendingOrder.Checkout();
+            pendingOrder.CancelDueToTimeout();
+            Assert.Equal(OrderStatus.Cancelled, pendingOrder.Status);
+        }
+
+        [Fact]
+        public void CancelDueToTimeout_WhenPaidOrDelivered_ThrowsInvalidOperationException()
+        {
+            var order = new CustomerOrder(Guid.NewGuid());
+            order.AddItem(Guid.NewGuid(), 1, new Money(10, "USD"));
+            order.Checkout();
+            order.MarkAsPaid();
+
+            Assert.Throws<InvalidOperationException>(() => order.CancelDueToTimeout());
+        }
+
+        [Fact]
+        public void ModifyOrder_WhenCancelled_ThrowsInvalidOperationException()
+        {
+            var order = new CustomerOrder(Guid.NewGuid());
+            order.CancelDueToTimeout();
+
+            Assert.Throws<InvalidOperationException>(() => order.AddItem(Guid.NewGuid(), 1, new Money(10, "USD")));
+            Assert.Throws<InvalidOperationException>(() => order.Checkout());
+            Assert.Throws<InvalidOperationException>(() => order.MarkAsPaid());
+        }
     }
 }
 

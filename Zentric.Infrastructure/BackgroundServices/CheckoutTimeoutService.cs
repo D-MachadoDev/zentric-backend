@@ -1,10 +1,13 @@
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Zentric.Domain.Orders.Ports;
-using Zentric.Domain.Orders.Enums;
+using Zentric.Domain.Inventories.Ports;
 using Zentric.Application.Common.Ports;
-using Zentric.Domain.Inventories.Events;
 
 namespace Zentric.Infrastructure.BackgroundServices
 {
@@ -27,9 +30,34 @@ namespace Zentric.Infrastructure.BackgroundServices
                 {
                     using var scope = _serviceProvider.CreateScope();
                     var orderRepo = scope.ServiceProvider.GetRequiredService<ICustomerOrderRepository>();
+                    var inventoryRepo = scope.ServiceProvider.GetRequiredService<IInventoryRepository>();
                     var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-                    
-                    _logger.LogInformation("CheckoutTimeoutService running.");
+
+                    var threshold = DateTime.UtcNow.AddMinutes(-15);
+                    var expiredOrders = await orderRepo.GetExpiredOrdersAsync(threshold, stoppingToken);
+
+                    if (expiredOrders.Count > 0)
+                    {
+                        foreach (var order in expiredOrders)
+                        {
+                            foreach (var item in order.Items)
+                            {
+                                var inventories = await inventoryRepo.GetByVariantIdAsync(item.VariantId, stoppingToken);
+                                var inventory = inventories.FirstOrDefault();
+                                if (inventory != null && inventory.ReservedQuantity >= item.Quantity)
+                                {
+                                    inventory.ReturnToAvailable(item.Quantity);
+                                    await inventoryRepo.UpdateAsync(inventory, stoppingToken);
+                                }
+                            }
+
+                            order.CancelDueToTimeout();
+                            await orderRepo.UpdateAsync(order, stoppingToken);
+                        }
+
+                        await uow.SaveChangesAsync(stoppingToken);
+                        _logger.LogInformation("CheckoutTimeoutService: Expired {Count} orders and returned inventory to available.", expiredOrders.Count);
+                    }
                 }
                 catch (Exception ex)
                 {

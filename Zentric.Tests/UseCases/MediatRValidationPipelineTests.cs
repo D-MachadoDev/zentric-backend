@@ -33,6 +33,9 @@ namespace Zentric.Tests.UseCases
             public Task<CustomerOrder?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
                 => Task.FromResult(_orders.TryGetValue(id, out var order) ? order : null);
 
+            public Task<IReadOnlyList<CustomerOrder>> GetExpiredOrdersAsync(DateTime threshold, CancellationToken cancellationToken = default)
+                => Task.FromResult((IReadOnlyList<CustomerOrder>)_orders.Values.Where(o => o.UpdatedAt < threshold).ToList());
+
             public Task AddAsync(CustomerOrder order, CancellationToken cancellationToken = default)
             {
                 _orders[order.Id] = order;

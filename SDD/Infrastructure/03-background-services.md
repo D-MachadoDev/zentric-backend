@@ -25,5 +25,4 @@ Para orquestar este proceso sin bloquear las peticiones HTTP del usuario, la inf
 ---
 
 ## 3. Estado de Madurez
-- `[CONFIRMADO]`: Registrado en el Composition Root (`Program.cs`) y compilando sin errores.
-- `[PENDIENTE]`: Conectar la consulta y cancelación de pedidos expirados contra PostgreSQL una vez que se homologue el servicio de reloj (`IClock`).
+- `[CONFIRMADO]` (2026-09-23): **100% Operativo**. `CheckoutTimeoutService` consulta periódicamente pedidos con más de 15 minutos en `Cart` o `PendingPayment`, devuelve el stock reservado a disponible mediante `inventory.ReturnToAvailable(qty)`, cancela el pedido mediante `order.CancelDueToTimeout()` (estado `OrderStatus.Cancelled`) y persiste atómicamente con `IUnitOfWork`. Verificado con pruebas unitarias en `CustomerOrderTests` (238/238 pruebas en verde).

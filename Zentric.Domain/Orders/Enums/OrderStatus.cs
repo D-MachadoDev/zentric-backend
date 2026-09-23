@@ -6,7 +6,8 @@ namespace Zentric.Domain.Orders.Enums
         PendingPayment,
         Paid,
         Dispatched,
-        Delivered
+        Delivered,
+        Cancelled
     }
 }
 
