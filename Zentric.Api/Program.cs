@@ -7,11 +7,53 @@ using Zentric.Domain.Logistics.Ports;
 using FluentValidation;
 using Zentric.Application.Common.Behaviors;
 
+using Microsoft.OpenApi;
+using System.Reflection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Zentric Marketplace Backend API",
+        Version = "v1",
+        Description = "API Central y Core de Dominio para Zentric (gestión de marketplace, bodegas, inventarios, catálogos, pedidos, logística, devoluciones y facturación).",
+        Contact = new OpenApiContact
+        {
+            Name = "Equipo de Desarrollo Zentric",
+            Email = "soporte@zentric.internal"
+        }
+    });
+
+    // Configuración del esquema de seguridad Bearer (JWT) para Swagger UI
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Ingrese el token JWT en el formato: Bearer {su_token}"
+    });
+
+    c.AddSecurityRequirement(doc => new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecuritySchemeReference("Bearer", doc, null),
+            new List<string>()
+        }
+    });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        c.IncludeXmlComments(xmlPath);
+    }
+});
 builder.Services.AddOpenApi();
 
 // Mapeo de errores a RFC 7807 (Problem Details), exigido por AGENTS.md §3.4.

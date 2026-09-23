@@ -1328,5 +1328,6 @@ Evidencia: [verification-baseline.md :11](#verification-baselinemd-:11) (`build 
 | 2026-09-18 | Búsqueda por patrón sobre carpetas sin versionar | La herramienta de búsqueda devuelve falsos negativos ahí; se cambió a escaneo directo por archivo |
 | 2026-09-18 | Paquete NuGet `MediatR` 14.2.0 (`MediatR.xml` + stack trace) | Confirmada la firma `Handle(request, RequestHandlerDelegate<TResponse>, CancellationToken)` y `AddOpenBehavior(Type, ServiceLifetime)`; MediatR 14 exige `ILoggerFactory` y ejecuta comprobación de licencia ([Q-14](#q-14)) |
 | 2026-09-18 | `Zentric.Domain/Products/ValueObjects/Money.cs` | Guardas reales: `amount >= 0`, `currency` no vacía y de 3 caracteres tras `Trim().ToUpperInvariant()` → reglas espejadas en `AddOrderItemCommandValidator`, no inventadas |
+| 2026-09-23 | `Zentric.Api` & `SDD/Presentation/01-endpoints.md` | Configurado esquema de seguridad Bearer JWT interactivo en Swagger UI (`Authorize`), activada generación de comentarios XML (`GenerateDocumentationFile`), categorizados los 8 Bounded Contexts mediante `[Tags]` y documentados exhaustivamente los 16 endpoints con respuestas tipadas y RFC 7807 ProblemDetails. Suite verificada: 231/231 tests PASS, build 0/0. |
 
 
