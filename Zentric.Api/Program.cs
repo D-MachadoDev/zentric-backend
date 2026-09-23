@@ -9,8 +9,9 @@ using Zentric.Application.Common.Behaviors;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
 
 // Mapeo de errores a RFC 7807 (Problem Details), exigido por AGENTS.md §3.4.
@@ -49,6 +50,13 @@ builder.Services.AddScoped<Zentric.Domain.Inventories.Services.InventoryReservat
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Zentric API v1");
+    c.RoutePrefix = "swagger";
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

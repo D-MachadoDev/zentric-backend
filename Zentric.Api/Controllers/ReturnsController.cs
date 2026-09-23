@@ -31,5 +31,15 @@ namespace Zentric.Api.Controllers
             if (result.IsFailure) return BadRequest(new ProblemDetails { Detail = result.Error });
             return Ok();
         }
+
+        [HttpPost("{id}/inspect")]
+        public async Task<IActionResult> InspectReturn(Guid id, [FromBody] InspectReturnRequestDto dto)
+        {
+            var result = await _mediator.Send(new InspectReturnCommand(id, dto.IsGoodCondition));
+            if (result.IsFailure) return BadRequest(new ProblemDetails { Detail = result.Error });
+            return Ok();
+        }
     }
+
+    public record InspectReturnRequestDto(bool IsGoodCondition);
 }

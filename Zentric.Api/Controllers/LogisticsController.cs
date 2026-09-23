@@ -30,5 +30,13 @@ namespace Zentric.Api.Controllers
             if (result.IsFailure) return BadRequest(new ProblemDetails { Detail = result.Error });
             return Ok();
         }
+
+        [HttpPost("fulfillment/cancel-ghost-stock")]
+        public async Task<IActionResult> CancelGhostStock([FromBody] CancelFulfillmentOrderDueToNoStockCommand command)
+        {
+            var result = await _mediator.Send(command);
+            if (result.IsFailure) return BadRequest(new ProblemDetails { Detail = result.Error });
+            return Ok(result.Value);
+        }
     }
 }
